@@ -106,18 +106,6 @@ public class Player extends Entity {
         } else {
             spriteNum = 0;
         }
-    
-
-            // Animation logic...
-            spriteCounter++;
-            if (spriteCounter > 10) {
-                spriteNum++;
-                if (spriteNum > 4) spriteNum = 1;
-                spriteCounter = 0;
-            }
-        } else {
-            spriteNum = 0;
-        }
     }
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
