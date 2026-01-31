@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import entity.Player;
 import tile.TileManager;
+import GUI.UI;
 
 public class GamePanel extends JPanel implements Runnable {
     
@@ -11,8 +12,8 @@ public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16;
     final int scale = 4;
     public final int tileSize = originalTileSize * scale;
-    final int maxScreenCol = 15;
-    final int maxScreenRow = 10;
+    public final int maxScreenCol = 15;
+    public final int maxScreenRow = 10;
     public final int screenWidth = tileSize * maxScreenCol;
     public final int screenHeight = tileSize * maxScreenRow;
     
@@ -21,18 +22,26 @@ public class GamePanel extends JPanel implements Runnable {
     
     // System
     public TileManager tileM = new TileManager(this);
-    KeyHandler keyH = new KeyHandler();
+    public KeyHandler keyH = new KeyHandler(this); // Pass 'this' so it can check gameState
+    public UI ui = new UI(this); 
     Thread gameThread;
     
     // Entity
     public Player player = new Player(this, keyH);
     
+    // GameState
+    public int gameState;
+    public final int titleState = 0;
+    public final int playState = 1;
+    
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(new Color(30, 30, 40)); 
         this.setDoubleBuffered(true);
-        this.addKeyListener(keyH);
+        this.addKeyListener(keyH); // keyH now has access to this GamePanel
         this.setFocusable(true);
+        
+        gameState = titleState; 
     }
     
     public void startGameThread() {
@@ -61,7 +70,9 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void update() {
-        player.update();
+        if (gameState == playState) {
+            player.update();
+        }
     }
     
     @Override
@@ -69,14 +80,17 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
-        // 1. Lower layers (Floor, Walls, Desks)
-        tileM.drawBackground(g2);
-        
-        // 2. The Character
-        player.draw(g2);
-        
-        // 3. The Top layer (Ceiling/Lights)
-        tileM.drawForeground(g2);
+        // TITLE STATE
+        if (gameState == titleState) {
+            ui.draw(g2); 
+        }
+        // PLAY STATE
+        else if (gameState == playState) {
+            tileM.drawBackground(g2);
+            player.draw(g2);        
+            tileM.drawForeground(g2);
+            // Optionally call ui.draw(g2) here too if you want a HUD during play
+        }
         
         g2.dispose();
     }
