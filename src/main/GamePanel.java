@@ -86,10 +86,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
         // PLAY STATE
         else if (gameState == playState) {
+            // 1. Lower layers (Floor, Walls, Desks)
             tileM.drawBackground(g2);
-            player.draw(g2);        
+            // 2. The Character
+            player.draw(g2); 
+            // 3. The Top layer (Ceiling/Lights)
             tileM.drawForeground(g2);
-            // Optionally call ui.draw(g2) here too if you want a HUD during play
         }
         
         g2.dispose();

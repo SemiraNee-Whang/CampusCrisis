@@ -21,24 +21,40 @@ public class KeyHandler implements KeyListener {
 
         // TITLE STATE
         if (gp.gameState == gp.titleState) {
-            if (code == KeyEvent.VK_W) {
-                gp.ui.commandNum--;
-                if (gp.ui.commandNum < 0) gp.ui.commandNum = 1; // Wrap to bottom
-            }
-            if (code == KeyEvent.VK_S) {
-                gp.ui.commandNum++;
-                if (gp.ui.commandNum > 1) gp.ui.commandNum = 0; // Wrap to top
-            }
-            if (code == KeyEvent.VK_ENTER) {
-                if (gp.ui.commandNum == 0) {
-                    gp.gameState = gp.playState;
+            
+            // Logic for the Main Title Menu
+            if (!gp.ui.confirmExitState) {
+                if (code == KeyEvent.VK_W) {
+                    gp.ui.commandNum--;
+                    if (gp.ui.commandNum < 0) gp.ui.commandNum = 1;
                 }
-                if (gp.ui.commandNum == 1) {
-                    System.exit(0);
+                if (code == KeyEvent.VK_S) {
+                    gp.ui.commandNum++;
+                    if (gp.ui.commandNum > 1) gp.ui.commandNum = 0;
                 }
+                if (code == KeyEvent.VK_ENTER) {
+                    if (gp.ui.commandNum == 0) gp.gameState = gp.playState;
+                    if (gp.ui.commandNum == 1) {
+                        gp.ui.confirmExitState = true; // Show confirmation
+                        gp.ui.commandNum = 1; // Default to "NO" for safety
+                    }
+                }
+            } 
+            // Logic for the "Are you sure?" Menu
+            else {
+                if (code == KeyEvent.VK_A) gp.ui.commandNum = 0; // YES
+                if (code == KeyEvent.VK_D) gp.ui.commandNum = 1; // NO
+                
+                if (code == KeyEvent.VK_ENTER) {
+                    if (gp.ui.commandNum == 0) System.exit(0); // Exit game
+                    if (gp.ui.commandNum == 1) {
+                        gp.ui.confirmExitState = false; // Go back
+                        gp.ui.commandNum = 1; // Reset cursor to Exit
+                    }
+                }
+                if (code == KeyEvent.VK_ESCAPE) gp.ui.confirmExitState = false; // Back out
             }
-        }
-        
+        }        
         // PLAY STATE
         else if (gp.gameState == gp.playState) {
             if (code == KeyEvent.VK_W) upPressed = true;
