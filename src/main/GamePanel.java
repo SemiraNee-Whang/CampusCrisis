@@ -5,6 +5,7 @@ import javax.swing.*;
 import entity.Player;
 import tile.TileManager;
 import GUI.UI;
+import GUI.LoginManager; // Import the new class
 
 public class GamePanel extends JPanel implements Runnable {
     
@@ -22,8 +23,11 @@ public class GamePanel extends JPanel implements Runnable {
     
     // System
     public TileManager tileM = new TileManager(this);
-    public KeyHandler keyH = new KeyHandler(this); // Pass 'this' so it can check gameState
+    public KeyHandler keyH = new KeyHandler(this); 
     public UI ui = new UI(this); 
+    public LoginManager loginM = new LoginManager(this);
+    public MouseHandler mouseH = new MouseHandler(this);
+    
     Thread gameThread;
     
     // Entity
@@ -33,13 +37,18 @@ public class GamePanel extends JPanel implements Runnable {
     public int gameState;
     public final int titleState = 0;
     public final int playState = 1;
+    public final int loginState = 2;
     
+    //GamePanel 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(new Color(30, 30, 40)); 
         this.setDoubleBuffered(true);
-        this.addKeyListener(keyH); // keyH now has access to this GamePanel
+        this.addKeyListener(keyH); 
+        this.addMouseListener(mouseH);
+        this.addMouseMotionListener(mouseH);
         this.setFocusable(true);
+        
         
         gameState = titleState; 
     }
@@ -73,9 +82,9 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == playState) {
             player.update();
         }
+        // You can add login specific update logic here if needed
     }
-    
- 
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -85,24 +94,19 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == titleState) {
             ui.draw(g2); 
         }
+        // LOGIN STATE
+        else if (gameState == loginState) {
+            loginM.draw(g2); // Use the new class to draw the login screen
+        }
         // PLAY STATE
         else if (gameState == playState) {
-            // 1. Draw the floor and walls first (Player walks ON TOP of these)
             tileM.drawBackground(g2);
-            
-            // 2. Draw the Player
             player.draw(g2);        
-            
-            // 3. Draw Objects (Drawn ON TOP of player - makes player look like they are behind)
             tileM.drawObjects(g2);
-            
-            // 4. Draw Foreground (Ceiling/Lights drawn last)
             tileM.drawForeground(g2);
-            
-            // 5. Draw UI (HUD, Dialogue, etc.)
             ui.draw(g2);
         }
         
         g2.dispose();
     }
-    }
+}

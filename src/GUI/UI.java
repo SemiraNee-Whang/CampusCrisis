@@ -12,8 +12,8 @@ public class UI {
 
     GamePanel gp;
     Graphics2D g2;
-    public int commandNum = 0;
-    public boolean confirmExitState = false; // New state for confirmation
+    public int commandNum = -1; // -1 means no hover
+    public boolean confirmExitState = false;
     BufferedImage titleBg;
 
     public UI(GamePanel gp) {
@@ -40,7 +40,7 @@ public class UI {
         if (titleBg != null) g2.drawImage(titleBg, 0, 0, gp.screenWidth, gp.screenHeight, null);
 
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 42F));
-        int x = gp.tileSize * 3;
+        int x = gp.tileSize * 6; // Moved X to align closer to center for hover detection
         int y = gp.tileSize * 8;
 
         drawOption("NEW GAME", x, y, 0);
@@ -48,7 +48,6 @@ public class UI {
     }
 
     public void drawExitConfirmation() {
-        // Draw the background image slightly dimmed
         if (titleBg != null) g2.drawImage(titleBg, 0, 0, gp.screenWidth, gp.screenHeight, null);
         g2.setColor(new Color(0, 0, 0, 150));
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
@@ -58,37 +57,28 @@ public class UI {
         int x = getXforCenteredText(text);
         int y = gp.screenHeight / 2 - gp.tileSize;
 
-        // Shadow and Text
         g2.setColor(Color.BLACK);
         g2.drawString(text, x + 3, y + 3);
         g2.setColor(Color.WHITE);
         g2.drawString(text, x, y);
 
-        // YES / NO options
         y += gp.tileSize * 2;
-        
-        // "YES"
-        String yesText = "YES";
-        int yesX = x + gp.tileSize * 2;
-        drawOption(yesText, yesX, y, 0);
-
-        // "NO"
-        String noText = "NO";
-        int noX = x + gp.tileSize * 6;
-        drawOption(noText, noX, y, 1);
+        drawOption("YES", x + gp.tileSize * 2, y, 0);
+        drawOption("NO", x + gp.tileSize * 6, y, 1);
     }
 
     private void drawOption(String text, int x, int y, int index) {
+        // Shadow
         g2.setColor(Color.BLACK);
         g2.drawString(text, x + 3, y + 3);
+        
+        // Hover Color Change
         if (commandNum == index) {
             g2.setColor(Color.YELLOW);
-            g2.drawString(text, x, y);
-            g2.drawString(">", x - 35, y);
         } else {
             g2.setColor(Color.WHITE);
-            g2.drawString(text, x, y);
         }
+        g2.drawString(text, x, y);
     }
 
     public int getXforCenteredText(String text) {
