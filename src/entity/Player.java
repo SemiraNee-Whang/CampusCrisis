@@ -62,37 +62,51 @@ public class Player extends Entity {
         boolean moving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
 
         if (moving) {
+            // Store old position for collision fallback
+            int oldX = x;
+            int oldY = y;
+
             if (keyH.upPressed) { direction = "up"; y -= speed; }
             else if (keyH.downPressed) { direction = "down"; y += speed; }
             else if (keyH.leftPressed) { direction = "left"; x -= speed; }
             else if (keyH.rightPressed) { direction = "right"; x += speed; }
 
-            // --- IMPROVED BOUNDARIES ---
-            
-            // 1. Left and Right Walls (Always blocked)
-            if (x < 50) x = 50; 
-            if (x > gp.screenWidth - gp.tileSize - 50) x = gp.screenWidth - gp.tileSize - 50;
-            
-            // 2. Top Wall (Always blocked)
-            if (y < 155) y = 155; 
+            // --- BIG DESK COLLISION ---
+            // Adjust these numbers so they match the visual location of your desk
+            // This stops the player from walking through the front of the desk
+            if (y < 400 && y > 300 && x > 250 && x < 650) {
+                x = oldX;
+                y = oldY;
+            }
 
-            // 3. Bottom Wall with DOORWAY logic
-            // The door appears to be between X: 400 and X: 550 (Adjust these numbers to fit your art)
+            // --- SCREEN BOUNDARIES ---
+            if (x < 0) x = 0; 
+            if (x > gp.screenWidth - gp.tileSize) x = gp.screenWidth - gp.tileSize;
+            if (y < 150) y = 150; // Blocked by the top wall
+
+            // --- DOORWAY LOGIC ---
             int doorLeftEdge = 410; 
             int doorRightEdge = 530;
 
             if (x < doorLeftEdge || x > doorRightEdge) {
-                // If NOT in front of the door, block the bottom wall
-                if (y > gp.screenHeight - gp.tileSize - 60) {
-                    y = gp.screenHeight - gp.tileSize - 60;
+                if (y > gp.screenHeight - gp.tileSize - 40) {
+                    y = gp.screenHeight - gp.tileSize - 40;
                 }
-            } else {
-                // If IN FRONT of the door, allow them to walk further down to "exit"
-                if (y > gp.screenHeight) {
-                    System.out.println("Player has exited the room!");
-                    // Here you can trigger a room change: gp.tileM.currentRoom = 1;
-                }
+            } else if (y > gp.screenHeight) {
+                 System.out.println("Exiting Room...");
             }
+
+            // Animation logic
+            spriteCounter++;
+            if (spriteCounter > 10) {
+                spriteNum++;
+                if (spriteNum > 4) spriteNum = 1;
+                spriteCounter = 0;
+            }
+        } else {
+            spriteNum = 0;
+        }
+    
 
             // Animation logic...
             spriteCounter++;

@@ -75,6 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     
+ 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -86,14 +87,23 @@ public class GamePanel extends JPanel implements Runnable {
         }
         // PLAY STATE
         else if (gameState == playState) {
-            // 1. Lower layers (Floor, Walls, Desks)
+            // 1. Draw the floor and walls first (Player walks ON TOP of these)
             tileM.drawBackground(g2);
-            // 2. The Character
-            player.draw(g2); 
-            // 3. The Top layer (Ceiling/Lights)
+            
+            // 2. Draw the Player
+            player.draw(g2);        
+            
+            // 3. Draw Objects (Drawn ON TOP of player - makes player look like they are behind)
+            tileM.drawObjects(g2);
+            
+            // 4. Draw Foreground (Ceiling/Lights drawn last)
             tileM.drawForeground(g2);
+            
+            // 5. Draw UI (HUD, Dialogue, etc.)
+            ui.draw(g2);
         }
         
         g2.dispose();
+    }
     }
 }
