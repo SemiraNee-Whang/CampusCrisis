@@ -17,6 +17,8 @@ public class RequestList {
     public ArrayList<Request> allRequests = new ArrayList<>();
     public ArrayList<Request> history = new ArrayList<>(); 
     
+    public boolean showButtons = false;
+    
     public Rectangle approveBtn, declineBtn, postponeBtn;
     private Random random = new Random();
 
@@ -86,10 +88,15 @@ public class RequestList {
             g2.drawString("Category: " + currentRequest.category, gp.tileSize * 2 + 30, gp.tileSize * 3 + 35);
         }
 
-        // Draw Buttons
-        drawStyledButton(g2, approveBtn, "APPROVE");
-        drawStyledButton(g2, declineBtn, "DECLINE");
-        drawStyledButton(g2, postponeBtn, "POSTPONE");
+        if (showButtons && currentRequest != null) {
+            drawStyledButton(g2, approveBtn, "APPROVE");
+            drawStyledButton(g2, declineBtn, "DECLINE");
+            drawStyledButton(g2, postponeBtn, "POSTPONE");
+        } else {
+            g2.setFont(new Font("Arial", Font.ITALIC, 14));
+            g2.setColor(Color.GRAY);
+            g2.drawString("Click the request to take action...", gp.tileSize * 2 + 30, gp.screenHeight - 100);
+        }
     }
 
     private void drawStyledButton(Graphics2D g2, Rectangle r, String text) {

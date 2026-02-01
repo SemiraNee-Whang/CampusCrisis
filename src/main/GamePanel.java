@@ -123,17 +123,15 @@ public class GamePanel extends JPanel implements Runnable {
             tileM.drawMainDesks(g2);    
             tileM.drawLayer2(g2);       
             
-            // 2. THE UI OVERLAYS
-            dashboard.draw(g2);         
-            
             if (gameState == requestState) {
                 reqList.draw(g2);       
             }
-            
-            // ADD THIS PART:
             if (gameState == historyState) {
                 historyView.draw(g2); 
             }
+            
+            // 3. UI Dashboard (Top & Bottom bars)
+            dashboard.draw(g2); // Now it stays on top!
             
             ui.draw(g2);
         }

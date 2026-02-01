@@ -39,39 +39,46 @@ public class Dashboard {
     }
 
     public void draw(Graphics2D g2) {
-        // 1. DASHBOARD PANEL
+        // --- 1. TOP STATUS BAR ---
         g2.setColor(new Color(20, 20, 30, 220)); 
         g2.fillRect(0, 0, gp.screenWidth, 65);
-        
-        // 2. ACCENT BORDER
         g2.setColor(Color.YELLOW);
         g2.fillRect(0, 62, gp.screenWidth, 3);
 
-        // 3. PRESIDENTIAL IDENTITY
         g2.setFont(new Font("SansSerif", Font.BOLD, 18));
         g2.setColor(Color.WHITE);
-        String presidentLabel = "PRESIDENT: " + gp.pSetup.presidentName.toUpperCase();
-        g2.drawString(presidentLabel, 20, 40);
+        g2.drawString("PRESIDENT: " + gp.pSetup.presidentName.toUpperCase(), 20, 40);
 
-        // 4. FINANCIAL STATUS (Use the 'budget' variable, not STARTING_BUDGET)
-        g2.setFont(new Font("SansSerif", Font.BOLD, 18));
+        // --- ADDED: TIMER (Centre) ---
+        String timeText = String.format("TIME: %02d:%02d", minutes, seconds);
+        int timeX = gp.screenWidth / 2 - (g2.getFontMetrics().stringWidth(timeText) / 2);
+        g2.drawString(timeText, timeX, 40);
+
+        // Budget (Top Right)
         g2.setColor(Color.YELLOW);
         String budgetDisplay = "BUDGET: R " + String.format("%,d", budget);
-        
-        FontMetrics fm = g2.getFontMetrics();
-        int budgetX = gp.screenWidth - fm.stringWidth(budgetDisplay) - 20;
-        g2.drawString(budgetDisplay, budgetX, 35);
+        g2.drawString(budgetDisplay, gp.screenWidth - 250, 30);
 
-        // 5. APPROVAL RATING (Use the 'approval' variable)
+        // --- ADDED: APPROVAL (Below Budget) ---
         g2.setFont(new Font("SansSerif", Font.BOLD, 14));
         g2.setColor(new Color(50, 255, 150)); 
-        String approvalRating = "APPROVAL: " + approval + "%";
-        int approvalX = gp.screenWidth - fm.stringWidth(approvalRating) - 20;
-        g2.drawString(approvalRating, approvalX, 55);
-        
-        // 6. TIMER DISPLAY
+        String approvalText = "APPROVAL: " + approval + "%";
+        g2.drawString(approvalText, gp.screenWidth - 250, 55);
+
+        // --- 2. BOTTOM ACTION BAR ---
+        int barHeight = 50;
+        int menuY = gp.screenHeight - barHeight;
+
+        g2.setColor(new Color(20, 20, 30, 230));
+        g2.fillRect(0, menuY, gp.screenWidth, barHeight);
+        g2.setColor(Color.YELLOW);
+        g2.fillRect(0, menuY, gp.screenWidth, 2);
+
+        g2.setFont(new Font("SansSerif", Font.BOLD, 14));
         g2.setColor(Color.WHITE);
-        String timeText = String.format("%02d:%02d", minutes, seconds);
-        g2.drawString("TIME: " + timeText, gp.screenWidth/2 - 30, 40);
+        g2.drawString("[1] VIEW REQUESTS", 50, menuY + 30);
+        g2.drawString("[2] DECISION HISTORY", 300, menuY + 30);
+        g2.setColor(Color.ORANGE);
+        g2.drawString("[ESC] BACK TO OFFICE", gp.screenWidth - 180, menuY + 30);
     }
 }

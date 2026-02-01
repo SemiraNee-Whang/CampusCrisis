@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Rectangle;
 import java.awt.event.*;
 import GUI.RequestList;
 
@@ -23,10 +24,30 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         } else if (gp.gameState == gp.setupState) {
             handleSetupClick(x, y);
         } else if (gp.gameState == gp.requestState) {
-            // DECISION BUTTONS
-            if (gp.reqList.approveBtn.contains(x, y)) processDecision("Approve");
-            else if (gp.reqList.declineBtn.contains(x, y)) processDecision("Decline");
-            else if (gp.reqList.postponeBtn.contains(x, y)) gp.reqList.getNextRandomRequest();
+            
+            // 1. REVEAL LOGIC: Click the white box to show Approve/Decline
+            // This is the area of the main request row
+            Rectangle requestBox = new Rectangle(gp.tileSize * 2, gp.tileSize * 2, gp.screenWidth - gp.tileSize * 4, gp.tileSize * 4);
+            
+            if (requestBox.contains(x, y) && !gp.reqList.showButtons) {
+                gp.reqList.showButtons = true; // Reveal the buttons
+            } 
+            
+            // 2. DECISION LOGIC: Only works if buttons are visible
+            else if (gp.reqList.showButtons) {
+                if (gp.reqList.approveBtn.contains(x, y)) {
+                    processDecision("Approve");
+                    gp.reqList.showButtons = false; // Hide buttons for the next incoming request
+                }
+                else if (gp.reqList.declineBtn.contains(x, y)) {
+                    processDecision("Decline");
+                    gp.reqList.showButtons = false;
+                }
+                else if (gp.reqList.postponeBtn.contains(x, y)) {
+                    gp.reqList.getNextRandomRequest();
+                    gp.reqList.showButtons = false;
+                }
+            }
         } else if (gp.gameState == gp.historyState) {
             if (gp.historyView.backBtn.contains(x, y)) gp.gameState = gp.playState;
         }
