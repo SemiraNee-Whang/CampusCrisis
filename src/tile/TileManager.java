@@ -46,7 +46,7 @@ public class TileManager {
 
     private void drawLayer(Graphics2D g2, int index) {
         if (tile[index] != null && tile[index].image != null) {
-            // Scaling to screenWidth/Height removes black borders
+            // Scaling to screenWidth/Height
             g2.drawImage(tile[index].image, 0, 0, gp.screenWidth, gp.screenHeight, null);
         }
     }

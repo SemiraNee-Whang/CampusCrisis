@@ -12,7 +12,8 @@ public class UI {
 
     GamePanel gp;
     Graphics2D g2;
-    public int commandNum = -1; // -1 means no hover
+    // -1 means no hover
+    public int commandNum = -1; 
     public boolean confirmExitState = false;
     BufferedImage titleBg;
 
@@ -40,11 +41,28 @@ public class UI {
         if (titleBg != null) g2.drawImage(titleBg, 0, 0, gp.screenWidth, gp.screenHeight, null);
 
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 42F));
-        int x = gp.tileSize * 6; // Moved X to align closer to center for hover detection
-        int y = gp.tileSize * 8;
+        
+        // Starting height for the menu 
+        int y = gp.tileSize * 6;
 
-        drawOption("NEW GAME", x, y, 0);
-        drawOption("EXIT", x, y + gp.tileSize, 1);
+        //START NEW TERM
+        int x = getXforCenteredText("START NEW TERM");
+        drawOption("START NEW TERM", x, y, 0);
+
+        //INSTRUCTIONS
+        y += gp.tileSize;
+        x = getXforCenteredText("INSTRUCTIONS");
+        drawOption("INSTRUCTIONS", x, y, 1);
+
+        //VIEW REPORTS
+        y += gp.tileSize;
+        x = getXforCenteredText("VIEW REPORTS");
+        drawOption("VIEW REPORTS", x, y, 2);
+
+        // EXIT
+        y += gp.tileSize;
+        x = getXforCenteredText("EXIT");
+        drawOption("EXIT", x, y, 3);
     }
 
     public void drawExitConfirmation() {
