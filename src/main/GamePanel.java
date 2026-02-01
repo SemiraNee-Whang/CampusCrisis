@@ -9,7 +9,6 @@ import GUI.LoginManager;
 import GUI.PresidentSetup;
 import GUI.Dashboard;
 import GUI.RequestList; 
-import main.CollisionChecker;
 
 public class GamePanel extends JPanel implements Runnable {
     
