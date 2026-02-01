@@ -4,9 +4,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
-
     GamePanel gp;
-    public boolean upPressed, downPressed, leftPressed, rightPressed, runPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed;
 
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
@@ -14,18 +13,43 @@ public class KeyHandler implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+
+        //LOGIN SCREEN TYPING
         if (gp.gameState == gp.loginState) {
-            char c = e.getKeyChar();
-            // Typing logic remains so user can enter credentials
-            if (gp.loginM.subState == 0) { // Username
-                if (Character.isLetterOrDigit(c) || c == ' ') gp.loginM.userText += c;
-                if (c == KeyEvent.VK_BACK_SPACE && gp.loginM.userText.length() > 0) 
-                    gp.loginM.userText = gp.loginM.userText.substring(0, gp.loginM.userText.length() - 1);
+            // subState 0 = Username, subState 1 = Password
+            if (gp.loginM.subState == 0 || gp.loginM.subState == 1) {
+                
+                // Handle Backspace
+                if (c == KeyEvent.VK_BACK_SPACE) {
+                    if (gp.loginM.subState == 0 && gp.loginM.userText.length() > 0) {
+                        gp.loginM.userText = gp.loginM.userText.substring(0, gp.loginM.userText.length() - 1);
+                    } else if (gp.loginM.subState == 1 && gp.loginM.passText.length() > 0) {
+                        gp.loginM.passText = gp.loginM.passText.substring(0, gp.loginM.passText.length() - 1);
+                    }
+                } 
+                // Handle Input: Allows all printable characters (ASCII 32 to 126) 
+                // This includes @, #, $, letters, and numbers
+                else if (c >= 32 && c <= 126) {
+                    if (gp.loginM.subState == 0 && gp.loginM.userText.length() < 16) {
+                        gp.loginM.userText += c;
+                    } else if (gp.loginM.subState == 1 && gp.loginM.passText.length() < 16) {
+                        gp.loginM.passText += c;
+                    }
+                }
             }
-            else if (gp.loginM.subState == 1) { // Password
-                if (Character.isLetterOrDigit(c)) gp.loginM.passText += c;
-                if (c == KeyEvent.VK_BACK_SPACE && gp.loginM.passText.length() > 0)
-                    gp.loginM.passText = gp.loginM.passText.substring(0, gp.loginM.passText.length() - 1);
+        }
+        
+        //PRESIDENT SETUP TYPING
+        else if (gp.gameState == gp.setupState && gp.pSetup.subState == 0) {
+            if (c == KeyEvent.VK_BACK_SPACE) {
+                if (gp.pSetup.presidentName.length() > 0) {
+                    gp.pSetup.presidentName = gp.pSetup.presidentName.substring(0, gp.pSetup.presidentName.length() - 1);
+                }
+            } else if (c >= 32 && c <= 126) {
+                if (gp.pSetup.presidentName.length() < 20) {
+                    gp.pSetup.presidentName += c;
+                }
             }
         }
     }
@@ -34,25 +58,26 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
-        // WSAD only works in PLAY STATE
+        // Movement for Jessie
         if (gp.gameState == gp.playState) {
             if (code == KeyEvent.VK_W) upPressed = true;
             if (code == KeyEvent.VK_S) downPressed = true;
             if (code == KeyEvent.VK_A) leftPressed = true;
             if (code == KeyEvent.VK_D) rightPressed = true;
-            if (code == KeyEvent.VK_SHIFT) runPressed = true;
+        }
+        
+        // Quick Enter for Login
+        if (code == KeyEvent.VK_ENTER && gp.gameState == gp.loginState) {
+            gp.loginM.subState = 2; // Move "focus" to the login button
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
-        if (gp.gameState == gp.playState) {
-            if (code == KeyEvent.VK_W) upPressed = false;
-            if (code == KeyEvent.VK_S) downPressed = false;
-            if (code == KeyEvent.VK_A) leftPressed = false;
-            if (code == KeyEvent.VK_D) rightPressed = false;
-            if (code == KeyEvent.VK_SHIFT) runPressed = false;
-        }
+        if (code == KeyEvent.VK_W) upPressed = false;
+        if (code == KeyEvent.VK_S) downPressed = false;
+        if (code == KeyEvent.VK_A) leftPressed = false;
+        if (code == KeyEvent.VK_D) rightPressed = false;
     }
 }
