@@ -58,6 +58,14 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
+        if (gp.gameState == gp.playState) {
+            if (code == KeyEvent.VK_1) gp.gameState = gp.requestState;
+            if (code == KeyEvent.VK_2) gp.gameState = gp.historyState; // New state
+        }
+        else if (gp.gameState == gp.requestState || gp.gameState == gp.historyState) {
+            if (code == KeyEvent.VK_ESCAPE) gp.gameState = gp.playState;
+        }
+    
         // Movement for Jessie
         if (gp.gameState == gp.playState) {
             if (code == KeyEvent.VK_W) upPressed = true;

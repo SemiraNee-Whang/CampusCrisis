@@ -24,7 +24,7 @@ public class GamePanel extends JPanel implements Runnable {
     // FPS
     int FPS = 60;
     
-    // SYSTEM
+    // SYSTEM (Varibles)
     public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this); 
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -34,6 +34,8 @@ public class GamePanel extends JPanel implements Runnable {
     public PresidentSetup pSetup = new PresidentSetup(this);
     public Dashboard dashboard = new Dashboard(this);
     public RequestList reqList = new RequestList(this); 
+    public GUI.DecisionHistory historyView = new GUI.DecisionHistory(this);
+    public java.util.ArrayList<main.Request> history = new java.util.ArrayList<>();
     
     Thread gameThread;
     
@@ -47,6 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int loginState = 2;
     public final int setupState = 3;
     public final int requestState = 4; 
+    public final int historyState = 5;
     
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -55,6 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH); 
         this.addMouseListener(mouseH);
         this.addMouseMotionListener(mouseH);
+        this.addMouseWheelListener(mouseH);
         this.setFocusable(true);
         
         gameState = titleState; 
@@ -109,28 +113,28 @@ public class GamePanel extends JPanel implements Runnable {
         }
         
         //PlayState
-else if (gameState == playState || gameState == requestState) {            
+        else if (gameState == playState || gameState == requestState || gameState == historyState) {            
             
-            // 1. THE FLOOR & BACK WALL
+            // 1. THE CLASSROOM LAYERS
             tileM.drawBackground(g2);   
             tileM.drawChalkboard(g2);   
-            
-            // 2. STANDARD DESKS (Drawn BEFORE player so she walks on top)
             tileM.drawDesks(g2);        
-
-            // 3. THE PLAYER
-            // Drawing her here means anything called AFTER this will overlap her
             player.draw(g2);            
-            
-            // 4. THE FOREGROUND (Drawn AFTER player so she is "behind" them)
             tileM.drawMainDesks(g2);    
             tileM.drawLayer2(g2);       
             
-            // 5. UI
+            // 2. THE UI OVERLAYS
             dashboard.draw(g2);         
+            
             if (gameState == requestState) {
                 reqList.draw(g2);       
             }
+            
+            // ADD THIS PART:
+            if (gameState == historyState) {
+                historyView.draw(g2); 
+            }
+            
             ui.draw(g2);
         }
         g2.dispose();
