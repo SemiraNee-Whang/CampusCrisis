@@ -1,0 +1,30 @@
+REQ001|Students request continued funding for the school soccer team.|Sports|3000|6
+REQ002|Introduce free after-school tutoring for maths and science.|Academic|2500|7
+REQ003|Organise a supervised term-end school dance.|Events|2000|5
+REQ004|Funding for cultural clubs (drama, dance, choir).|Culture|1800|6
+REQ005|Install additional fans in warm classrooms.|Facilities|1200|4
+REQ006|One-day workshop on student wellbeing and stress management.|Welfare|800|5
+REQ007|Purchase up-to-date textbooks and fiction for the library.|Academic|2200|6
+REQ008|Create a small vegetable/flower garden for environmental club.|Environmental|1000|5
+REQ009|Upgrade Wi-Fi to support student research.|Technology|4000|7
+REQ010|Place recycling bins in each classroom.|Environmental|600|3
+REQ011|Add an optional study period twice a week.|Academic|0|6
+REQ012|Fix broken playground equipment for safety.|Facilities|1500|5
+REQ013|Host an art exhibition showcasing student work.|Culture|700|4
+REQ014|Provide subsidised healthy snacks during break.|Welfare|1600|6
+REQ015|Purchase new jerseys for school teams.|Sports|2200|5
+REQ016|Invite local professionals for a careers expo.|Events|900|5
+REQ017|Replace worn-out lab equipment and chemicals.|Academic|3500|8
+REQ018|Keep library open one extra hour after school.|Academic|300|4
+REQ019|Fund activities and prizes for sports day.|Events|1400|6
+REQ020|Start a student-led support group supervised by counsellor.|Welfare|200|5
+REQ021|Install projectors in two classrooms.|Technology|4800|7
+REQ022|School potluck/fair celebrating different cultures.|Culture|500|4
+REQ023|Replace outdated directional and safety signs.|Facilities|900|3
+REQ024|Start a chess club with weekly sessions and a small trophy.|Culture|150|3
+REQ025|Add a filtered water fountain near sports fields.|Facilities|3000|6
+REQ026|Provide free or subsidised stationery for exams.|Welfare|1200|5
+REQ027|Relaunch the school newspaper with online edition.|Culture|600|4
+REQ028|Arrange safety workshops for students who use school transport.|Welfare|250|3
+REQ029|Fund materials for a student-designed school mural.|Culture|400|4
+REQ030|Establish a small fund for outstanding students in need.|Welfare|5000|9

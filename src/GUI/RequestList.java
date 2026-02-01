@@ -39,7 +39,7 @@ public class RequestList {
 
     private void loadRequests() {
         try {
-            InputStream is = getClass().getResourceAsStream("/requests/requests.txt");
+            InputStream is = getClass().getResourceAsStream("/requests.txt");
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String line;
             while ((line = br.readLine()) != null) {
@@ -88,22 +88,40 @@ public class RequestList {
             g2.drawString("Category: " + currentRequest.category, gp.tileSize * 2 + 30, gp.tileSize * 3 + 35);
         }
 
+        // BUTTON LOGIC
         if (showButtons && currentRequest != null) {
-            drawStyledButton(g2, approveBtn, "APPROVE");
-            drawStyledButton(g2, declineBtn, "DECLINE");
-            drawStyledButton(g2, postponeBtn, "POSTPONE");
+            // Updated to Yellow buttons
+            Color btnYellow = new Color(255, 215, 0); // Gold-ish Yellow
+            drawStyledButton(g2, approveBtn, "APPROVE", btnYellow);
+            drawStyledButton(g2, declineBtn, "DECLINE", btnYellow);
+            drawStyledButton(g2, postponeBtn, "POSTPONE", btnYellow);
         } else {
             g2.setFont(new Font("Arial", Font.ITALIC, 14));
             g2.setColor(Color.GRAY);
-            g2.drawString("Click the request to take action...", gp.tileSize * 2 + 30, gp.screenHeight - 100);
+            g2.drawString("Click the request area to reveal actions...", gp.tileSize * 2 + 30, gp.screenHeight - 100);
         }
     }
 
-    private void drawStyledButton(Graphics2D g2, Rectangle r, String text) {
-        g2.setColor(new Color(0, 0, 102)); // Dark Blue
+    private void drawStyledButton(Graphics2D g2, Rectangle r, String text, Color bgColor) {
+        // Shadow effect for a "Decision Button" feel
+        g2.setColor(new Color(0, 0, 0, 50));
+        g2.fillRect(r.x + 3, r.y + 3, r.width, r.height);
+
+        // Main Button Body
+        g2.setColor(bgColor); 
         g2.fill(r);
-        g2.setColor(Color.WHITE);
+        
+        // Button Border
+        g2.setColor(Color.BLACK);
+        g2.setStroke(new BasicStroke(1));
+        g2.draw(r);
+
+        // Text (Centred)
+        g2.setColor(Color.BLACK);
         g2.setFont(new Font("Arial", Font.BOLD, 14));
-        g2.drawString(text, r.x + 35, r.y + 28);
+        FontMetrics fm = g2.getFontMetrics();
+        int textX = r.x + (r.width - fm.stringWidth(text)) / 2;
+        int textY = r.y + (r.height + fm.getAscent()) / 2 - 2;
+        g2.drawString(text, textX, textY);
     }
 }

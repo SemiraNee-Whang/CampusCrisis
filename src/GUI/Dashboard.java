@@ -79,6 +79,6 @@ public class Dashboard {
         g2.drawString("[1] VIEW REQUESTS", 50, menuY + 30);
         g2.drawString("[2] DECISION HISTORY", 300, menuY + 30);
         g2.setColor(Color.ORANGE);
-        g2.drawString("[ESC] BACK TO OFFICE", gp.screenWidth - 180, menuY + 30);
+        g2.drawString("[ESC] BACK", gp.screenWidth - 180, menuY + 30);
     }
 }
