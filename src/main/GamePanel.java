@@ -82,7 +82,6 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == playState) {
             player.update();
         }
-        // You can add login specific update logic here if needed
     }
 
     @Override

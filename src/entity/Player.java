@@ -57,46 +57,33 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
-
     public void update() {
         boolean moving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
 
         if (moving) {
-            // Store old position for collision fallback
-            int oldX = x;
-            int oldY = y;
-
+            //POSITION UPDATE
             if (keyH.upPressed) { direction = "up"; y -= speed; }
             else if (keyH.downPressed) { direction = "down"; y += speed; }
             else if (keyH.leftPressed) { direction = "left"; x -= speed; }
             else if (keyH.rightPressed) { direction = "right"; x += speed; }
 
-            // --- BIG DESK COLLISION ---
-            // Adjust these numbers so they match the visual location of your desk
-            // This stops the player from walking through the front of the desk
-            if (y < 400 && y > 300 && x > 250 && x < 650) {
-                x = oldX;
-                y = oldY;
+            //RE-CALIBRATED BOUNDARIES
+            
+            // Left Wall
+            if (x < 80) x = 80; 
+
+            // Right Wall
+            if (x > gp.screenWidth - gp.tileSize - 95) x = gp.screenWidth - gp.tileSize - 95;
+
+            // Top Wall
+            if (y < 140) y = 140; 
+
+            // Bottom Wall
+            if (y > gp.screenHeight - gp.tileSize - 70) {
+                y = gp.screenHeight - gp.tileSize - 70;
             }
 
-            // --- SCREEN BOUNDARIES ---
-            if (x < 0) x = 0; 
-            if (x > gp.screenWidth - gp.tileSize) x = gp.screenWidth - gp.tileSize;
-            if (y < 150) y = 150; // Blocked by the top wall
-
-            // --- DOORWAY LOGIC ---
-            int doorLeftEdge = 410; 
-            int doorRightEdge = 530;
-
-            if (x < doorLeftEdge || x > doorRightEdge) {
-                if (y > gp.screenHeight - gp.tileSize - 40) {
-                    y = gp.screenHeight - gp.tileSize - 40;
-                }
-            } else if (y > gp.screenHeight) {
-                 System.out.println("Exiting Room...");
-            }
-
-            // Animation logic
+            // 3
             spriteCounter++;
             if (spriteCounter > 10) {
                 spriteNum++;
