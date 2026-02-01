@@ -4,19 +4,22 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
 import main.GamePanel;
 import main.KeyHandler;
+import java.awt.Rectangle;
 
 public class Player extends Entity {
 
     GamePanel gp;
     KeyHandler keyH;
+    public Rectangle solidArea;
+    public boolean collisionOn = false;
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
         
+        solidArea = new Rectangle(16, 48, 32, 16);
         setDefaultValues();
         getPlayerImage();
     }
@@ -61,11 +64,24 @@ public class Player extends Entity {
         boolean moving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
 
         if (moving) {
-            //POSITION UPDATE
-            if (keyH.upPressed) { direction = "up"; y -= speed; }
-            else if (keyH.downPressed) { direction = "down"; y += speed; }
-            else if (keyH.leftPressed) { direction = "left"; x -= speed; }
-            else if (keyH.rightPressed) { direction = "right"; x += speed; }
+            if (keyH.upPressed) direction = "up";
+            else if (keyH.downPressed) direction = "down";
+            else if (keyH.leftPressed) direction = "left";
+            else if (keyH.rightPressed) direction = "right";
+
+            // CHECK TILE COLLISION
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+
+            // IF COLLISION IS FALSE, PLAYER CAN MOVE
+            if (!collisionOn) {
+                switch(direction) {
+                    case "up": y -= speed; break;
+                    case "down": y += speed; break;
+                    case "left": x -= speed; break;
+                    case "right": x += speed; break;
+                }
+            }
 
             //RE-CALIBRATED BOUNDARIES
             

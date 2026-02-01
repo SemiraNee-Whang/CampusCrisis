@@ -41,7 +41,7 @@ public class KeyHandler implements KeyListener {
         }
         
         //PRESIDENT SETUP TYPING
-        else if (gp.gameState == gp.setupState && gp.pSetup.subState == 0) {
+        else if (gp.gameState == gp.setupState && gp.pSetup.nameBoxSelected) {
             if (c == KeyEvent.VK_BACK_SPACE) {
                 if (gp.pSetup.presidentName.length() > 0) {
                     gp.pSetup.presidentName = gp.pSetup.presidentName.substring(0, gp.pSetup.presidentName.length() - 1);

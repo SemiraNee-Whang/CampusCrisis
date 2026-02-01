@@ -7,6 +7,9 @@ import tile.TileManager;
 import GUI.UI;
 import GUI.LoginManager;
 import GUI.PresidentSetup;
+import GUI.Dashboard;
+import GUI.RequestList; 
+import main.CollisionChecker;
 
 public class GamePanel extends JPanel implements Runnable {
     
@@ -25,10 +28,13 @@ public class GamePanel extends JPanel implements Runnable {
     // SYSTEM
     public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this); 
+    public CollisionChecker cChecker = new CollisionChecker(this);
     public UI ui = new UI(this); 
     public LoginManager loginM = new LoginManager(this);
     public MouseHandler mouseH = new MouseHandler(this);
     public PresidentSetup pSetup = new PresidentSetup(this);
+    public Dashboard dashboard = new Dashboard(this);
+    public RequestList reqList = new RequestList(this); 
     
     Thread gameThread;
     
@@ -41,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int playState = 1;    
     public final int loginState = 2;
     public final int setupState = 3;
+    public final int requestState = 4; 
     
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -51,7 +58,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.addMouseMotionListener(mouseH);
         this.setFocusable(true);
         
-        // Starts the game at the Title Screen
         gameState = titleState; 
     }
     
@@ -81,11 +87,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void update() {
-        // Only update player movement/logic during active gameplay
         if (gameState == playState) {
             player.update();
+            dashboard.updateTimer();
         }
-        // Menu states (Title, Login, Setup) are handled via Mouse/Key Handlers
     }
 
     @Override
@@ -93,39 +98,42 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
-        // 1. TITLE SCREEN
-        if (gameState == titleState) {
+        //MENU STATES
+        if (gameState == titleState) { 
             ui.draw(g2); 
         }
-        
-        // 2. LOGIN SCREEN
-        else if (gameState == loginState) {
+        else if (gameState == loginState) { 
             loginM.draw(g2);
         }
-
-        // 3. PRESIDENT SETUP SCREEN
-        else if (gameState == setupState) {
+        else if (gameState == setupState) { 
             pSetup.draw(g2);
         }
         
-        // 4. PLAY STATE (Gameplay)
-        else if (gameState == playState) {
-            // Layer 1: Floor and Walls
-            tileM.drawBackground(g2);
+        //PlayState
+else if (gameState == playState || gameState == requestState) {            
             
-            // Layer 2: Characters (Jessie)
-            player.draw(g2);        
+            // 1. THE FLOOR & BACK WALL
+            tileM.drawBackground(g2);   
+            tileM.drawChalkboard(g2);   
             
-            // Layer 3: Interactive Objects (Desks, Chalkboard)
-            tileM.drawObjects(g2);
+            // 2. STANDARD DESKS (Drawn BEFORE player so she walks on top)
+            tileM.drawDesks(g2);        
+
+            // 3. THE PLAYER
+            // Drawing her here means anything called AFTER this will overlap her
+            player.draw(g2);            
             
-            // Layer 4: Overlays (Wall tops)
-            tileM.drawForeground(g2);
+            // 4. THE FOREGROUND (Drawn AFTER player so she is "behind" them)
+            tileM.drawMainDesks(g2);    
+            tileM.drawLayer2(g2);       
             
-            // Layer 5: UI (HUD, Budget, Approval Rating)
+            // 5. UI
+            dashboard.draw(g2);         
+            if (gameState == requestState) {
+                reqList.draw(g2);       
+            }
             ui.draw(g2);
         }
-        
         g2.dispose();
     }
 }

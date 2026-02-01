@@ -66,7 +66,10 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //TITLE STATE ACTIONS
+        int x = e.getX();
+        int y = e.getY();
+
+        // TITLE STATE ACTIONS
         if (gp.gameState == gp.titleState) {
             if (!gp.ui.confirmExitState) {
                 if (gp.ui.commandNum == 0) gp.gameState = gp.loginState;
@@ -77,39 +80,50 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             }
         } 
         
-        //LOGIN STATE ACTIONS
+        // LOGIN STATE ACTIONS
         else if (gp.gameState == gp.loginState) {
-            // Back to main menu
             if (gp.loginM.subState == 4) { 
                 gp.gameState = gp.titleState; 
                 gp.ui.commandNum = -1; 
             }
-            // Execute Login or Registration
             else if (gp.loginM.subState == 2) {
                 if (gp.loginM.isSignUp) gp.loginM.registerUser();
                 else if (gp.loginM.validateLogin()) gp.gameState = gp.setupState; 
             }
-            // Toggle Login/Signup view
             else if (gp.loginM.subState == 3) {
                 gp.loginM.isSignUp = !gp.loginM.isSignUp;
                 gp.loginM.message = "";
             }
         }
         
-        //PRESIDENT SETUP ACTIONS
+        // PRESIDENT SETUP ACTIONS
         else if (gp.gameState == gp.setupState) {
-            // Confirm and start game
+            int boxX = gp.tileSize * 6;
+            int boxY = gp.tileSize * 5 - 30;
+            int boxW = gp.tileSize * 6;
+            int boxH = 40;
+
+            if (x >= boxX && x <= boxX + boxW && y >= boxY && y <= boxY + boxH) {
+                gp.pSetup.nameBoxSelected = true;
+            } else {
+                // This allows clicking "off" the box to stop typing
+                gp.pSetup.nameBoxSelected = false;
+            }
+        }
+
+            // 2. Confirm and start game (Action: Initialise simulation)
             if (gp.pSetup.subState == 1) {
                 if (!gp.pSetup.presidentName.trim().isEmpty()) {
                     gp.gameState = gp.playState;
+                    // Transitioning to Dashboard Screen as per specs 
                 }
             }
-            // Return to login screen
+            // 3. Return to login screen
             else if (gp.pSetup.subState == 2) {
                 gp.gameState = gp.loginState;
             }
         }
-    }
+    
 
     // Unused mandatory methods
     @Override public void mouseDragged(MouseEvent e) {}
