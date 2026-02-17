@@ -3,6 +3,7 @@ package main;
 import java.awt.Rectangle;
 import java.awt.event.*;
 import GUI.RequestList;
+import GUI.Instructions;
 
 public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
     GamePanel gp;
@@ -25,21 +26,23 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
             handleSetupClick(x, y);
         } 
         
-        // --- NEW: INSTRUCTIONS CLICK LOGIC ---
         else if (gp.gameState == gp.instructionState) {
-            // Check Next/Finish Button
-            if (gp.ui.instructions.nextBtn.contains(x, y)) {
-                if (gp.ui.instructions.subState < 8) {
-                    gp.ui.instructions.subState++;
+            
+            // Check the NEXT button inside gp.instructions
+            if (gp.instructions.nextBtn.contains(x, y)) {
+                if (gp.instructions.subState < 8) {
+                    gp.instructions.subState++;
                 } else {
-                    gp.gameState = gp.titleState; // Return to menu
-                    gp.ui.instructions.subState = 0;
+                    // If on the last page, go back to the menu
+                    gp.gameState = gp.titleState;
+                    gp.instructions.subState = 0; // Reset to page 1 for next time
                 }
             }
-            // Check Back Button
-            else if (gp.ui.instructions.backBtn.contains(x, y)) {
-                if (gp.ui.instructions.subState > 0) {
-                    gp.ui.instructions.subState--;
+            
+            // Check the BACK button inside gp.instructions
+            else if (gp.instructions.backBtn.contains(x, y)) {
+                if (gp.instructions.subState > 0) {
+                    gp.instructions.subState--;
                 }
             }
         }
@@ -61,7 +64,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
                 }
                 else if (gp.reqList.postponeBtn.contains(x, y)) {
                     // Start cooldown even for postpone so they don't spam requests
-                    gp.reqList.startCooldown();
+                 
                     gp.reqList.showButtons = false;
                 }
             }
@@ -98,11 +101,12 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
     // --- ACCESSING THE HOVER HELPERS ---
     public void handleTitleHover(int x, int y) {
         if (!gp.ui.confirmExitState) {
+            // Check if mouse is within the horizontal bounds of your menu
             if (x >= gp.tileSize * 3 && x <= gp.tileSize * 12) {
-                if (y >= gp.tileSize * 6 - 40 && y <= gp.tileSize * 6 + 10) gp.ui.commandNum = 0;
-                else if (y >= gp.tileSize * 7 - 40 && y <= gp.tileSize * 7 + 10) gp.ui.commandNum = 1;
-                else if (y >= gp.tileSize * 8 - 40 && y <= gp.tileSize * 8 + 10) gp.ui.commandNum = 2;
-                else if (y >= gp.tileSize * 9 - 40 && y <= gp.tileSize * 9 + 10) gp.ui.commandNum = 3;
+                if (y >= gp.tileSize * 6 - 40 && y <= gp.tileSize * 6 + 10) gp.ui.commandNum = 0; // Play
+                else if (y >= gp.tileSize * 7 - 40 && y <= gp.tileSize * 7 + 10) gp.ui.commandNum = 1; // Instructions <--- CHECK THIS
+                else if (y >= gp.tileSize * 8 - 40 && y <= gp.tileSize * 8 + 10) gp.ui.commandNum = 2; // Credits/Settings
+                else if (y >= gp.tileSize * 9 - 40 && y <= gp.tileSize * 9 + 10) gp.ui.commandNum = 3; // Exit
                 else gp.ui.commandNum = -1;
             } else gp.ui.commandNum = -1;
         }
@@ -135,7 +139,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         else if (gp.pSetup.subState == 2) gp.gameState = gp.loginState;
     }
 
-    // Rest of your click helpers (handleTitleClick, handleLoginClick) go here...
+
 
     @Override public void mouseWheelMoved(MouseWheelEvent e) {
         if (gp.gameState == gp.historyState) {
@@ -159,21 +163,27 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
     
     private void handleTitleClick() {
         if (!gp.ui.confirmExitState) {
-            // Main Title Menu
-            if (gp.ui.commandNum == 0) { // Start Game / Play
+            // Option 0: Play
+            if (gp.ui.commandNum == 0) {
                 gp.gameState = gp.loginState;
             }
-            if (gp.ui.commandNum == 3) { // Exit
-                gp.ui.confirmExitState = true;
-                gp.ui.commandNum = -1; // Reset hover
+            
+            // --- ADD THIS SECTION ---
+            // Option 1: Instructions (Redirects to State 6)
+            if (gp.ui.commandNum == 1) {
+                gp.gameState = gp.instructionState; 
+                gp.instructions.subState = 0; // Ensure it starts on page 1
             }
-        } else {
-            // Exit Confirmation Menu
-            if (gp.ui.commandNum == 0) System.exit(0); // Yes
-            if (gp.ui.commandNum == 1) { // No
-                gp.ui.confirmExitState = false;
+            
+            // Option 3: Exit
+            if (gp.ui.commandNum == 3) {
+                gp.ui.confirmExitState = true;
                 gp.ui.commandNum = -1;
             }
+        } else {
+            // Exit Confirmation logic...
+            if (gp.ui.commandNum == 0) System.exit(0);
+            if (gp.ui.commandNum == 1) gp.ui.confirmExitState = false;
         }
     }
     private void handleLoginClick() {

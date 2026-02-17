@@ -9,6 +9,8 @@ import GUI.LoginManager;
 import GUI.PresidentSetup;
 import GUI.Dashboard;
 import GUI.RequestList; 
+import GUI.Instructions;
+
 
 public class GamePanel extends JPanel implements Runnable {
     
@@ -34,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
     public PresidentSetup pSetup = new PresidentSetup(this);
     public Dashboard dashboard = new Dashboard(this);
     public RequestList reqList = new RequestList(this); 
+    public Instructions instructions = new Instructions(this);
     public GUI.DecisionHistory historyView = new GUI.DecisionHistory(this);
     public java.util.ArrayList<main.Request> history = new java.util.ArrayList<>();
     
@@ -50,6 +53,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int setupState = 3;
     public final int requestState = 4; 
     public final int historyState = 5;
+    public final int instructionState = 6;
     
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -110,6 +114,11 @@ public class GamePanel extends JPanel implements Runnable {
         else if (gameState == setupState) { 
             pSetup.draw(g2);
         }
+        
+        else if (gameState == instructionState) { 
+            instructions.draw(g2);
+        }
+        
         
         //PlayState
         else if (gameState == playState || gameState == requestState || gameState == historyState) {            
