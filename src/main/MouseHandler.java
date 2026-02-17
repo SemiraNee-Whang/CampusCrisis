@@ -75,27 +75,38 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
                 gp.gameState = gp.playState;
             }
         }
-        else if (gp.gameState == gp.reportState) {
-            // Check if the user clicked the BACK button on the ReportView screen
-            if (gp.reportView.backBtn.contains(x, y)) {
-                gp.gameState = gp.titleState; // Go back to main menu
+        if (gp.gameState == gp.reportState) {
+            if (gp.reportView.backBtn.contains(e.getPoint())) {
+                // Reset the game stats for a new run
+                resetGame();
+                gp.gameState = gp.titleState;
             }
         }
     }
+        
+        public void resetGame() {
+            gp.dashboard.budget = gp.pSetup.STARTING_BUDGET;
+            gp.dashboard.approval = gp.pSetup.STARTING_APPROVAL;
+            gp.dashboard.minutes = 5;
+            gp.dashboard.seconds = 0;
+            gp.reqList.history.clear();
+            // Move player back to start position
+            gp.player.setDefaultValues();
+        }
 
     private void processDecision(String decision) {
         Request r = gp.reqList.currentRequest;
-        if (r == null) return;
-
         if (decision.equals("Approve")) {
             gp.dashboard.budget -= r.cost;
+            
+            // Add the impact but cap it at 100
             gp.dashboard.approval += r.impact;
+            if (gp.dashboard.approval > 100) {
+                gp.dashboard.approval = 100;
+            }
+            
             r.status = "Approved";
             r.outcome = "Budget -" + r.cost + ", Approval +" + r.impact;
-        } else if (decision.equals("Decline")) {
-            gp.dashboard.approval -= 4;
-            r.status = "Declined";
-            r.outcome = "Approval -4";
         }
 
         // 1. Add to the active list

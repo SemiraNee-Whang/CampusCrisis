@@ -6,63 +6,85 @@ import main.Request;
 
 public class DecisionHistory {
     GamePanel gp;
-    public int scrollOffset = 0; // Public for MouseHandler
+    public int scrollOffset = 0; 
     public Rectangle backBtn;
 
     public DecisionHistory(GamePanel gp) {
         this.gp = gp;
-        // Back button at the bottom centre
-        backBtn = new Rectangle(gp.tileSize + 20, gp.screenHeight - 140, 100, 35);	    }
+        // Positioned at the bottom-left of the white table area
+        backBtn = new Rectangle(gp.tileSize + 20, gp.screenHeight - 110, 100, 35);
+    }
 
     public void draw(Graphics2D g2) {
-        // 1. WHITE TABLE BACKGROUND
-        g2.setColor(Color.WHITE);
-        g2.fillRect(gp.tileSize, gp.tileSize, gp.screenWidth - (gp.tileSize * 2), gp.screenHeight - (gp.tileSize * 3));
+        // 1. DIM THE BACKGROUND (To make the table pop)
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
-        // 2. COLUMN LABELS
-        g2.setColor(Color.BLACK);
-        g2.setFont(new Font("Arial", Font.BOLD, 16));
-        int yHead = gp.tileSize + 40;
-        g2.drawString("ID", gp.tileSize + 20, yHead);
-        g2.drawString("STATUS", gp.tileSize + 100, yHead);
-        g2.drawString("OUTCOME", gp.tileSize + 250, yHead);
+        // 2. WHITE TABLE BACKGROUND
+        int tableX = gp.tileSize;
+        int tableY = gp.tileSize;
+        int tableW = gp.screenWidth - (gp.tileSize * 2);
+        int tableH = gp.screenHeight - (gp.tileSize * 3);
         
-        g2.setStroke(new BasicStroke(2));
-        g2.drawLine(gp.tileSize + 10, yHead + 10, gp.screenWidth - gp.tileSize - 10, yHead + 10);
+        g2.setColor(Color.WHITE);
+        g2.fillRect(tableX, tableY, tableW, tableH);
+        g2.setColor(Color.BLACK);
+        g2.drawRect(tableX, tableY, tableW, tableH);
 
-        // 3. DRAW HISTORY
-        g2.setFont(new Font("Arial", Font.PLAIN, 14));
-        for (int i = 0; i < gp.reqList.history.size(); i++) {
-            main.Request r = gp.reqList.history.get(i);
-            int rowY = yHead + 40 + (i * 30) - (scrollOffset); 
+        // 3. COLUMN LABELS
+        g2.setFont(new Font("Arial", Font.BOLD, 18));
+        int yHead = tableY + 40;
+        
+        g2.drawString("ID", tableX + 30, yHead);
+        g2.drawString("STATUS", tableX + 130, yHead);
+        g2.drawString("OUTCOME SUMMARY", tableX + 300, yHead);
+        
+        // Header Underline
+        g2.setStroke(new BasicStroke(2));
+        g2.drawLine(tableX + 20, yHead + 10, tableX + tableW - 20, yHead + 10);
+
+        // 4. DRAW HISTORY FROM GamePanel ArrayList
+        g2.setFont(new Font("Consolas", Font.PLAIN, 15)); // Monospaced looks better for logs
+        
+        // IMPORTANT: Changed from gp.reqList.history to gp.history to match MouseHandler
+        for (int i = 0; i < gp.history.size(); i++) {
+            Request r = gp.history.get(i);
             
-            if (rowY > yHead + 20 && rowY < gp.screenHeight - 150) {
-                // Status-based colouring (Optional but looks great)
-                if(r.status.equals("Approved")) g2.setColor(new Color(0, 150, 0)); // Dark Green
-                else g2.setColor(new Color(200, 0, 0)); // Dark Red
+            // Calculate Y position based on scroll
+            int rowY = yHead + 50 + (i * 35) - scrollOffset; 
+            
+            // Clipping: Only draw if inside the white table area
+            if (rowY > yHead + 20 && rowY < tableY + tableH - 20) {
                 
-                g2.drawString(r.id, gp.tileSize + 20, rowY);
-                g2.drawString(r.status, gp.tileSize + 100, rowY);
+                // Color coding based on status
+                if ("Approved".equals(r.status)) {
+                    g2.setColor(new Color(0, 120, 0)); // Dark Green
+                } else if ("Declined".equals(r.status)) {
+                    g2.setColor(new Color(180, 0, 0)); // Dark Red
+                } else {
+                    g2.setColor(Color.GRAY);
+                }
+                
+                g2.drawString(r.id, tableX + 30, rowY);
+                g2.drawString(r.status, tableX + 130, rowY);
+                
                 g2.setColor(Color.BLACK); // Reset for description
-                g2.drawString(r.outcome, gp.tileSize + 250, rowY);
+                g2.drawString(r.outcome, tableX + 300, rowY);
             }
         }
 
-        // 4. YELLOW BACK BUTTON (Matching Request buttons)
-        Color btnYellow = new Color(255, 215, 0);
-        drawStyledButton(g2, backBtn, "BACK", btnYellow);
+        // 5. BACK BUTTON
+        drawStyledButton(g2, backBtn, "BACK", new Color(255, 215, 0));
     }
 
-    // Helper method for the yellow button style
     private void drawStyledButton(Graphics2D g2, Rectangle r, String text, Color bgColor) {
         g2.setColor(bgColor);
         g2.fill(r);
-        
         g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(1));
         g2.draw(r);
 
-        g2.setFont(new Font("Arial", Font.BOLD, 13));
+        g2.setFont(new Font("Arial", Font.BOLD, 14));
         FontMetrics fm = g2.getFontMetrics();
         int textX = r.x + (r.width - fm.stringWidth(text)) / 2;
         int textY = r.y + (r.height + fm.getAscent()) / 2 - 2;

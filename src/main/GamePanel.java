@@ -99,11 +99,37 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void update() {
-        if (gameState == playState) {
-            player.update();
+    	if (gameState == playState || gameState == requestState || gameState == historyState) {
+    		player.update();
             dashboard.updateTimer();
+            checkGameOver();
         }
     }
+    
+    public void checkGameOver() {
+        // 1. Budget check: Ends if 0 or less
+        boolean budgetOut = dashboard.budget <= 0;
+        
+        // 2. Approval check: Ends if 0 or less
+        boolean approvalOut = dashboard.approval <= 0;
+        
+        // 3. Timer check: Ends if minutes and seconds are both 0
+        boolean timeOut = (dashboard.minutes == 0 && dashboard.seconds == 0);
+
+        if (budgetOut || approvalOut || timeOut) {
+            triggerEndScreen();
+        }
+    }
+
+    public void triggerEndScreen() {
+        // Generate the official report file
+        reportM.generateFinalReport(dashboard.approval, dashboard.budget, reqList.history);
+        
+        // Switch state to show the ReportView
+        gameState = reportState;
+    }
+    
+    
 
     @Override
     public void paintComponent(Graphics g) {
