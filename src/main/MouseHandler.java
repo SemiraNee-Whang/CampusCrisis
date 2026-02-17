@@ -23,33 +23,55 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
             handleLoginClick();
         } else if (gp.gameState == gp.setupState) {
             handleSetupClick(x, y);
-        } else if (gp.gameState == gp.requestState) {
-            
-            // 1. REVEAL LOGIC: Click the white box to show Approve/Decline
-            // This is the area of the main request row
+        } 
+        
+        // --- NEW: INSTRUCTIONS CLICK LOGIC ---
+        else if (gp.gameState == gp.instructionState) {
+            // Check Next/Finish Button
+            if (gp.ui.instructions.nextBtn.contains(x, y)) {
+                if (gp.ui.instructions.subState < 8) {
+                    gp.ui.instructions.subState++;
+                } else {
+                    gp.gameState = gp.titleState; // Return to menu
+                    gp.ui.instructions.subState = 0;
+                }
+            }
+            // Check Back Button
+            else if (gp.ui.instructions.backBtn.contains(x, y)) {
+                if (gp.ui.instructions.subState > 0) {
+                    gp.ui.instructions.subState--;
+                }
+            }
+        }
+
+        else if (gp.gameState == gp.requestState) {
             Rectangle requestBox = new Rectangle(gp.tileSize * 2, gp.tileSize * 2, gp.screenWidth - gp.tileSize * 4, gp.tileSize * 4);
             
             if (requestBox.contains(x, y) && !gp.reqList.showButtons) {
-                gp.reqList.showButtons = true; // Reveal the buttons
+                gp.reqList.showButtons = true; 
             } 
-            
-            // 2. DECISION LOGIC: Only works if buttons are visible
             else if (gp.reqList.showButtons) {
                 if (gp.reqList.approveBtn.contains(x, y)) {
                     processDecision("Approve");
-                    gp.reqList.showButtons = false; // Hide buttons for the next incoming request
+                    gp.reqList.showButtons = false;
                 }
                 else if (gp.reqList.declineBtn.contains(x, y)) {
                     processDecision("Decline");
                     gp.reqList.showButtons = false;
                 }
                 else if (gp.reqList.postponeBtn.contains(x, y)) {
-                    gp.reqList.getNextRandomRequest();
+                    // Start cooldown even for postpone so they don't spam requests
+                    gp.reqList.startCooldown();
                     gp.reqList.showButtons = false;
                 }
             }
-        } else if (gp.gameState == gp.historyState) {
-            if (gp.historyView.backBtn.contains(x, y)) gp.gameState = gp.playState;
+        } 
+        
+        else if (gp.gameState == gp.historyState) {
+            // Updated to match the new moved-up "BACK" button position
+            if (gp.historyView.backBtn.contains(x, y)) {
+                gp.gameState = gp.playState;
+            }
         }
     }
 
@@ -63,14 +85,15 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
             r.status = "Approved";
             r.outcome = "Budget -" + r.cost + ", Approval +" + r.impact;
         } else if (decision.equals("Decline")) {
-            gp.dashboard.approval -= 4;
+            gp.dashboard.approval -= 4; // Penalty from specifications
             r.status = "Declined";
             r.outcome = "Approval -4";
         }
 
         gp.reqList.history.add(r);
-        gp.reqList.getNextRandomRequest();
-    }
+        
+        // Use the cooldown method for random timing between requests
+        gp.reqList.getNextRandomRequest();    }
 
     // --- ACCESSING THE HOVER HELPERS ---
     public void handleTitleHover(int x, int y) {
