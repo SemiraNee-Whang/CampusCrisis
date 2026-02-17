@@ -69,22 +69,21 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread.start();
     }
     
-    @Override
     public void run() {
         double drawInterval = 1000000000 / FPS; 
-        double delta = 0;
+        double time = 0;
         long lastTime = System.nanoTime();
         long currentTime;
         
         while (gameThread != null) {
             currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
+            time += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
             
-            if (delta >= 1) {
+            if (time >= 1) {
                 update();
                 repaint();
-                delta--;
+                time--;
             }
         }
     }
@@ -131,7 +130,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
             
             // 3. UI Dashboard (Top & Bottom bars)
-            dashboard.draw(g2); // Now it stays on top!
+            dashboard.draw(g2); 
             
             ui.draw(g2);
         }
