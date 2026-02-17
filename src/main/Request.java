@@ -1,11 +1,15 @@
 package main;
 
 public class Request {
-    public String id, description, category;
+    public String id, description, category,requestName;
     public int cost, impact;
     
     public String status = ""; 
     public String outcome = ""; 
+    
+    public Request() {
+    
+    }
 
     public Request(String id, String description, String category, int cost, int impact) {
         this.id = id;

@@ -1,0 +1,55 @@
+EVT001|A rare comet will be visible tonight; fund a nationwide viewing event.|+7|12000
+EVT002|Major tech company offers to sponsor free laptops for schools.|+15|-50000
+EVT003|Unexpected cyber-attack hits government databases; emergency recovery required.|-20|80000
+EVT004|A celebrity visits the country and requests a state banquet.|+10|30000
+EVT005|Severe drought forces water rationing in multiple cities.|-25|40000
+EVT006|Breakthrough medical discovery needs funding for mass rollout.|+12|60000
+EVT007|Massive art installation proposal for the capital sparks public debate.|+5|25000
+EVT008|Discovery of rare minerals in rural areas; mining contracts need approval.|+8|45000
+EVT009|International sports event is offered to be hosted locally.|+20|100000
+EVT010|A viral social media challenge encourages nationwide clean-up.|+18|15000
+EVT011|Alien-like crop formations appear in farmland, drawing media attention.|+6|20000
+EVT012|Unexpected volcanic activity threatens tourist regions.|-30|70000
+EVT013|New sustainable energy project proposes solar farms in key cities.|+14|50000
+EVT014|Massive traffic jam due to celebrity parade causes public outrage.|-10|10000
+EVT015|Ancient archaeological site discovered; need funds for excavation.|+9|35000
+EVT016|Sudden heatwave causes widespread forest fires.|-25|60000
+EVT017|National science fair attracts international attention and sponsors.|+11|20000
+EVT018|Famous musician offers to perform free concert for youth outreach.|+13|25000
+EVT019|Unexpected storm damages multiple bridges; emergency repairs required.|-22|80000
+EVT020|International tech summit wants to be hosted locally.|+16|90000
+EVT021|A mysterious art thief hits the national museum; security upgrades needed.|-15|40000
+EVT022|Rare species discovered in national park; conservation funding needed.|+12|30000
+EVT023|Unexpected food shortage requires subsidy for farmers.|-18|50000
+EVT024|Government receives anonymous donation for youth scholarships.|+10|0
+EVT025|Global media praises eco-friendly initiatives in the country.|+20|15000
+EVT026|Sudden strike by transport workers halts major industries.|-20|20000
+EVT027|Celebrity chef proposes nationwide healthy eating campaign.|+8|15000
+EVT028|Mysterious blackout affects multiple cities; urgent infrastructure fix needed.|-25|60000
+EVT029|Famous author requests state funding for literacy programs.|+9|10000
+EVT030|Rare comet passes near planet; astronomers demand national observatory upgrade.|+7|40000
+EVT031|National robotics team wins international championship.|+18|12000
+EVT032|Unexpected earthquake shakes a major city; emergency funding required.|-30|90000
+EVT033|Celebrity couple wants to open a public park in capital.|+11|25000
+EVT034|New virtual reality education project seeks national implementation.|+14|50000
+EVT035|Massive fashion show causes traffic chaos but gains international coverage.|+6|20000
+EVT036|Unprecedented rainfall floods key agricultural regions.|-28|70000
+EVT037|National theater festival attracts foreign tourists.|+15|30000
+EVT038|Famous explorer proposes environmental expedition; needs government support.|+10|40000
+EVT039|Unexpected political scandal lowers approval ratings nationwide.|-35|0
+EVT040|New breakthrough in clean water tech requires implementation funding.|+12|45000
+EVT041|Celebrity athlete donates equipment to youth sports programs.|+9|15000
+EVT042|Sudden rise in housing demand; temporary housing subsidies needed.|-20|50000
+EVT043|National film festival draws international awards.|+14|35000
+EVT044|Rare meteor shower attracts tourists; national celebrations planned.|+11|30000
+EVT045|Unexpected migration of wildlife disrupts urban areas.|-15|25000
+EVT046|Major fashion brand proposes a cultural showcase in capital.|+7|20000
+EVT047|Breakthrough in renewable energy; national rollout requires investment.|+16|60000
+EVT048|International peace conference wants to be hosted locally.|+20|100000
+EVT049|Sudden epidemic requires rapid health response funding.|-30|80000
+EVT050|Famous filmmaker proposes free workshops for aspiring youth.|+8|15000
+EVT051|Rare volcanic mineral discovery sparks mining interest.|+9|40000
+EVT052|Unexpected cyber fraud scandal lowers public trust.|-22|20000
+EVT053|International music awards show offered to be hosted locally.|+18|90000
+EVT054|Celebrity-backed charity event proposes free healthcare access for underprivileged.|+12|50000
+EVT055|Unexpected protest by students demands education reforms.|-15|10000

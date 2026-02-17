@@ -2,8 +2,7 @@ package main;
 
 import java.awt.Rectangle;
 import java.awt.event.*;
-import GUI.RequestList;
-import GUI.Instructions;
+
 
 public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
     GamePanel gp;
@@ -76,6 +75,12 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
                 gp.gameState = gp.playState;
             }
         }
+        else if (gp.gameState == gp.reportState) {
+            // Check if the user clicked the BACK button on the ReportView screen
+            if (gp.reportView.backBtn.contains(x, y)) {
+                gp.gameState = gp.titleState; // Go back to main menu
+            }
+        }
     }
 
     private void processDecision(String decision) {
@@ -88,15 +93,30 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
             r.status = "Approved";
             r.outcome = "Budget -" + r.cost + ", Approval +" + r.impact;
         } else if (decision.equals("Decline")) {
-            gp.dashboard.approval -= 4; // Penalty from specifications
+            gp.dashboard.approval -= 4;
             r.status = "Declined";
             r.outcome = "Approval -4";
         }
 
-        gp.reqList.history.add(r);
+        // 1. Add to the active list
+        gp.history.add(r);
         
-        // Use the cooldown method for random timing between requests
-        gp.reqList.getNextRandomRequest();    }
+        // 2. NEW: Save to the text file
+        saveDecisionToFile(r);
+
+        gp.reqList.getNextRandomRequest();
+    }
+
+    private void saveDecisionToFile(Request r) {
+        try (java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter("decisions.txt", true))) {
+            // Format: ID | Status | Outcome | Request Name
+            String record = r.id + " | " + r.status + " | " + r.outcome + " | " + r.requestName;
+            writer.write(record);
+            writer.newLine();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     // --- ACCESSING THE HOVER HELPERS ---
     public void handleTitleHover(int x, int y) {
@@ -163,29 +183,28 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
     
     private void handleTitleClick() {
         if (!gp.ui.confirmExitState) {
-            // Option 0: Play
-            if (gp.ui.commandNum == 0) {
-                gp.gameState = gp.loginState;
-            }
+            if (gp.ui.commandNum == 0) gp.gameState = gp.loginState;
             
-            // --- ADD THIS SECTION ---
-            // Option 1: Instructions (Redirects to State 6)
             if (gp.ui.commandNum == 1) {
                 gp.gameState = gp.instructionState; 
-                gp.instructions.subState = 0; // Ensure it starts on page 1
+                gp.instructions.subState = 0;
+            }
+
+            // --- REDIRECT TO YOUR NEW REPORT STATE ---
+            if (gp.ui.commandNum == 2) {
+                gp.gameState = gp.reportState; 
             }
             
-            // Option 3: Exit
             if (gp.ui.commandNum == 3) {
                 gp.ui.confirmExitState = true;
                 gp.ui.commandNum = -1;
             }
         } else {
-            // Exit Confirmation logic...
             if (gp.ui.commandNum == 0) System.exit(0);
             if (gp.ui.commandNum == 1) gp.ui.confirmExitState = false;
         }
     }
+    
     private void handleLoginClick() {
         // subState 4 is usually the "Back" button (top left)
         if (gp.loginM.subState == 4) {
