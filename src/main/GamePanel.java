@@ -13,6 +13,7 @@ import GUI.Instructions;
 import GUI.ReportView;
 
 
+
 public class GamePanel extends JPanel implements Runnable {
     
     // SCREEN SETTINGS
@@ -35,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
     public LoginManager loginM = new LoginManager(this);
     public MouseHandler mouseH = new MouseHandler(this);
     public PresidentSetup pSetup = new PresidentSetup(this);
+    public ReportManager reportM = new ReportManager(this);
     public EventManager eventM = new EventManager(this);
     public Dashboard dashboard = new Dashboard(this);
     public RequestList reqList = new RequestList(this); 

@@ -9,9 +9,9 @@ public class PresidentSetup {
     public int subState = 0; // 0: Name Input, 1: Confirm Button, 2: Back Button
     
     // Initialising stats from specifications 
-    public final int STARTING_BUDGET = 50000;
+    public final int STARTING_BUDGET = 15000;
     public int currentBudget;
-    public final int STARTING_APPROVAL = 50;
+    public final int STARTING_APPROVAL = 40;
     public int currentApproval;
     public int remainingTime = 12; // Example: 12 weeks/turns [cite: 38]
     

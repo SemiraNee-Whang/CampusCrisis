@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import main.GamePanel;
 import main.Request;
+import main.ReportManager;
+import GUI.Dashboard;
 
 public class RequestList {
     GamePanel gp;
@@ -58,8 +60,14 @@ public class RequestList {
     }
 
     public void getNextRandomRequest() {
-        // Logic to alternate between normal requests and random events
-        // For now, let's keep it pulling from the normal list
+        if (history.size() >= 10) {
+            
+            gp.reportM.generateFinalReport(gp.dashboard.approval, gp.dashboard.budget, history);
+            
+            gp.gameState = gp.reportState;
+            return;
+        }
+
         if (!allRequests.isEmpty()) {
             int index = random.nextInt(allRequests.size());
             currentRequest = allRequests.get(index);
