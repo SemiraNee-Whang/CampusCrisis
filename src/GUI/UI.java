@@ -66,34 +66,35 @@ public class UI {
     }
 
     public void drawExitConfirmation() {
-        // Draws the background image
+        // 1. BACKGROUND & OVERLAY
         if (titleBg != null) g2.drawImage(titleBg, 0, 0, gp.screenWidth, gp.screenHeight, null);
         
-        // Adds a semi-transparent dark overlay to make text pop
+        // Add a dark semi-transparent tint to make the white text readable
         g2.setColor(new Color(0, 0, 0, 150));
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
-        // Configures font and centers the main question
+        // 2. MAIN QUESTION
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 42F));
         String text = "Are you sure you want to exit?";
         int x = getXforCenteredText(text);
-        int y = gp.screenHeight / 2 - gp.tileSize;
+        int y = gp.screenHeight / 2; // Position text in the middle of the screen
 
-        // Draws Shadow for the question
+        // Draw shadow for depth
         g2.setColor(Color.BLACK);
         g2.drawString(text, x + 3, y + 3);
-        // Draws Main Question text
+        // Draw main text
         g2.setColor(Color.WHITE);
         g2.drawString(text, x, y);
 
-        // Positions the YES/NO options below the question
+        // 3. INTERACTIVE BUTTONS (YES / NO)
+        // Shift y down to place buttons below the question
         y += gp.tileSize * 2;
         int centerX = gp.screenWidth / 2;
 
-        // Draws YES to the left of center and NO to the right of center
-        // This perfectly matches the hitboxes in your MouseHandler (±150 pixels from center)
-        drawOption("YES", centerX - 120, y, 0);
-        drawOption("NO", centerX + 60, y, 1);
+        // Use index 4 and 5 to distinguish from the 0-3 indices used in the main menu
+        // YES is drawn to the left of center, NO to the right
+        drawOption("YES", centerX - 120, y, 4); 
+        drawOption("NO", centerX + 60, y, 5);
     }
     
     private void drawOption(String text, int x, int y, int index) {

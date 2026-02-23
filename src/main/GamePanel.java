@@ -44,6 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
     public GUI.ReportView reportView = new GUI.ReportView(this);
     public GUI.DecisionHistory historyView = new GUI.DecisionHistory(this);
     public java.util.ArrayList<main.Request> history = new java.util.ArrayList<>();
+    public int requestsHandled = 0;
     
     Thread gameThread;
     
@@ -113,8 +114,8 @@ public class GamePanel extends JPanel implements Runnable {
         // 2. Approval check: Ends if 0 or less
         boolean approvalOut = dashboard.approval <= 0;
         
-        // 3. Timer check: Ends if minutes and seconds are both 0
-        boolean timeOut = (dashboard.minutes == 0 && dashboard.seconds == 0);
+        // // 3. Timer check: Ends if minutes and seconds are both 03. Timer check: Ends if minutes and seconds are both 0
+        boolean timeOut = (dashboard.minutes == 0 && dashboard.seconds == 0 && requestsHandled >= 2);
 
         if (budgetOut || approvalOut || timeOut) {
             triggerEndScreen();
