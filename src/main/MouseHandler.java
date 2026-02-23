@@ -7,8 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * MouseHandler manages all user interactions via mouse.
- * It tracks decision counts, manages state transitions, and enforces UI locks.
+ * Updated MouseHandler: Postpone now logs to history and moves to the next request.
  */
 public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
     GamePanel gp;
@@ -23,14 +22,13 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         int x = e.getX();
         int y = e.getY();
 
-        // 1. REQUEST POP-UP LOCK
-        // Prevents interacting with background elements while a request is active.
+        // 1. REQUEST POP-UP INTERACTION
         if (gp.gameState == gp.requestState) {
             handleRequestPopUp(x, y);
-            return; 
+            return; // Lock inputs while in request screen
         }
 
-        // 2. STATE-BASED CLICK DELEGATION
+        // 2. OTHER GAME STATES
         if (gp.gameState == gp.titleState) {
             handleTitleClick();
         } else if (gp.gameState == gp.loginState) {
@@ -52,13 +50,12 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
     }
 
     /**
-     * Logic for the student requests. 
-     * Screen stays open after choice to allow sequential decision making.
+     * Handles clicks within the request pop-up including Postpone.
      */
     private void handleRequestPopUp(int x, int y) {
         Rectangle requestBox = new Rectangle(gp.tileSize * 2, gp.tileSize * 2, gp.screenWidth - gp.tileSize * 4, gp.tileSize * 4);
         
-        // Reveals buttons on initial click of the request card
+        // Click the box to reveal actions
         if (requestBox.contains(x, y) && !gp.reqList.showButtons) {
             gp.reqList.showButtons = true; 
         } 
@@ -71,22 +68,22 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
                 processDecision("Decline");
                 gp.reqList.showButtons = false;
             }
+            // NEW: POSTPONE LOGIC
             else if (gp.reqList.postponeBtn.contains(x, y)) {
-                processDecision("Postpone");
+                processDecision("Postpone"); // Call decision logic for Postpone
                 gp.reqList.showButtons = false;
+                // Note: gameState stays in requestState so a new request appears immediately
             }
         }
     }
 
     /**
-     * Updates game statistics, increments the handled request counter,
-     * and logs the outcome to both memory and a text file.
+     * Logic for processing impacts and logging to history.
      */
     private void processDecision(String decision) {
         Request r = gp.reqList.currentRequest;
         if (r == null) return;
 
-        // 1. PROCESS IMPACTS
         if (decision.equals("Approve")) {
             gp.dashboard.budget -= r.cost;
             gp.dashboard.approval += r.impact;
@@ -94,46 +91,50 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
             r.outcome = "Budget -" + r.cost + ", Approval +" + r.impact;
         } 
         else if (decision.equals("Decline")) {
-            gp.dashboard.approval -= 8; // Declining penalty
+            // Penalty for declining
+            gp.dashboard.approval -= 8; 
             r.status = "Declined";
             r.outcome = "Approval -8";
         }
+        // NEW: Handle the Postpone status
         else if (decision.equals("Postpone")) {
             r.status = "Postponed";
-            r.outcome = "No change (Deferred)";
+            r.outcome = "No change (Deferred)"; // No budget or approval change
         }
+        
+      
 
-        // 2. ENFORCE BOUNDARIES (Approval 0-100)
+        // Apply caps and floors
         if (gp.dashboard.approval > 100) gp.dashboard.approval = 100;
         if (gp.dashboard.approval < 0) gp.dashboard.approval = 0;
 
-        // 3. INCREMENT COUNTER (To ensure at least 2 are handled before game end)
-        gp.requestsHandled++;
-
-        // 4. DATA LOGGING
+        // Save to internal history for the table
         gp.history.add(r);
+        
+        // Log to text file
         saveDecisionToFile(r);
 
-        // 5. REFRESH FOR NEXT REQUEST
+        // Transition to the next available request immediately
         gp.reqList.getNextRandomRequest();
+        
+        
     }
 
     /**
-     * Wipes session data for a new game, including the request counter.
+     * Resets stats for a fresh game session.
      */
     public void resetGame() {
         gp.dashboard.budget = gp.pSetup.STARTING_BUDGET;
         gp.dashboard.approval = gp.pSetup.STARTING_APPROVAL;
         gp.dashboard.minutes = 5;
         gp.dashboard.seconds = 0;
-        gp.requestsHandled = 0; // Reset counter
         gp.history.clear();
         gp.reqList.history.clear();
         gp.player.setDefaultValues();
     }
 
     /**
-     * Handles Main Menu clicks and the Exit Confirmation logic using indices.
+     * Main menu button and Exit screen logic.
      */
     private void handleTitleClick() {
         if (!gp.ui.confirmExitState) {
@@ -148,12 +149,11 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
                 gp.ui.commandNum = -1;
             }
         } else {
-            // YES Button (Index 4)
-            if (gp.ui.commandNum == 4) {
+            // Use indices from UI.java
+            if (gp.ui.commandNum == 4) { // YES
                 System.exit(0);
             }
-            // NO Button (Index 5)
-            if (gp.ui.commandNum == 5) {
+            if (gp.ui.commandNum == 5) { // NO
                 gp.ui.confirmExitState = false;
                 gp.ui.commandNum = -1;
             }
@@ -220,7 +220,6 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
                 else gp.ui.commandNum = -1;
             }
         } else {
-            // YES/NO Hover logic based on centerX from UI.java
             int centerY = (gp.screenHeight / 2) + (gp.tileSize * 2);
             if (y >= centerY - 40 && y <= centerY + 10) {
                 if (x > gp.screenWidth/2 - 150 && x < gp.screenWidth/2 - 20) gp.ui.commandNum = 4;

@@ -1,5 +1,6 @@
 package main;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -35,6 +36,17 @@ public class ReportManager {
             System.out.println("Report generated successfully in res/report.txt");
         } catch (IOException e) {
             System.err.println("Critical Error: Could not save report. " + e.getMessage());
+        }
+    }
+    
+    public void saveGameToHistory(String name, int budget, int approval) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("game_history.txt", true))) {
+            String status = (budget <= 0 || approval <= 0) ? "FAILED" : "COMPLETED";
+            // Format: Name|Budget|Approval|Status
+            bw.write(name + "|" + budget + "|" + approval + "|" + status);
+            bw.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
