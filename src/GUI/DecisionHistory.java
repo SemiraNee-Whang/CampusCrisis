@@ -16,11 +16,11 @@ public class DecisionHistory {
     }
 
     public void draw(Graphics2D g2) {
-        // 1. DIM THE BACKGROUND (To make the table pop)
+        //Dims the Background (To make the table pop)
         g2.setColor(new Color(0, 0, 0, 150));
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
-        // 2. WHITE TABLE BACKGROUND
+        // White Table Background
         int tableX = gp.tileSize;
         int tableY = gp.tileSize;
         int tableW = gp.screenWidth - (gp.tileSize * 2);
@@ -31,7 +31,7 @@ public class DecisionHistory {
         g2.setColor(Color.BLACK);
         g2.drawRect(tableX, tableY, tableW, tableH);
 
-        // 3. COLUMN LABELS
+        //Column Labels 
         g2.setFont(new Font("Arial", Font.BOLD, 18));
         int yHead = tableY + 40;
         
@@ -39,24 +39,24 @@ public class DecisionHistory {
         g2.drawString("STATUS", tableX + 130, yHead);
         g2.drawString("OUTCOME SUMMARY", tableX + 300, yHead);
         
-        // Header Underline
+        //Header Underline
         g2.setStroke(new BasicStroke(2));
         g2.drawLine(tableX + 20, yHead + 10, tableX + tableW - 20, yHead + 10);
 
-        // 4. DRAW HISTORY FROM GamePanel ArrayList
-        g2.setFont(new Font("Consolas", Font.PLAIN, 15)); // Monospaced looks better for logs
+        //Draw History: FROM GamePanel ArrayList
+        g2.setFont(new Font("Consolas", Font.PLAIN, 15)); // used Monospaced type font
         
-        // IMPORTANT: Changed from gp.reqList.history to gp.history to match MouseHandler
+        //gp.history matches MouseHandler
         for (int i = 0; i < gp.history.size(); i++) {
             Request r = gp.history.get(i);
             
-            // Calculate Y position based on scroll
+            //Calculate Y position based on scroll
             int rowY = yHead + 50 + (i * 35) - scrollOffset; 
             
-            // Clipping: Only draw if inside the white table area
+            //Clipping: Only draw if inside the white table area
             if (rowY > yHead + 20 && rowY < tableY + tableH - 20) {
                 
-                // Color coding based on status
+                //Colour coding based on status
                 if ("Approved".equals(r.status)) {
                     g2.setColor(new Color(0, 120, 0)); // Dark Green
                 } else if ("Declined".equals(r.status)) {
@@ -73,7 +73,7 @@ public class DecisionHistory {
             }
         }
 
-        // 5. BACK BUTTON
+        //Back Button
         drawStyledButton(g2, backBtn, "BACK", new Color(255, 215, 0));
     }
 

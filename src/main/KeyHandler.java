@@ -15,12 +15,12 @@ public class KeyHandler implements KeyListener {
     public void keyTyped(KeyEvent e) {
         char c = e.getKeyChar();
 
-        //LOGIN SCREEN TYPING
+        //Login Screen Typing
         if (gp.gameState == gp.loginState) {
-            // subState 0 = Username, subState 1 = Password
+            //subState 0 = Username, subState 1 = Password
             if (gp.loginM.subState == 0 || gp.loginM.subState == 1) {
                 
-                // Handle Backspace
+                //Handle Backspace
                 if (c == KeyEvent.VK_BACK_SPACE) {
                     if (gp.loginM.subState == 0 && gp.loginM.userText.length() > 0) {
                         gp.loginM.userText = gp.loginM.userText.substring(0, gp.loginM.userText.length() - 1);
@@ -28,7 +28,7 @@ public class KeyHandler implements KeyListener {
                         gp.loginM.passText = gp.loginM.passText.substring(0, gp.loginM.passText.length() - 1);
                     }
                 } 
-                // Handle Input: Allows all printable characters (ASCII 32 to 126) 
+                // Handle Input: Allows all characters (ASCII 32 to 126) 
                 // This includes @, #, $, letters, and numbers
                 else if (c >= 32 && c <= 126) {
                     if (gp.loginM.subState == 0 && gp.loginM.userText.length() < 16) {
@@ -66,7 +66,7 @@ public class KeyHandler implements KeyListener {
             if (code == KeyEvent.VK_ESCAPE) gp.gameState = gp.playState;
         }
     
-        // Movement for Jessie
+        //Handles keyboard controls when pressing the buttons
         if (gp.gameState == gp.playState) {
             if (code == KeyEvent.VK_W) upPressed = true;
             if (code == KeyEvent.VK_S) downPressed = true;
@@ -80,7 +80,7 @@ public class KeyHandler implements KeyListener {
         }
     }
 
-    @Override
+    //Handles keyboard controls when not pressing the buttons
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_W) upPressed = false;

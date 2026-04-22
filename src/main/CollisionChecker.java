@@ -3,6 +3,7 @@ package main;
 import entity.Entity;
 import entity.Player;
 
+//Helps with Character Collision
 public class CollisionChecker {
     GamePanel gp;
 

@@ -8,6 +8,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
+//Handles the UI
 public class UI {
 
     GamePanel gp;
@@ -19,6 +20,7 @@ public class UI {
 
     public UI(GamePanel gp) {
         this.gp = gp;
+        
         try {
             titleBg = ImageIO.read(getClass().getResourceAsStream("/TitleScreen/PIC.png"));
         } catch (IOException e) {
@@ -42,67 +44,70 @@ public class UI {
 
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 42F));
         
-        // Starting height for the menu 
+        //Starting height for the menu 
         int y = gp.tileSize * 6;
 
-        //START NEW TERM
+        //Start New Term
         int x = getXforCenteredText("START NEW TERM");
         drawOption("START NEW TERM", x, y, 0);
 
-        //INSTRUCTIONS
+        //Instructions
         y += gp.tileSize;
         x = getXforCenteredText("INSTRUCTIONS");
         drawOption("INSTRUCTIONS", x, y, 1);
 
-        //VIEW REPORTS
+        //View Reports
         y += gp.tileSize;
         x = getXforCenteredText("VIEW REPORTS");
         drawOption("VIEW REPORTS", x, y, 2);
 
-        // EXIT
+        //Exit
         y += gp.tileSize;
         x = getXforCenteredText("EXIT");
         drawOption("EXIT", x, y, 3);
     }
 
     public void drawExitConfirmation() {
-        // 1. BACKGROUND & OVERLAY
-        if (titleBg != null) g2.drawImage(titleBg, 0, 0, gp.screenWidth, gp.screenHeight, null);
+    	
+        //Background and Overlay
+        if (titleBg != null) 
+        	g2.drawImage(titleBg, 0, 0, gp.screenWidth, gp.screenHeight, null);
         
-        // Add a dark semi-transparent tint to make the white text readable
+        
+        //Adding a dark semi-transparent tint to make the white text readable
         g2.setColor(new Color(0, 0, 0, 150));
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
-        // 2. MAIN QUESTION
+        //Main Question
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 42F));
         String text = "Are you sure you want to exit?";
         int x = getXforCenteredText(text);
         int y = gp.screenHeight / 2; // Position text in the middle of the screen
 
-        // Draw shadow for depth
+        //Draw shadow for depth
         g2.setColor(Color.BLACK);
         g2.drawString(text, x + 3, y + 3);
         // Draw main text
         g2.setColor(Color.WHITE);
         g2.drawString(text, x, y);
 
-        // 3. INTERACTIVE BUTTONS (YES / NO)
+        //Interactive Buttons (YES/NO)
         // Shift y down to place buttons below the question
         y += gp.tileSize * 2;
         int centerX = gp.screenWidth / 2;
 
-        // Use index 4 and 5 to distinguish from the 0-3 indices used in the main menu
-        // YES is drawn to the left of center, NO to the right
+        // Use indices 4 and 5 to distinguish from the 0-3 indices used in the main menu
+        // YES is drawn to the left of centre, NO to the right
         drawOption("YES", centerX - 120, y, 4); 
         drawOption("NO", centerX + 60, y, 5);
     }
     
     private void drawOption(String text, int x, int y, int index) {
-        // Shadow
+        //Shadow
         g2.setColor(Color.BLACK);
         g2.drawString(text, x + 3, y + 3);
         
-        // Hover Color Change
+        //Hover Colour Change
         if (commandNum == index) {
             g2.setColor(Color.YELLOW);
         } else {

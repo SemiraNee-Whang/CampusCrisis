@@ -13,13 +13,11 @@ public class ReportView {
 
     public ReportView(GamePanel gp) {
         this.gp = gp;
-        // Positioned at the bottom center
+        //Positioned at the bottom centre
         this.backBtn = new Rectangle(gp.screenWidth/2 - 50, gp.screenHeight - 80, 100, 40);
     }
 
-    /**
-     * Reads the history file and stores it in an ArrayList for display
-     */
+  //Reads the history file and stores it in an ArrayList for display
     public void loadGameHistory() {
         gameHistory.clear();
         try (BufferedReader br = new BufferedReader(new FileReader("game_history.txt"))) {
@@ -34,16 +32,16 @@ public class ReportView {
     }
 
     public void draw(Graphics2D g2) {
-        // 1. Background
+        //Background
         g2.setColor(new Color(20, 20, 30));
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
-        // 2. Title
+        //Title
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
         g2.setColor(Color.WHITE);
         g2.drawString("PREVIOUS TERMS RECORDS", gp.tileSize, gp.tileSize);
 
-        // 3. Table Headers
+        //Table Headers
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 18F));
         int y = gp.tileSize * 2;
         int startX = gp.tileSize;
@@ -56,7 +54,7 @@ public class ReportView {
 
         g2.drawLine(startX, y + 10, gp.screenWidth - gp.tileSize, y + 10);
 
-        // 4. Draw Table Rows
+        //Draw Table Rows
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 16F));
         g2.setColor(Color.WHITE);
         
@@ -67,17 +65,17 @@ public class ReportView {
             String[] data = gameHistory.get(i);
             if (data.length >= 4) {
                 g2.drawString(data[0], startX, y);        // Name
-                g2.drawString("£" + data[1], startX + 200, y); // Budget
+                g2.drawString("R" + data[1], startX + 200, y); // Budget
                 g2.drawString(data[2] + "%", startX + 400, y); // Approval
                 g2.drawString(data[3], startX + 550, y);  // Outcome (e.g. Completed/Failed)
                 
                 y += rowHeight;
             }
-            // Limit display to fit screen
+            //Limit display to fit screen
             if (y > gp.screenHeight - 100) break;
         }
 
-        // 5. Back Button
+        //Calls Back Button
         drawBackButton(g2);
     }
 

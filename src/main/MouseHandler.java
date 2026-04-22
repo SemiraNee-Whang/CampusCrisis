@@ -6,10 +6,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-/**
- * Updated MouseHandler: Postpone now logs to history and moves to the next request.
- */
-public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
+	public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
     GamePanel gp;
     public int mouseX, mouseY;
 
@@ -17,18 +14,18 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         this.gp = gp;
     }
 
-    @Override
+    
     public void mousePressed(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
 
-        // 1. REQUEST POP-UP INTERACTION
+        //Request Pop-Up Interaction
         if (gp.gameState == gp.requestState) {
             handleRequestPopUp(x, y);
             return; // Lock inputs while in request screen
         }
 
-        // 2. OTHER GAME STATES
+        //Other Game States
         if (gp.gameState == gp.titleState) {
             handleTitleClick();
         } else if (gp.gameState == gp.loginState) {
@@ -49,9 +46,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         }
     }
 
-    /**
-     * Handles clicks within the request pop-up including Postpone.
-     */
+    //Handles clicks within the request pop-up, including "Postpone"
     private void handleRequestPopUp(int x, int y) {
         Rectangle requestBox = new Rectangle(gp.tileSize * 2, gp.tileSize * 2, gp.screenWidth - gp.tileSize * 4, gp.tileSize * 4);
         
@@ -59,44 +54,45 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         if (requestBox.contains(x, y) && !gp.reqList.showButtons) {
             gp.reqList.showButtons = true; 
         } 
+        //Approval button
         else if (gp.reqList.showButtons) {
             if (gp.reqList.approveBtn.contains(x, y)) {
                 processDecision("Approve");
                 gp.reqList.showButtons = false;
             }
+            //Decline button
             else if (gp.reqList.declineBtn.contains(x, y)) {
                 processDecision("Decline");
                 gp.reqList.showButtons = false;
             }
-            // NEW: POSTPONE LOGIC
+            //Postpone button
             else if (gp.reqList.postponeBtn.contains(x, y)) {
                 processDecision("Postpone"); // Call decision logic for Postpone
                 gp.reqList.showButtons = false;
-                // Note: gameState stays in requestState so a new request appears immediately
-            }
+                            }
         }
     }
 
-    /**
-     * Logic for processing impacts and logging to history.
-     */
+    ///Logic for processing impacts and logging to history.
     private void processDecision(String decision) {
         Request r = gp.reqList.currentRequest;
         if (r == null) return;
 
+        //Approval logic
         if (decision.equals("Approve")) {
             gp.dashboard.budget -= r.cost;
             gp.dashboard.approval += r.impact;
             r.status = "Approved";
             r.outcome = "Budget -" + r.cost + ", Approval +" + r.impact;
         } 
+        //Decline logic
         else if (decision.equals("Decline")) {
             // Penalty for declining
             gp.dashboard.approval -= 8; 
             r.status = "Declined";
             r.outcome = "Approval -8";
         }
-        // NEW: Handle the Postpone status
+        //Postpone Logic
         else if (decision.equals("Postpone")) {
             r.status = "Postponed";
             r.outcome = "No change (Deferred)"; // No budget or approval change
@@ -114,15 +110,11 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         // Log to text file
         saveDecisionToFile(r);
 
-        // Transition to the next available request immediately
-        gp.reqList.getNextRandomRequest();
         
         
     }
 
-    /**
-     * Resets stats for a fresh game session.
-     */
+    //Handles restarting stats for a fresh game session.
     public void resetGame() {
         gp.dashboard.budget = gp.pSetup.STARTING_BUDGET;
         gp.dashboard.approval = gp.pSetup.STARTING_APPROVAL;
@@ -133,9 +125,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         gp.player.setDefaultValues();
     }
 
-    /**
-     * Main menu button and Exit screen logic.
-     */
+    // Main menu button and Exit screen logic.
     private void handleTitleClick() {
         if (!gp.ui.confirmExitState) {
             if (gp.ui.commandNum == 0) gp.gameState = gp.loginState;
@@ -173,6 +163,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         }
     }
 
+   
     private void handleLoginClick() {
         if (gp.loginM.subState == 4) {
             gp.gameState = gp.titleState;
@@ -203,7 +194,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         }
     }
 
-    @Override public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent e) {
         mouseX = e.getX(); mouseY = e.getY();
         if (gp.gameState == gp.titleState) handleTitleHover(mouseX, mouseY);
         else if (gp.gameState == gp.loginState) handleLoginHover(mouseX, mouseY);
@@ -231,32 +222,55 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
         }
     }
 
-    @Override public void mouseWheelMoved(MouseWheelEvent e) {
+     public void mouseWheelMoved(MouseWheelEvent e) {
         if (gp.gameState == gp.historyState) {
             gp.historyView.scrollOffset += e.getWheelRotation() * 20;
             if (gp.historyView.scrollOffset < 0) gp.historyView.scrollOffset = 0;
         }
     }
 
-    @Override public void mouseDragged(MouseEvent e) { mouseX = e.getX(); mouseY = e.getY(); }
-    @Override public void mouseClicked(MouseEvent e) {}
-    @Override public void mouseReleased(MouseEvent e) {}
-    @Override public void mouseEntered(MouseEvent e) {}
-    @Override public void mouseExited(MouseEvent e) {}
+    public void mouseDragged(MouseEvent e) 
+    { 
+    	mouseX = e.getX(); mouseY = e.getY(); 
+    }
+    public void mouseClicked(MouseEvent e) 
+    {
+
+    }
+    public void mouseReleased(MouseEvent e) 
+    {
+    	
+    }
+    public void mouseEntered(MouseEvent e) 
+    {
+    	
+    }
+    public void mouseExited(MouseEvent e) 
+    {
+    	
+    }
 
     public void handleLoginHover(int x, int y) {
-        if (x >= 10 && x <= 100 && y >= 10 && y <= 50) gp.loginM.subState = 4;
-        else if (y >= gp.tileSize * 4 - 40 && y <= gp.tileSize * 4 + 10) gp.loginM.subState = 0;
-        else if (y >= gp.tileSize * 6 - 40 && y <= gp.tileSize * 6 + 10) gp.loginM.subState = 1;
-        else if (y >= gp.tileSize * 8 - 40 && y <= gp.tileSize * 8 + 10) gp.loginM.subState = 2;
-        else if (y >= gp.tileSize * 9 - 40 && y <= gp.tileSize * 9 + 10) gp.loginM.subState = 3;
+        if (x >= 10 && x <= 100 && y >= 10 && y <= 50) 
+        	gp.loginM.subState = 4;
+        else if (y >= gp.tileSize * 4 - 40 && y <= gp.tileSize * 4 + 10) 
+        	gp.loginM.subState = 0;
+        else if (y >= gp.tileSize * 6 - 40 && y <= gp.tileSize * 6 + 10) 
+        	gp.loginM.subState = 1;
+        else if (y >= gp.tileSize * 8 - 40 && y <= gp.tileSize * 8 + 10) 
+        	gp.loginM.subState = 2;
+        else if (y >= gp.tileSize * 9 - 40 && y <= gp.tileSize * 9 + 10) 
+        	gp.loginM.subState = 3;
         else gp.loginM.subState = -1;
     }
 
     public void handleSetupHover(int x, int y) {
-        if (x >= 10 && x <= 100 && y >= 10 && y <= 50) gp.pSetup.subState = 2;
-        else if (y >= gp.tileSize * 5 - 30 && y <= gp.tileSize * 6 - 30) gp.pSetup.subState = 0;
-        else if (y >= gp.tileSize * 7 && y <= gp.tileSize * 8) gp.pSetup.subState = 1;
+        if (x >= 10 && x <= 100 && y >= 10 && y <= 50) 
+        	gp.pSetup.subState = 2;
+        else if (y >= gp.tileSize * 5 - 30 && y <= gp.tileSize * 6 - 30) 
+        	gp.pSetup.subState = 0;
+        else if (y >= gp.tileSize * 7 && y <= gp.tileSize * 8) 
+        	gp.pSetup.subState = 1;
         else gp.pSetup.subState = -1;
     }
 }

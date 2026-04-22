@@ -17,15 +17,15 @@ public class LoginManager {
         this.gp = gp;
     }
     public void draw(Graphics2D g2) {
-        // Fills the background with a dark theme color
+        //Fills the background with a dark theme colour
         g2.setColor(new Color(20, 20, 30));
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
-        // BACK BUTTON
+        //Back Button
         // Sets the font size for the navigation button
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20F));
         
-        // Changes the text color to yellow if the mouse is hovering over the back button (subState 4)
+        // Changes the text colour to yellow if the mouse is hovering over the back button 
         if (subState == 4) {
             g2.setColor(Color.YELLOW);
         } else {
@@ -35,27 +35,27 @@ public class LoginManager {
         // Renders the back button at the top-left of the screen
         g2.drawString("< BACK", 20, 40);
 
-        //TITLE
+        //Title
         // Sets the font and determines if the screen should display "SIGN UP" or "LOG IN"
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
         g2.setColor(Color.WHITE);
         String title = isSignUp ? "SIGN UP" : "LOG IN";
         g2.drawString(title, gp.tileSize * 6, gp.tileSize * 2);
 
-        // INPUT FIELDS
-        // Draws the Username and Password fields using the drawField helper method
+        //Input Fields
+        // Draws the username and password fields using the drawField helper method
         g2.setFont(g2.getFont().deriveFont(24F));
         drawField(g2, "Username:", userText, gp.tileSize * 4, subState == 0);
         drawField(g2, "Password:", "*".repeat(passText.length()), gp.tileSize * 6, subState == 1);
 
-        //ACTION BUTTON
+        //Action Button
         // Displays the main button for logging in or creating an account
         String actionBtn = isSignUp ? "CREATE ACCOUNT" : "LOGIN";
         // Highlights the button in yellow if the mouse is hovering over it (subState 2)
         g2.setColor(subState == 2 ? Color.YELLOW : Color.WHITE);
         g2.drawString(actionBtn, gp.tileSize * 6, gp.tileSize * 8);
 
-        //SWITCH LINK
+        //Switch Link
         // Displays a link to toggle between the Login and Sign-Up states
         String switchLink = isSignUp ? "Go to Login" : "No account? Sign Up";
         g2.setFont(g2.getFont().deriveFont(18F));
@@ -63,8 +63,8 @@ public class LoginManager {
         g2.setColor(subState == 3 ? Color.YELLOW : Color.GRAY);
         g2.drawString(switchLink, gp.tileSize * 6, gp.tileSize * 9);
 
-        //ERROR/SUCCESS MESSAGE
-        // Displays feedback messages (like "Account Created" or "Invalid Login") in orange
+        //Error/Success Message
+        //Displays feedback messages (like "Account Created" or "Invalid Login") in orange
         g2.setColor(Color.ORANGE);
         g2.drawString(message, gp.tileSize * 5, gp.tileSize * 3);
     }

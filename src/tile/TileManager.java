@@ -12,10 +12,13 @@ public class TileManager {
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
+        //Uses 11 Arrays
         tile = new Tile[10];
+        //Calls Method getTitleImage
         getTileImage();
     }
 
+    //Creates the Tile images using Arrays
     public void getTileImage() {
         try {
             tile[0] = new Tile(); 
@@ -40,6 +43,7 @@ public class TileManager {
         }
     }
 
+    //Handles the Layers
     public void drawBackground(Graphics2D g2) { drawLayer(g2, 0); } // Floor/Wall
     public void drawChalkboard(Graphics2D g2) { drawLayer(g2, 1); } // Chalkboard
     public void drawDesks(Graphics2D g2) { drawLayer(g2, 2); }      // Standard Desks

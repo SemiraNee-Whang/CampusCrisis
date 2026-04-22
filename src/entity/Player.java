@@ -8,6 +8,7 @@ import main.GamePanel;
 import main.KeyHandler;
 import java.awt.Rectangle;
 
+//Inheritence
 public class Player extends Entity {
 
     GamePanel gp;
@@ -31,8 +32,10 @@ public class Player extends Entity {
         direction = "down";
     }
 
+    //Player Entity picture frames
     public void getPlayerImage() {
         try {
+        	
             // UP (3 frames)
             up1 = ImageIO.read(getClass().getResourceAsStream("/player/1 Walk up.png"));
             up2 = ImageIO.read(getClass().getResourceAsStream("/player/2 Walk up.png"));
@@ -60,9 +63,10 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
+    //Handles Character Moving
     public void update() {
         boolean moving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
-
+    
         if (moving) {
             if (keyH.upPressed) direction = "up";
             else if (keyH.downPressed) direction = "down";
@@ -110,6 +114,7 @@ public class Player extends Entity {
             spriteNum = 0;
         }
     }
+    //Player Graphics
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
 

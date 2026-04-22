@@ -1,5 +1,6 @@
 package main;
 
+//Handles Request (Main CLass For it)
 public class Request {
     public String id, description, category,requestName;
     public int cost, impact;

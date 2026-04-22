@@ -10,13 +10,10 @@ import GUI.PresidentSetup;
 import GUI.Dashboard;
 import GUI.RequestList; 
 import GUI.Instructions;
-import GUI.ReportView;
-
-
 
 public class GamePanel extends JPanel implements Runnable {
     
-    // SCREEN SETTINGS
+    //Screen Settings
     final int originalTileSize = 16;
     final int scale = 4;
     public final int tileSize = originalTileSize * scale; // 64x64
@@ -25,10 +22,10 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tileSize * maxScreenCol; // 960px
     public final int screenHeight = tileSize * maxScreenRow; // 640px
     
-    // FPS
+    //FPS
     int FPS = 60;
     
-    // SYSTEM (Varibles)
+    //System (Variables)
     public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this); 
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -37,7 +34,6 @@ public class GamePanel extends JPanel implements Runnable {
     public MouseHandler mouseH = new MouseHandler(this);
     public PresidentSetup pSetup = new PresidentSetup(this);
     public ReportManager reportM = new ReportManager(this);
-    public EventManager eventM = new EventManager(this);
     public Dashboard dashboard = new Dashboard(this);
     public RequestList reqList = new RequestList(this); 
     public Instructions instructions = new Instructions(this);
@@ -48,10 +44,10 @@ public class GamePanel extends JPanel implements Runnable {
     
     Thread gameThread;
     
-    // ENTITY
+    //Entitiy
     public Player player = new Player(this, keyH);
     
-    // GAME STATE
+    //Game State
     public int gameState;
     public final int titleState = 0;
     public final int playState = 1;    
@@ -108,13 +104,13 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void checkGameOver() {
-        // 1. Budget check: Ends if 0 or less
+        //Budget check: Ends if 0 or less
         boolean budgetOut = dashboard.budget <= 0;
         
-        // 2. Approval check: Ends if 0 or less
+        //Approval check: Ends if 0 or less
         boolean approvalOut = dashboard.approval <= 0;
         
-        // // 3. Timer check: Ends if minutes and seconds are both 03. Timer check: Ends if minutes and seconds are both 0
+        // //Timer check: Ends if minutes and seconds are both 03. Timer check: Ends if minutes and seconds are both 0
         boolean timeOut = (dashboard.minutes == 0 && dashboard.seconds == 0 && requestsHandled >= 2);
 
         if (budgetOut || approvalOut || timeOut) {
@@ -131,13 +127,12 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     
-
-    @Override
+    //Using Painting Component
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
-        //MENU STATES
+        //Menu State
         if (gameState == titleState) { 
             ui.draw(g2); 
         }
@@ -160,7 +155,7 @@ public class GamePanel extends JPanel implements Runnable {
         //PlayState
         else if (gameState == playState || gameState == requestState || gameState == historyState) {            
             
-            // 1. THE CLASSROOM LAYERS
+            //Classroom Layer
             tileM.drawBackground(g2);   
             tileM.drawChalkboard(g2);   
             tileM.drawDesks(g2);        
@@ -175,7 +170,7 @@ public class GamePanel extends JPanel implements Runnable {
                 historyView.draw(g2); 
             }
             
-            // 3. UI Dashboard (Top & Bottom bars)
+            //UI Dashboard (Top & Bottom bars)
             dashboard.draw(g2); 
             
             ui.draw(g2);

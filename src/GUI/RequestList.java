@@ -5,11 +5,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Random;
 import main.GamePanel;
 import main.Request;
-import main.ReportManager;
-import GUI.Dashboard;
 
 public class RequestList {
     GamePanel gp;
@@ -18,13 +15,13 @@ public class RequestList {
     public ArrayList<Request> history = new ArrayList<>(); 
     public boolean showButtons = false;
     public Rectangle approveBtn, declineBtn, postponeBtn;
-    private Random random = new Random();
+
 
     public RequestList(GamePanel gp) {
         this.gp = gp;
         loadRequests(); // Loads normal requests
-        getNextRandomRequest();
 
+        
         approveBtn = new Rectangle(gp.tileSize * 3, gp.screenHeight - 120, 140, 45);
         declineBtn = new Rectangle(gp.tileSize * 6, gp.screenHeight - 120, 140, 45);
         postponeBtn = new Rectangle(gp.tileSize * 9, gp.screenHeight - 120, 140, 45);
@@ -32,7 +29,7 @@ public class RequestList {
 
     private void loadRequests() {
         try {
-            // Looking for requests.txt in the res folder
+            //Looks for requests.txt in the res folder
             InputStream is = getClass().getResourceAsStream("/requests.txt");
             if (is == null) {
                 System.out.println("Could not find requests.txt in res folder!");
@@ -43,7 +40,7 @@ public class RequestList {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length >= 5) {
-                    // Normal requests have: ID|Description|Category|Cost|Impact
+                    //Normal requests have to be: ID|Description|Category|Cost|Impact
                     allRequests.add(new Request(
                         parts[0].trim(), 
                         parts[1].trim(), 
@@ -54,26 +51,14 @@ public class RequestList {
                 }
             }
             br.close();
+            //Helps me if there is a problem with the text file
         } catch (Exception e) {
             System.out.println("Error loading requests: " + e.getMessage());
         }
     }
 
-    public void getNextRandomRequest() {
-        if (history.size() >= 10) {
-            
-            gp.reportM.generateFinalReport(gp.dashboard.approval, gp.dashboard.budget, history);
-            
-            gp.gameState = gp.reportState;
-            return;
-        }
-
-        if (!allRequests.isEmpty()) {
-            int index = random.nextInt(allRequests.size());
-            currentRequest = allRequests.get(index);
-        }
-    }
-
+   
+    //Design for the request screen
     public void draw(Graphics2D g2) {
         g2.setColor(Color.WHITE);
         g2.fillRoundRect(gp.tileSize * 2, gp.tileSize * 2, gp.screenWidth - gp.tileSize * 4, gp.tileSize * 4, 15, 15);
@@ -84,7 +69,7 @@ public class RequestList {
 
         if (currentRequest != null) {
             g2.setFont(new Font("Arial", Font.BOLD, 18));
-            g2.drawString(currentRequest.description != null ? currentRequest.description : currentRequest.requestName, 
+            g2.drawString(currentRequest.description != null ? currentRequest.description: currentRequest.requestName, 
                          gp.tileSize * 2 + 30, gp.tileSize * 3 + 10);
             
             g2.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -104,6 +89,7 @@ public class RequestList {
         }
     }
 
+    //Design for the buttons in the request screen
     private void drawStyledButton(Graphics2D g2, Rectangle r, String text, Color bgColor) {
         g2.setColor(new Color(0, 0, 0, 50));
         g2.fillRect(r.x + 3, r.y + 3, r.width, r.height);

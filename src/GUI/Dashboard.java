@@ -6,23 +6,23 @@ import main.GamePanel;
 public class Dashboard {
     GamePanel gp;
     
-    // LIVE STATS (Use these so they can change!)
+    //Live Stats
     public int budget;
     public int approval;
     
-    // TIMER VARIABLES
+    //Timer Variables
     public int secondCounter = 0;
     public int minutes = 5;
     public int seconds = 0;
 
     public Dashboard(GamePanel gp) {
         this.gp = gp;
-        // Set live stats from your starting constants
+        //Set live stats from your starting constants
         this.budget = gp.pSetup.STARTING_BUDGET;
         this.approval = gp.pSetup.STARTING_APPROVAL;
     }
 
-    // THIS METHOD MUST EXIST FOR GAMEPANEL TO WORK
+    //The method exists so that gamepanel can continue working 
     public void updateTimer() {
         secondCounter++;
         if (secondCounter >= 60) { // 60 FPS
@@ -39,7 +39,7 @@ public class Dashboard {
     }
 
     public void draw(Graphics2D g2) {
-        // --- 1. TOP STATUS BAR ---
+        //Top Status Bar
         g2.setColor(new Color(20, 20, 30, 220)); 
         g2.fillRect(0, 0, gp.screenWidth, 65);
         g2.setColor(Color.YELLOW);
@@ -49,26 +49,27 @@ public class Dashboard {
         g2.setColor(Color.WHITE);
         g2.drawString("PRESIDENT: " + gp.pSetup.presidentName.toUpperCase(), 20, 40);
 
-        // --- ADDED: TIMER (Centre) ---
+        //Timer Button
         String timeText = String.format("TIME: %02d:%02d", minutes, seconds);
         int timeX = gp.screenWidth / 2 - (g2.getFontMetrics().stringWidth(timeText) / 2);
         g2.drawString(timeText, timeX, 40);
 
-        // Budget (Top Right)
+        //Budget Button
         g2.setColor(Color.YELLOW);
         String budgetDisplay = "BUDGET: R " + String.format("%,d", budget);
         g2.drawString(budgetDisplay, gp.screenWidth - 250, 30);
 
-        // --- ADDED: APPROVAL (Below Budget) ---
+        //Approval Button
         g2.setFont(new Font("SansSerif", Font.BOLD, 14));
         g2.setColor(new Color(50, 255, 150)); 
         String approvalText = "APPROVAL: " + approval + "%";
         g2.drawString(approvalText, gp.screenWidth - 250, 55);
 
-        // --- 2. BOTTOM ACTION BAR ---
+        //Bottom Action Button
         int barHeight = 50;
         int menuY = gp.screenHeight - barHeight;
 
+        //Dashboard Design
         g2.setColor(new Color(20, 20, 30, 230));
         g2.fillRect(0, menuY, gp.screenWidth, barHeight);
         g2.setColor(Color.YELLOW);
