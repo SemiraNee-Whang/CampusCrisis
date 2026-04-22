@@ -8,7 +8,11 @@ import main.GamePanel;
 import main.KeyHandler;
 import java.awt.Rectangle;
 
-//Inheritence
+/**
+ * Represents the student president character controlled by the player.
+ * Extends Entity to inherit sprite/collision fields.
+ * Handles movement input, boundary clamping, animation cycling, and rendering.
+ */
 public class Player extends Entity {
 
     GamePanel gp;
