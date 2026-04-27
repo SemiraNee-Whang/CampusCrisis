@@ -98,6 +98,23 @@ import java.io.IOException;
             r.outcome = "No change (Deferred)"; // No budget or approval change
         }
         
+        if (decision.equals("Postpone")) {
+            gp.reqList.allRequests.remove(r);
+            gp.reqList.allRequests.add(r);      // send to back of queue
+        } else {
+            gp.reqList.allRequests.remove(r);   // remove from queue entirely
+            gp.reqList.history.add(r);          // track in reqList's own history too
+        }
+        gp.requestsHandled++;
+
+        // Load next request
+        if (!gp.reqList.allRequests.isEmpty()) {
+            gp.reqList.currentRequest = gp.reqList.allRequests.get(0);
+        } else {
+            gp.reqList.currentRequest = null;
+        }
+        gp.reqList.showButtons = false;
+        
       
 
         // Apply caps and floors
@@ -165,13 +182,31 @@ import java.io.IOException;
 
    
     private void handleLoginClick() {
-        if (gp.loginM.subState == 4) {
+        int x = mouseX, y = mouseY;
+
+        // Back button
+        if (x >= 10 && x <= 100 && y >= 10 && y <= 50) {
+            gp.loginM.activeField = -1;
             gp.gameState = gp.titleState;
             gp.ui.commandNum = -1;
-        } else if (gp.loginM.subState == 2) {
+
+        // Username field click
+        } else if (y >= gp.tileSize * 4 - 40 && y <= gp.tileSize * 4 + 10) {
+            gp.loginM.activeField = 0;
+
+        // Password field click
+        } else if (y >= gp.tileSize * 6 - 40 && y <= gp.tileSize * 6 + 10) {
+            gp.loginM.activeField = 1;
+
+        // Login/Create button click
+        } else if (y >= gp.tileSize * 8 - 40 && y <= gp.tileSize * 8 + 10) {
+            gp.loginM.activeField = -1;
             if (gp.loginM.isSignUp) gp.loginM.registerUser();
             else if (gp.loginM.validateLogin()) gp.gameState = gp.setupState;
-        } else if (gp.loginM.subState == 3) {
+
+        // Switch link click
+        } else if (y >= gp.tileSize * 9 - 40 && y <= gp.tileSize * 9 + 10) {
+            gp.loginM.activeField = -1;
             gp.loginM.isSignUp = !gp.loginM.isSignUp;
         }
     }

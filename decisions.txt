@@ -140,3 +140,27 @@ REQ002 | Approved | Budget -2500, Approval +7 | null
 REQ016 | Approved | Budget -900, Approval +5 | null
 REQ009 | Approved | Budget -4000, Approval +7 | null
 REQ011 | Approved | Budget -0, Approval +6 | null
+REQ001 | Approved | Budget -3000, Approval +6 | null
+REQ001 | Declined | Approval -8 | null
+REQ001 | Declined | Approval -8 | null
+REQ001 | Approved | Budget -3000, Approval +6 | null
+REQ001 | Postponed | No change (Deferred) | null
+REQ001 | Declined | Approval -8 | null
+REQ001 | Approved | Budget -3000, Approval +6 | null
+REQ001 | Approved | Budget -3000, Approval +6 | null
+REQ001 | Postponed | No change (Deferred) | null
+REQ001 | Declined | Approval -8 | null
+REQ001 | Approved | Budget -3000, Approval +6 | null
+REQ001 | Declined | Approval -8 | null
+REQ001 | Approved | Budget -3000, Approval +6 | null
+REQ001 | Postponed | No change (Deferred) | null
+REQ001 | Declined | Approval -8 | null
+REQ001 | Approved | Budget -3000, Approval +6 | null
+REQ001 | Approved | Budget -3000, Approval +6 | null
+REQ002 | Declined | Approval -8 | null
+REQ003 | Postponed | No change (Deferred) | null
+REQ004 | Approved | Budget -1800, Approval +6 | null
+REQ005 | Declined | Approval -8 | null
+REQ001 | Approved | Budget -3000, Approval +6 | null
+REQ002 | Approved | Budget -2500, Approval +7 | null
+REQ003 | Declined | Approval -8 | null

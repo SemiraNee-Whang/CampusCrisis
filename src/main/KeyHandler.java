@@ -18,26 +18,21 @@ public class KeyHandler implements KeyListener {
         //Login Screen Typing
         if (gp.gameState == gp.loginState) {
             //subState 0 = Username, subState 1 = Password
-            if (gp.loginM.subState == 0 || gp.loginM.subState == 1) {
-                
-                //Handle Backspace
-                if (c == KeyEvent.VK_BACK_SPACE) {
-                    if (gp.loginM.subState == 0 && gp.loginM.userText.length() > 0) {
-                        gp.loginM.userText = gp.loginM.userText.substring(0, gp.loginM.userText.length() - 1);
-                    } else if (gp.loginM.subState == 1 && gp.loginM.passText.length() > 0) {
-                        gp.loginM.passText = gp.loginM.passText.substring(0, gp.loginM.passText.length() - 1);
-                    }
-                } 
-                // Handle Input: Allows all characters (ASCII 32 to 126) 
-                // This includes @, #, $, letters, and numbers
-                else if (c >= 32 && c <= 126) {
-                    if (gp.loginM.subState == 0 && gp.loginM.userText.length() < 16) {
-                        gp.loginM.userText += c;
-                    } else if (gp.loginM.subState == 1 && gp.loginM.passText.length() < 16) {
-                        gp.loginM.passText += c;
-                    }
-                }
-            }
+        	if (gp.loginM.activeField == 0 || gp.loginM.activeField == 1) {
+        	    if (c == KeyEvent.VK_BACK_SPACE) {
+        	        if (gp.loginM.activeField == 0 && gp.loginM.userText.length() > 0) {
+        	            gp.loginM.userText = gp.loginM.userText.substring(0, gp.loginM.userText.length() - 1);
+        	        } else if (gp.loginM.activeField == 1 && gp.loginM.passText.length() > 0) {
+        	            gp.loginM.passText = gp.loginM.passText.substring(0, gp.loginM.passText.length() - 1);
+        	        }
+        	    } else if (c >= 32 && c <= 126) {
+        	        if (gp.loginM.activeField == 0 && gp.loginM.userText.length() < 16) {
+        	            gp.loginM.userText += c;
+        	        } else if (gp.loginM.activeField == 1 && gp.loginM.passText.length() < 16) {
+        	            gp.loginM.passText += c;
+        	        }
+        	    }
+        	}
         }
         
         //PRESIDENT SETUP TYPING
@@ -76,9 +71,11 @@ public class KeyHandler implements KeyListener {
         
         // Quick Enter for Login
         if (code == KeyEvent.VK_ENTER && gp.gameState == gp.loginState) {
-            gp.loginM.subState = 2; // Move "focus" to the login button
+            gp.loginM.activeField = -1; // deselect field
+            gp.loginM.subState = 2;     // focus login button
         }
-    }
+        }
+    
 
     //Handles keyboard controls when not pressing the buttons
     public void keyReleased(KeyEvent e) {

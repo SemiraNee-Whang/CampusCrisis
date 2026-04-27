@@ -16,65 +16,109 @@ public class RequestList {
     public boolean showButtons = false;
     public Rectangle approveBtn, declineBtn, postponeBtn;
 
-
     public RequestList(GamePanel gp) {
         this.gp = gp;
-        loadRequests(); // Loads normal requests
-
+        loadRequests(); 
         
-        approveBtn = new Rectangle(gp.tileSize * 3, gp.screenHeight - 120, 140, 45);
-        declineBtn = new Rectangle(gp.tileSize * 6, gp.screenHeight - 120, 140, 45);
-        postponeBtn = new Rectangle(gp.tileSize * 9, gp.screenHeight - 120, 140, 45);
+        if (!allRequests.isEmpty()) {
+            currentRequest = allRequests.get(0);
+        }
+
+        // Button positioning (matching your screenshot layout)
+        int btnWidth = 140;
+        int btnHeight = 45;
+        int yPos = gp.screenHeight - 120;
+        
+        approveBtn = new Rectangle(gp.tileSize * 3, yPos, btnWidth, btnHeight);
+        declineBtn = new Rectangle(gp.tileSize * 6, yPos, btnWidth, btnHeight);
+        postponeBtn = new Rectangle(gp.tileSize * 9, yPos, btnWidth, btnHeight);
     }
 
-    private void loadRequests() {
-        try {
-            //Looks for requests.txt in the res folder
-            InputStream is = getClass().getResourceAsStream("/requests.txt");
-            if (is == null) {
-                System.out.println("Could not find requests.txt in res folder!");
-                return;
-            }
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split("\\|");
-                if (parts.length >= 5) {
-                    //Normal requests have to be: ID|Description|Category|Cost|Impact
-                    allRequests.add(new Request(
-                        parts[0].trim(), 
-                        parts[1].trim(), 
-                        parts[2].trim(), 
-                        Integer.parseInt(parts[3].trim()), 
-                        Integer.parseInt(parts[4].trim())
-                    ));
-                }
-            }
-            br.close();
-            //Helps me if there is a problem with the text file
-        } catch (Exception e) {
-            System.out.println("Error loading requests: " + e.getMessage());
+    // --- LOGIC FOR BUTTON CLICKS ---
+    public void handleInput(int mouseX, int mouseY) {
+        if (!showButtons || currentRequest == null) {
+            // If buttons aren't showing, clicking the area reveals them
+            showButtons = true;
+            return;
+        }
+
+        if (approveBtn.contains(mouseX, mouseY)) {
+            processRequest("APPROVED");
+        } else if (declineBtn.contains(mouseX, mouseY)) {
+            processRequest("DECLINED");
+        } else if (postponeBtn.contains(mouseX, mouseY)) {
+            postponeRequest();
         }
     }
 
-   
-    //Design for the request screen
+    private void processRequest(String status) {
+        System.out.println("Request " + status + ": " + currentRequest.requestName);
+        
+        // 1. Move current to history
+        history.add(currentRequest);
+        
+        // 2. Remove from the pending list
+        allRequests.remove(currentRequest);
+        
+        // 3. Load the next one or clear if empty
+        nextRequest();
+    }
+
+    private void postponeRequest() {
+        System.out.println("Request POSTPONED: " + currentRequest.requestName);
+        
+        // Move to the back of the queue
+        allRequests.remove(currentRequest);
+        allRequests.add(currentRequest);
+        
+        nextRequest();
+    }
+
+    private void nextRequest() {
+        if (!allRequests.isEmpty()) {
+            currentRequest = allRequests.get(0);
+        } else {
+            currentRequest = null;
+        }
+        showButtons = false; // Hide buttons until the next click
+    }
+
+    // --- LOADING & DRAWING ---
+    private void loadRequests() {
+        try (InputStream is = getClass().getResourceAsStream("/requests.txt")) {
+            if (is == null) return;
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split("\\|");
+                    if (parts.length >= 5) {
+                        try {
+                            allRequests.add(new Request(parts[0].trim(), parts[1].trim(), parts[2].trim(), 
+                                           Integer.parseInt(parts[3].trim()), Integer.parseInt(parts[4].trim())));
+                        } catch (Exception e) { /* Skip bad lines */ }
+                    }
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
     public void draw(Graphics2D g2) {
+        // UI Box
         g2.setColor(Color.WHITE);
-        g2.fillRoundRect(gp.tileSize * 2, gp.tileSize * 2, gp.screenWidth - gp.tileSize * 4, gp.tileSize * 4, 15, 15);
+        g2.fillRoundRect(gp.tileSize * 2, gp.tileSize * 2, gp.screenWidth - gp.tileSize * 4, gp.tileSize * 5, 15, 15);
         
         g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(2));
-        g2.drawRoundRect(gp.tileSize * 2 + 10, gp.tileSize * 2 + 10, gp.screenWidth - gp.tileSize * 4 - 20, gp.tileSize * 3, 10, 10);
+        g2.drawRoundRect(gp.tileSize * 2 + 10, gp.tileSize * 2 + 10, gp.screenWidth - gp.tileSize * 4 - 20, gp.tileSize * 5 - 20, 10, 10);
 
         if (currentRequest != null) {
-            g2.setFont(new Font("Arial", Font.BOLD, 18));
-            g2.drawString(currentRequest.description != null ? currentRequest.description: currentRequest.requestName, 
-                         gp.tileSize * 2 + 30, gp.tileSize * 3 + 10);
+            g2.setFont(new Font("Arial", Font.BOLD, 22));
+            String text = currentRequest.description != null ? currentRequest.description : currentRequest.requestName;
+            drawWrappedText(g2, text, gp.tileSize * 2 + 30, gp.tileSize * 2 + 60, gp.screenWidth - gp.tileSize * 5);
             
-            g2.setFont(new Font("Arial", Font.PLAIN, 14));
+            g2.setFont(new Font("Arial", Font.PLAIN, 16));
             g2.setColor(Color.GRAY);
-            g2.drawString("Category: " + currentRequest.category, gp.tileSize * 2 + 30, gp.tileSize * 3 + 35);
+            g2.drawString("Category: " + currentRequest.category, gp.tileSize * 2 + 30, gp.tileSize * 2 + 110);
         }
 
         if (showButtons && currentRequest != null) {
@@ -82,25 +126,34 @@ public class RequestList {
             drawStyledButton(g2, approveBtn, "APPROVE", btnYellow);
             drawStyledButton(g2, declineBtn, "DECLINE", btnYellow);
             drawStyledButton(g2, postponeBtn, "POSTPONE", btnYellow);
-        } else {
-            g2.setFont(new Font("Arial", Font.ITALIC, 14));
-            g2.setColor(Color.GRAY);
-            g2.drawString("Click the request area to reveal actions...", gp.tileSize * 2 + 30, gp.screenHeight - 100);
         }
     }
 
-    //Design for the buttons in the request screen
+    private void drawWrappedText(Graphics2D g2, String text, int x, int y, int maxWidth) {
+        FontMetrics fm = g2.getFontMetrics();
+        String[] words = text.split(" ");
+        StringBuilder line = new StringBuilder();
+        int currentY = y;
+        for (String word : words) {
+            if (fm.stringWidth(line + word) < maxWidth) {
+                line.append(word).append(" ");
+            } else {
+                g2.drawString(line.toString(), x, currentY);
+                line = new StringBuilder(word + " ");
+                currentY += fm.getHeight();
+            }
+        }
+        g2.drawString(line.toString(), x, currentY);
+    }
+
     private void drawStyledButton(Graphics2D g2, Rectangle r, String text, Color bgColor) {
-        g2.setColor(new Color(0, 0, 0, 50));
+        g2.setColor(new Color(0, 0, 0, 80));
         g2.fillRect(r.x + 3, r.y + 3, r.width, r.height);
         g2.setColor(bgColor); 
         g2.fill(r);
         g2.setColor(Color.BLACK);
         g2.draw(r);
-        g2.setFont(new Font("Arial", Font.BOLD, 14));
         FontMetrics fm = g2.getFontMetrics();
-        int textX = r.x + (r.width - fm.stringWidth(text)) / 2;
-        int textY = r.y + (r.height + fm.getAscent()) / 2 - 2;
-        g2.drawString(text, textX, textY);
+        g2.drawString(text, r.x + (r.width - fm.stringWidth(text)) / 2, r.y + (r.height + fm.getAscent()) / 2 - 2);
     }
 }

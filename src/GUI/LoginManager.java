@@ -12,6 +12,7 @@ public class LoginManager {
     public int subState = -1; // -1: None, 0: User, 1: Pass, 2: Action, 3: Switch
     public boolean isSignUp = false;
     public String message = "";
+    public int activeField = -1;
 
     public LoginManager(GamePanel gp) {
         this.gp = gp;
@@ -45,8 +46,8 @@ public class LoginManager {
         //Input Fields
         // Draws the username and password fields using the drawField helper method
         g2.setFont(g2.getFont().deriveFont(24F));
-        drawField(g2, "Username:", userText, gp.tileSize * 4, subState == 0);
-        drawField(g2, "Password:", "*".repeat(passText.length()), gp.tileSize * 6, subState == 1);
+        drawField(g2, "Username:", userText, gp.tileSize * 4, activeField == 0);
+        drawField(g2, "Password:", "*".repeat(passText.length()), gp.tileSize * 6, activeField == 1);
 
         //Action Button
         // Displays the main button for logging in or creating an account
