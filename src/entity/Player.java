@@ -1,5 +1,5 @@
 package entity;
-
+	
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -67,6 +67,7 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
+    
     //Handles Character Moving
     public void update() {
         boolean moving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
@@ -118,6 +119,7 @@ public class Player extends Entity {
             spriteNum = 0;
         }
     }
+    
     //Player Graphics
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
@@ -125,12 +127,12 @@ public class Player extends Entity {
         switch (direction) {
             case "up":
                 if (spriteNum == 0) image = upNeutral;
-                // Since Up only has 2 walking frames, we alternate them
+                // Since Up only has 2 walking frames, I alternated them
                 else image = (spriteNum == 1 || spriteNum == 3) ? up1 : up2;
                 break;
             case "down":
                 if (spriteNum == 0) image = downNeutral;
-                // Since Down only has 2 walking frames, we alternate them
+                // Since Down only has 2 walking frames, I alternated them
                 else image = (spriteNum == 1 || spriteNum == 3) ? down1 : down2;
                 break;
             case "left":

@@ -140,7 +140,7 @@ import java.io.IOException;
             gp.reqList.currentRequest = null;
         }
         gp.reqList.showButtons = false;
-    }
+    }	
 
     //Handles restarting stats for a fresh game session.
     public void resetGame() {
@@ -161,7 +161,11 @@ import java.io.IOException;
                 gp.gameState = gp.instructionState; 
                 gp.instructions.subState = 0;
             }
-            if (gp.ui.commandNum == 2) gp.gameState = gp.reportState; 
+            if (gp.ui.commandNum == 2) {
+            	gp.reportView.loadGameHistory(); 
+            	gp.gameState = gp.reportState;
+            }
+            	
             if (gp.ui.commandNum == 3) {
                 gp.ui.confirmExitState = true;
                 gp.ui.commandNum = -1;
