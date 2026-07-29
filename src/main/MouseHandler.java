@@ -78,34 +78,60 @@ import java.io.IOException;
         Request r = gp.reqList.currentRequest;
         if (r == null) return;
 
-        //Approval logic
+        // Approval logic
         if (decision.equals("Approve")) {
             gp.dashboard.budget -= r.cost;
             gp.dashboard.approval += r.impact;
             r.status = "Approved";
             r.outcome = "Budget -" + r.cost + ", Approval +" + r.impact;
         } 
-        //Decline logic
+        // Decline logic
         else if (decision.equals("Decline")) {
-            // Penalty for declining
             gp.dashboard.approval -= 8; 
             r.status = "Declined";
             r.outcome = "Approval -8";
         }
-        //Postpone Logic
+        // Postpone logic
         else if (decision.equals("Postpone")) {
             r.status = "Postponed";
-            r.outcome = "No change (Deferred)"; // No budget or approval change
+            r.outcome = "No change (Deferred)";
         }
-        
+
         if (decision.equals("Postpone")) {
             gp.reqList.allRequests.remove(r);
-            gp.reqList.allRequests.add(r);      // send to back of queue
+            gp.reqList.allRequests.add(r); // Send to back of queue
         } else {
-            gp.reqList.allRequests.remove(r);   // remove from queue entirely
-            gp.reqList.history.add(r);          // track in reqList's own history too
+            gp.reqList.allRequests.remove(r);
+            gp.reqList.history.add(r);
+            gp.requestsHandled++;
+            gp.history.add(r);
+            saveDecisionToFile(r);
         }
-        gp.requestsHandled++;
+
+        // Apply caps and floors
+        if (gp.dashboard.approval > 100) gp.dashboard.approval = 100;
+        if (gp.dashboard.approval < 0) gp.dashboard.approval = 0;
+
+        // Check game-over / win conditions
+        if (gp.dashboard.approval <= 0 || gp.dashboard.approval >= 100 || gp.dashboard.budget <= 0 || gp.reqList.allRequests.isEmpty()) {
+            
+            // 1. Save summary record to game_history.txt for the Previous Terms screen
+            String presidentName = gp.pSetup.presidentName;
+            if (presidentName == null || presidentName.trim().isEmpty()) {
+                presidentName = "President";
+            }
+            gp.reportM.saveGameToHistory(presidentName, gp.dashboard.budget, gp.dashboard.approval);
+            
+            // 2. Generate detailed report.txt
+            gp.reportM.generateFinalReport(gp.dashboard.approval, gp.dashboard.budget, gp.reqList.history);
+            
+            // 3. Reload history in ReportView so the table updates immediately
+            gp.reportView.loadGameHistory();
+            
+            // 4. Switch state to end screen
+            gp.gameState = gp.reportState;
+            return;
+        }
 
         // Load next request
         if (!gp.reqList.allRequests.isEmpty()) {
@@ -114,21 +140,6 @@ import java.io.IOException;
             gp.reqList.currentRequest = null;
         }
         gp.reqList.showButtons = false;
-        
-      
-
-        // Apply caps and floors
-        if (gp.dashboard.approval > 100) gp.dashboard.approval = 100;
-        if (gp.dashboard.approval < 0) gp.dashboard.approval = 0;
-
-        // Save to internal history for the table
-        gp.history.add(r);
-        
-        // Log to text file
-        saveDecisionToFile(r);
-
-        
-        
     }
 
     //Handles restarting stats for a fresh game session.

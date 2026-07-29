@@ -41,7 +41,16 @@ public class ReportManager {
     
     public void saveGameToHistory(String name, int budget, int approval) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("game_history.txt", true))) {
-            String status = (budget <= 0 || approval <= 0) ? "FAILED" : "COMPLETED";
+            
+            String status;
+            if (approval >= 100) {
+                status = "COMPLETED";
+            } else if (approval <= 0 || budget <= 0) {
+                status = "FAILED";
+            } else {
+                status = "COMPLETED";
+            }
+
             // Format: Name|Budget|Approval|Status
             bw.write(name + "|" + budget + "|" + approval + "|" + status);
             bw.newLine();
