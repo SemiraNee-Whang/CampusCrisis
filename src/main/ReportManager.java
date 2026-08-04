@@ -21,7 +21,7 @@ public class ReportManager {
             writer.println("============================");
             writer.println("Total Decisions Made: " + history.size());
             writer.println("Final Approval Rating: " + finalApproval + "%");
-            writer.println("Remaining Budget: £" + finalBudget);
+            writer.println("Remaining Budget: R" + finalBudget);
             
             // Logic for Term Outcome
             String outcome = (finalApproval >= 50 && finalBudget >= 0) ? "SUCCESSFUL" : "UNSUCCESSFUL";
