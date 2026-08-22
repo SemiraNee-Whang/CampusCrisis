@@ -18,8 +18,8 @@ import Admin.UserManager;
 public class GamePanel extends JPanel implements Runnable {
     
     //Screen Settings
-    final int originalTileSize = 16;
-    final int scale = 4;
+    private final int originalTileSize = 16;
+    private final int scale = 4;
     public final int tileSize = originalTileSize * scale; // 64x64
     public final int maxScreenCol = 15;
     public final int maxScreenRow = 10;
@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenHeight = tileSize * maxScreenRow; // 640px
     
     //FPS
-    int FPS = 60;
+    private int FPS = 60;
     
     //System (Variables)
     public TileManager tileM = new TileManager(this);
@@ -51,7 +51,7 @@ public class GamePanel extends JPanel implements Runnable {
     public java.util.ArrayList<main.Request> history = new java.util.ArrayList<>();
     public int requestsHandled = 0;
     
-    Thread gameThread;
+    private Thread gameThread;
     
     //Entitiy
     public Player player = new Player(this, keyH);
