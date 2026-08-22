@@ -169,6 +169,10 @@ import java.io.IOException;
             if (gp.ui.commandNum == 3) {
                 gp.ui.confirmExitState = true;
                 gp.ui.commandNum = -1;
+            } 
+            if (gp.ui.commandNum == 6) {
+                gp.gameState = gp.adminLoginState;
+                gp.ui.commandNum = -1;
             }
         } else {
             // Use indices from UI.java
@@ -197,34 +201,46 @@ import java.io.IOException;
 
    
     private void handleLoginClick() {
-        int x = mouseX, y = mouseY;
+
+        int x = mouseX;
+        int y = mouseY;
 
         // Back button
         if (x >= 10 && x <= 100 && y >= 10 && y <= 50) {
+
             gp.loginM.activeField = -1;
             gp.gameState = gp.titleState;
             gp.ui.commandNum = -1;
 
         // Username field click
         } else if (y >= gp.tileSize * 4 - 40 && y <= gp.tileSize * 4 + 10) {
+
             gp.loginM.activeField = 0;
 
         // Password field click
         } else if (y >= gp.tileSize * 6 - 40 && y <= gp.tileSize * 6 + 10) {
+
             gp.loginM.activeField = 1;
 
         // Login/Create button click
         } else if (y >= gp.tileSize * 8 - 40 && y <= gp.tileSize * 8 + 10) {
+
             gp.loginM.activeField = -1;
-            if (gp.loginM.isSignUp) gp.loginM.registerUser();
-            else if (gp.loginM.validateLogin()) gp.gameState = gp.setupState;
+
+            if (gp.loginM.isSignUp) {
+                gp.loginM.registerUser();
+            } else if (gp.loginM.validateLogin()) {
+                gp.gameState = gp.setupState;
+            }
 
         // Switch link click
         } else if (y >= gp.tileSize * 9 - 40 && y <= gp.tileSize * 9 + 10) {
+
             gp.loginM.activeField = -1;
             gp.loginM.isSignUp = !gp.loginM.isSignUp;
         }
     }
+	
 
     public void handleSetupClick(int x, int y) {
         int boxX = gp.tileSize * 6;
@@ -252,20 +268,61 @@ import java.io.IOException;
     }
 
     public void handleTitleHover(int x, int y) {
+
         if (!gp.ui.confirmExitState) {
+
             if (x >= gp.tileSize * 3 && x <= gp.tileSize * 12) {
-                if (y >= gp.tileSize * 6 - 40 && y <= gp.tileSize * 6 + 10) gp.ui.commandNum = 0;
-                else if (y >= gp.tileSize * 7 - 40 && y <= gp.tileSize * 7 + 10) gp.ui.commandNum = 1;
-                else if (y >= gp.tileSize * 8 - 40 && y <= gp.tileSize * 8 + 10) gp.ui.commandNum = 2;
-                else if (y >= gp.tileSize * 9 - 40 && y <= gp.tileSize * 9 + 10) gp.ui.commandNum = 3;
-                else gp.ui.commandNum = -1;
+                //Start New Term
+                if (y >= gp.tileSize * 5 - 40 && y <= gp.tileSize * 5 + 10) {
+                    gp.ui.commandNum = 0;
+                }
+
+                //Instructions
+                else if (y >= gp.tileSize * 6 - 40 && y <= gp.tileSize * 6 + 10) {
+                    gp.ui.commandNum = 1;
+                }
+
+                //View Reports
+                else if (y >= gp.tileSize * 7 - 40 && y <= gp.tileSize * 7 + 10) {
+                    gp.ui.commandNum = 2;
+                }
+
+                //Admin
+                else if (y >= gp.tileSize * 8 - 40 && y <= gp.tileSize * 8 + 10) {
+                    gp.ui.commandNum = 6;
+                }
+
+                //Exit
+                else if (y >= gp.tileSize * 9 - 40 && y <= gp.tileSize * 9 + 10) {
+                    gp.ui.commandNum = 3;
+                }
+
+                else {
+                    gp.ui.commandNum = -1;
+                }
+
+            } else {
+                gp.ui.commandNum = -1;
             }
+
         } else {
+
             int centerY = (gp.screenHeight / 2) + (gp.tileSize * 2);
+
             if (y >= centerY - 40 && y <= centerY + 10) {
-                if (x > gp.screenWidth/2 - 150 && x < gp.screenWidth/2 - 20) gp.ui.commandNum = 4;
-                else if (x > gp.screenWidth/2 + 20 && x < gp.screenWidth/2 + 150) gp.ui.commandNum = 5;
-                else gp.ui.commandNum = -1;
+
+                if (x > gp.screenWidth / 2 - 150 && x < gp.screenWidth / 2 - 20) {
+                    gp.ui.commandNum = 4;
+                }
+
+                else if (x > gp.screenWidth / 2 + 20 && x < gp.screenWidth / 2 + 150) {
+                    gp.ui.commandNum = 5;
+                }
+
+                else {
+                    gp.ui.commandNum = -1;
+                }
+
             } else {
                 gp.ui.commandNum = -1;
             }

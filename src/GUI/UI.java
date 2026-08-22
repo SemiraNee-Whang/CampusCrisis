@@ -45,7 +45,7 @@
 		        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 42F));
 		        
 		        //Starting height for the menu 
-		        int y = gp.tileSize * 6;
+		        int y = gp.tileSize * 5;
 		
 		        //Start New Term
 		        int x = getXforCenteredText("START NEW TERM");
@@ -60,11 +60,19 @@
 		        y += gp.tileSize;
 		        x = getXforCenteredText("VIEW REPORTS");
 		        drawOption("VIEW REPORTS", x, y, 2);
-		
+	
+		        //Admin
+		        y += gp.tileSize;
+		        x = getXforCenteredText("ADMIN");
+		        drawOption("ADMIN", x, y, 6);
+		        
 		        //Exit
 		        y += gp.tileSize;
 		        x = getXforCenteredText("EXIT");
 		        drawOption("EXIT", x, y, 3);
+		        
+		        
+		        
 		    }
 		
 		    public void drawExitConfirmation() {

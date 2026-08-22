@@ -10,6 +10,10 @@ import GUI.PresidentSetup;
 import GUI.Dashboard;
 import GUI.RequestList; 
 import GUI.Instructions;
+import Admin.AdminLogin;
+import Admin.AdminMenu;
+import Admin.RequestManager;
+import Admin.UserManager;
 
 public class GamePanel extends JPanel implements Runnable {
     
@@ -39,6 +43,8 @@ public class GamePanel extends JPanel implements Runnable {
     public Instructions instructions = new Instructions(this);
     public GUI.ReportView reportView = new GUI.ReportView(this);
     public GUI.DecisionHistory historyView = new GUI.DecisionHistory(this);
+    public AdminLogin adminLogin = new AdminLogin(this);
+  
     public java.util.ArrayList<main.Request> history = new java.util.ArrayList<>();
     public int requestsHandled = 0;
     
@@ -57,6 +63,10 @@ public class GamePanel extends JPanel implements Runnable {
     public final int historyState = 5;
     public final int instructionState = 6;
     public final int reportState = 7;
+    public final int adminLoginState = 8;	
+    public final int adminState = 9;
+    public final int adminRequestState = 10;
+    public final int adminUserState = 11;
     
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -149,6 +159,9 @@ public class GamePanel extends JPanel implements Runnable {
         
         else if (gameState == reportState) {
             reportView.draw(g2);
+        }
+        else if (gameState == adminLoginState) {
+            adminLogin.draw(g2);
         }
         
         
