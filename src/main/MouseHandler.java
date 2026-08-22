@@ -34,6 +34,8 @@ import java.io.IOException;
             handleAdminLoginClick(x, y);
         }else if (gp.gameState == gp.adminState) {
             handleAdminMenuClick(x, y);
+        }else if (gp.gameState == gp.adminRequestState) {
+                handleRequestManagerClick(x, y);
         } else if (gp.gameState == gp.setupState) {
             handleSetupClick(x, y);
         } else if (gp.gameState == gp.instructionState) {
@@ -432,13 +434,18 @@ import java.io.IOException;
         }
     }
     
-  //Handles clicks on the main Admin Menu
+    //Handles clicks on the main Admin Menu
     private void handleAdminMenuClick(int x, int y) {
 
         //Manage Requests Button
         if (gp.adminMenu.manageRequestsBtn.contains(x, y)) {
+        	
+        	//Reloads requests before opening the screen
+        	gp.requestManager.loadRequests();
 
-            System.out.println("Manage Requests clicked");
+        	//Opens the Request Management screen
+        	gp.gameState = gp.adminRequestState;
+
 
         }
 
@@ -459,6 +466,31 @@ import java.io.IOException;
             gp.adminLogin.activeField = -1;
 
             gp.gameState = gp.titleState;
+        }
+    }
+    //Handles clicks on the Request Management screen
+    private void handleRequestManagerClick(int x, int y) {
+
+        //Add Request button
+    	//Add Request button
+    	if (gp.requestManager.addBtn.contains(x, y)) {
+
+    	    gp.requestManager.addRequest();
+    	}
+
+    	//Edit Request button
+    	else if (gp.requestManager.editBtn.contains(x, y)) {
+    	    gp.requestManager.editRequest();
+    	}
+
+        //Delete Request button
+    	else if (gp.requestManager.deleteBtn.contains(x, y)) {
+    	    gp.requestManager.deleteRequest();
+    	}
+
+        //Back button
+        else if (gp.requestManager.backBtn.contains(x, y)) {
+            gp.gameState = gp.adminState;
         }
     }
 }

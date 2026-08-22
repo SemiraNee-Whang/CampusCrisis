@@ -45,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
     public GUI.DecisionHistory historyView = new GUI.DecisionHistory(this);
     public AdminLogin adminLogin = new AdminLogin(this);
     public AdminMenu adminMenu = new AdminMenu(this);
+    public RequestManager requestManager = new RequestManager(this);
   
     public java.util.ArrayList<main.Request> history = new java.util.ArrayList<>();
     public int requestsHandled = 0;
@@ -166,6 +167,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
         else if (gameState == adminState) {
             adminMenu.draw(g2);
+        }
+        else if (gameState == adminRequestState) {
+            requestManager.draw(g2);
         }
         
         

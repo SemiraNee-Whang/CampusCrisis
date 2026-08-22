@@ -1,4 +1,4 @@
-REQ001|Students request continued funding for the school soccer team.|Sports|3000|6
+REQ001|Students request continued funding for the school soccer team..|Sports|3000|6
 REQ002|Introduce free after-school tutoring for maths and science.|Academic|2500|7
 REQ003|Organise a supervised term-end school dance.|Events|2000|5
 REQ004|Funding for cultural clubs (drama, dance, choir).|Culture|1800|6
@@ -27,4 +27,4 @@ REQ026|Provide free or subsidised stationery for exams.|Welfare|1200|5
 REQ027|Relaunch the school newspaper with online edition.|Culture|600|4
 REQ028|Arrange safety workshops for students who use school transport.|Welfare|250|3
 REQ029|Fund materials for a student-designed school mural.|Culture|400|4
-REQ030|Establish a small fund for outstanding students in need.|Welfare|5000|9
+REQ030|Establish a small fund for outstanding students in need.|Welfare|5000|945
