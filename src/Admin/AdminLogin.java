@@ -121,19 +121,23 @@ public class AdminLogin {
         g2.drawString("BACK", backBtn.x + 25, backBtn.y + 25);
     }
 
-    //Draws a reusable textbox
+  //Draws a reusable text box
     private void drawTextBox(Graphics2D g2, Rectangle box, String text) {
 
-        g2.setColor(Color.WHITE);
+        //Text box background
+        g2.setColor(new Color(40, 40, 50));
         g2.fill(box);
 
-        g2.setColor(Color.BLACK);
+        //Text box border
+        g2.setColor(Color.WHITE);
         g2.draw(box);
 
+        //Text box text
+        g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.PLAIN, 18));
         g2.drawString(text, box.x + 10, box.y + 28);
     }
-
+    
     //Validates the admin login details using admin.txt
     public boolean validateLogin() {
 

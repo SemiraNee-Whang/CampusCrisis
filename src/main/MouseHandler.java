@@ -338,10 +338,45 @@ import java.io.IOException;
         }
     }
 
-     public void mouseWheelMoved(MouseWheelEvent e) {
+    public void mouseWheelMoved(MouseWheelEvent e) {
+
+        //Scrolls through the Decision History screen
         if (gp.gameState == gp.historyState) {
-            gp.historyView.scrollOffset += e.getWheelRotation() * 20;
-            if (gp.historyView.scrollOffset < 0) gp.historyView.scrollOffset = 0;
+
+            gp.historyView.scrollOffset +=
+                    e.getWheelRotation() * 20;
+
+            if (gp.historyView.scrollOffset < 0) {
+                gp.historyView.scrollOffset = 0;
+            }
+        }
+
+        //Scrolls through the Admin Request Manager
+        else if (gp.gameState == gp.adminRequestState) {
+
+            gp.requestManager.scrollOffset +=
+                    e.getWheelRotation() * 30;
+
+            //Stops scrolling above the first request
+            if (gp.requestManager.scrollOffset < 0) {
+                gp.requestManager.scrollOffset = 0;
+            }
+
+            //Calculates the maximum amount the table can scroll
+            int rowHeight = 35;
+            int visibleHeight = gp.screenHeight - 260;
+
+            int totalHeight =
+                    gp.requestManager.requestData.size()
+                    * rowHeight;
+
+            int maxScroll =
+                    Math.max(0, totalHeight - visibleHeight);
+
+            //Stops scrolling past the last request
+            if (gp.requestManager.scrollOffset > maxScroll) {
+                gp.requestManager.scrollOffset = maxScroll;
+            }
         }
     }
 
@@ -442,6 +477,9 @@ import java.io.IOException;
         	
         	//Reloads requests before opening the screen
         	gp.requestManager.loadRequests();
+
+        	//Starts the table at the top
+        	gp.requestManager.scrollOffset = 0;
 
         	//Opens the Request Management screen
         	gp.gameState = gp.adminRequestState;

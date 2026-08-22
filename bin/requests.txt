@@ -28,4 +28,3 @@ REQ027|Relaunch the school newspaper with online edition.|Culture|600|4
 REQ028|Arrange safety workshops for students who use school transport.|Welfare|250|3
 REQ029|Fund materials for a student-designed school mural.|Culture|400|4
 REQ030|Establish a small fund for outstanding students in need.|Welfare|5000|945
-REQ031|Upgrade computer lab|Academic|15000|10
