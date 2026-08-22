@@ -30,6 +30,8 @@ import java.io.IOException;
             handleTitleClick();
         } else if (gp.gameState == gp.loginState) {
             handleLoginClick();
+        } else if (gp.gameState == gp.adminLoginState) {
+            handleAdminLoginClick(x, y);
         } else if (gp.gameState == gp.setupState) {
             handleSetupClick(x, y);
         } else if (gp.gameState == gp.instructionState) {
@@ -38,11 +40,14 @@ import java.io.IOException;
             if (gp.historyView.backBtn.contains(x, y)) {
                 gp.gameState = gp.playState;
             }
+           
         } else if (gp.gameState == gp.reportState) {
             if (gp.reportView.backBtn.contains(e.getPoint())) {
                 resetGame();
                 gp.gameState = gp.titleState;
-            }
+            } 
+       
+           
         }
     }
 
@@ -379,5 +384,49 @@ import java.io.IOException;
         else if (y >= gp.tileSize * 7 && y <= gp.tileSize * 8) 
         	gp.pSetup.subState = 1;
         else gp.pSetup.subState = -1;
+    }
+    
+  //Handles clicks on the Admin Login screen
+    private void handleAdminLoginClick(int x, int y) {
+
+        //Back button
+        if (gp.adminLogin.backBtn.contains(x, y)) {
+
+            gp.adminLogin.activeField = -1;
+
+            //Clears login details when leaving the screen
+            gp.adminLogin.username = "";
+            gp.adminLogin.password = "";
+            gp.adminLogin.errorMessage = "";
+
+            gp.gameState = gp.titleState;
+        }
+
+        //Username textbox
+        else if (gp.adminLogin.usernameBox.contains(x, y)) {
+
+            gp.adminLogin.activeField = 0;
+            gp.adminLogin.errorMessage = "";
+        }
+
+        //Password textbox
+        else if (gp.adminLogin.passwordBox.contains(x, y)) {
+
+            gp.adminLogin.activeField = 1;
+            gp.adminLogin.errorMessage = "";
+        }
+
+        //Login button
+        else if (gp.adminLogin.loginBtn.contains(x, y)) {
+
+            gp.adminLogin.activeField = -1;
+
+            //Checks admin.txt for matching login details
+            if (gp.adminLogin.validateLogin()) {
+
+                gp.gameState = gp.adminState;
+
+            }
+        }
     }
 }

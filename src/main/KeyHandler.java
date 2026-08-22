@@ -35,6 +35,48 @@ public class KeyHandler implements KeyListener {
         	}
         }
         
+      //Admin Login Screen Typing
+        else if (gp.gameState == gp.adminLoginState) {
+
+            //Username field
+            if (gp.adminLogin.activeField == 0) {
+
+                if (c == KeyEvent.VK_BACK_SPACE) {
+                    if (gp.adminLogin.username.length() > 0) {
+                        gp.adminLogin.username =
+                                gp.adminLogin.username.substring(
+                                        0,
+                                        gp.adminLogin.username.length() - 1);
+                    }
+                }
+
+                else if (c >= 32 && c <= 126) {
+                    if (gp.adminLogin.username.length() < 16) {
+                        gp.adminLogin.username += c;
+                    }
+                }
+            }
+
+            //Password field
+            else if (gp.adminLogin.activeField == 1) {
+
+                if (c == KeyEvent.VK_BACK_SPACE) {
+                    if (gp.adminLogin.password.length() > 0) {
+                        gp.adminLogin.password =
+                                gp.adminLogin.password.substring(
+                                        0,
+                                        gp.adminLogin.password.length() - 1);
+                    }
+                }
+
+                else if (c >= 32 && c <= 126) {
+                    if (gp.adminLogin.password.length() < 16) {
+                        gp.adminLogin.password += c;
+                    }
+                }
+            }
+        }	
+        
         //PRESIDENT SETUP TYPING
         else if (gp.gameState == gp.setupState && gp.pSetup.nameBoxSelected) {
             if (c == KeyEvent.VK_BACK_SPACE) {
