@@ -34,6 +34,8 @@ import java.io.IOException;
             handleAdminLoginClick(x, y);
         }else if (gp.gameState == gp.adminState) {
             handleAdminMenuClick(x, y);
+        }else if (gp.gameState == gp.adminUserState) {
+            handleUserManagerClick(x, y);
         }else if (gp.gameState == gp.adminRequestState) {
                 handleRequestManagerClick(x, y);
         } else if (gp.gameState == gp.setupState) {
@@ -490,8 +492,14 @@ import java.io.IOException;
         //Manage Users Button
         else if (gp.adminMenu.manageUsersBtn.contains(x, y)) {
 
-            System.out.println("Manage Users clicked");
+        	//Reloads users before opening the screen
+        	gp.userManager.loadUsers();
 
+        	//Starts the table at the top
+        	gp.userManager.scrollOffset = 0;
+
+        	//Opens the User Management screen
+        	gp.gameState = gp.adminUserState;
         }
 
         //Back Button
@@ -528,6 +536,30 @@ import java.io.IOException;
 
         //Back button
         else if (gp.requestManager.backBtn.contains(x, y)) {
+            gp.gameState = gp.adminState;
+        }
+    }
+    
+  //Handles clicks on the User Management screen
+    private void handleUserManagerClick(int x, int y) {
+
+        //Add User button
+        if (gp.userManager.addBtn.contains(x, y)) {
+            System.out.println("Add User clicked");
+        }
+
+        //Edit User button
+        else if (gp.userManager.editBtn.contains(x, y)) {
+            System.out.println("Edit User clicked");
+        }
+
+        //Delete User button
+        else if (gp.userManager.deleteBtn.contains(x, y)) {
+            System.out.println("Delete User clicked");
+        }
+
+        //Back button
+        else if (gp.userManager.backBtn.contains(x, y)) {
             gp.gameState = gp.adminState;
         }
     }
