@@ -32,6 +32,8 @@ import java.io.IOException;
             handleLoginClick();
         } else if (gp.gameState == gp.adminLoginState) {
             handleAdminLoginClick(x, y);
+        }else if (gp.gameState == gp.adminState) {
+            handleAdminMenuClick(x, y);
         } else if (gp.gameState == gp.setupState) {
             handleSetupClick(x, y);
         } else if (gp.gameState == gp.instructionState) {
@@ -427,6 +429,36 @@ import java.io.IOException;
                 gp.gameState = gp.adminState;
 
             }
+        }
+    }
+    
+  //Handles clicks on the main Admin Menu
+    private void handleAdminMenuClick(int x, int y) {
+
+        //Manage Requests Button
+        if (gp.adminMenu.manageRequestsBtn.contains(x, y)) {
+
+            System.out.println("Manage Requests clicked");
+
+        }
+
+        //Manage Users Button
+        else if (gp.adminMenu.manageUsersBtn.contains(x, y)) {
+
+            System.out.println("Manage Users clicked");
+
+        }
+
+        //Back Button
+        else if (gp.adminMenu.backBtn.contains(x, y)) {
+
+            //Clears admin login information when logging out
+            gp.adminLogin.username = "";
+            gp.adminLogin.password = "";
+            gp.adminLogin.errorMessage = "";
+            gp.adminLogin.activeField = -1;
+
+            gp.gameState = gp.titleState;
         }
     }
 }
