@@ -364,7 +364,6 @@ import java.io.IOException;
                 gp.requestManager.scrollOffset = 0;
             }
 
-            //Calculates the maximum amount the table can scroll
             int rowHeight = 35;
             int visibleHeight = gp.screenHeight - 260;
 
@@ -380,8 +379,29 @@ import java.io.IOException;
                 gp.requestManager.scrollOffset = maxScroll;
             }
         }
-    }
 
+        //Scrolls through the Admin User Manager
+        else if (gp.gameState == gp.adminUserState) {
+
+            gp.userManager.scrollOffset +=
+                    e.getWheelRotation() * 30;
+
+            //Stops scrolling above the first user
+            if (gp.userManager.scrollOffset < 0) {
+                gp.userManager.scrollOffset = 0;
+            }
+
+            //Gets the correct maximum scroll amount
+            int maxScroll =
+                    gp.userManager.getMaxScroll();
+
+            //Stops scrolling past the last user
+            if (gp.userManager.scrollOffset > maxScroll) {
+                gp.userManager.scrollOffset = maxScroll;
+            }
+        }
+    }
+    
     public void mouseDragged(MouseEvent e) 
     { 
     	mouseX = e.getX(); mouseY = e.getY(); 
@@ -545,17 +565,17 @@ import java.io.IOException;
 
         //Add User button
         if (gp.userManager.addBtn.contains(x, y)) {
-            System.out.println("Add User clicked");
+        	gp.userManager.addUser();   
         }
 
-        //Edit User button
+      //Edit User button
         else if (gp.userManager.editBtn.contains(x, y)) {
-            System.out.println("Edit User clicked");
+            gp.userManager.editUser();
         }
 
-        //Delete User button
+      //Delete User button
         else if (gp.userManager.deleteBtn.contains(x, y)) {
-            System.out.println("Delete User clicked");
+            gp.userManager.deleteUser();
         }
 
         //Back button
