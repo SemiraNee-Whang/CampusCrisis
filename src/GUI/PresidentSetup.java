@@ -4,7 +4,7 @@ import java.awt.*;
 import main.GamePanel;
 
 public class PresidentSetup {
-    GamePanel gp;
+    private GamePanel gp;
     public String presidentName = "";
     public int subState = 0; // 0: Name Input, 1: Confirm Button, 2: Back Button
     

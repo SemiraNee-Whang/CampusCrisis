@@ -5,7 +5,7 @@ import entity.Player;
 
 //Helps with Character Collision
 public class CollisionChecker {
-    GamePanel gp;
+    private GamePanel gp;
 
     public CollisionChecker(GamePanel gp) {
         this.gp = gp;

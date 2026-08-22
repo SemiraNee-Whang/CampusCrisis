@@ -9,7 +9,7 @@
 	import main.Request;
 	
 	public class RequestList {
-	    GamePanel gp;
+	    private GamePanel gp;
 	    public Request currentRequest;
 	    public ArrayList<Request> allRequests = new ArrayList<>();
 	    public ArrayList<Request> history = new ArrayList<>(); 

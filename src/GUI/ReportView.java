@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import main.GamePanel;
 
 public class ReportView {
-    GamePanel gp;
+    private GamePanel gp;
     public Rectangle backBtn;
     ArrayList<String[]> gameHistory = new ArrayList<>();
 

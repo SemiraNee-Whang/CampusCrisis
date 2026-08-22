@@ -15,8 +15,8 @@ import java.awt.Rectangle;
  */
 public class Player extends Entity {
 
-    GamePanel gp;
-    KeyHandler keyH;
+    private GamePanel gp;
+    private KeyHandler keyH;
     public Rectangle solidArea;
     public boolean collisionOn = false;
 

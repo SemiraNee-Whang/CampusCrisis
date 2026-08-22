@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class ReportManager {
-    GamePanel gp;
+    private GamePanel gp;
 
     public ReportManager(GamePanel gp) {
         this.gp = gp;

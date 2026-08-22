@@ -11,7 +11,7 @@
 		//Handles the UI
 		public class UI {
 		
-		    GamePanel gp;
+		    private GamePanel gp;
 		    Graphics2D g2;
 		    // -1 means no hover
 		    public int commandNum = -1; 

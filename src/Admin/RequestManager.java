@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 //Handles viewing and managing requests from requests.txt
 public class RequestManager {
 
-    GamePanel gp;
+    private GamePanel gp;
 
     //Stores the request data read from requests.txt
     public ArrayList<String[]> requestData = new ArrayList<>();

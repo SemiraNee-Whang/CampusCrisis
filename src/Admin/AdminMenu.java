@@ -6,7 +6,7 @@ import main.GamePanel;
 //Handles the main Admin Menu after successful login
 public class AdminMenu {
 
-    GamePanel gp;
+    private GamePanel gp;
 
     //Buttons used on the Admin Menu
     public Rectangle manageRequestsBtn;

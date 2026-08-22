@@ -4,7 +4,7 @@ import java.awt.*;
 import main.GamePanel;
 
 public class Instructions {
-    GamePanel gp;
+    private GamePanel gp;
     public int subState = 0; 
     public Rectangle nextBtn, backBtn;
 

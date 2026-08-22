@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 	public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
-    GamePanel gp;
+    private GamePanel gp;
     public int mouseX, mouseY;
 
     public MouseHandler(GamePanel gp) {

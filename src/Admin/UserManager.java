@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 //Handles viewing and managing users from the login and sign up text file
 public class UserManager {
 
-    GamePanel gp;
+    private GamePanel gp;
 
     //Stores user data read from the login text file
     public ArrayList<String[]> userData = new ArrayList<>();

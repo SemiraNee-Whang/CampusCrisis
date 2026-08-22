@@ -4,7 +4,7 @@ import java.awt.*;
 import main.GamePanel;
 
 public class Dashboard {
-    GamePanel gp;
+    private GamePanel gp;
     
     //Live Stats
     public int budget;

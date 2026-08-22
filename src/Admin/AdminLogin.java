@@ -8,7 +8,7 @@ import main.GamePanel;
 //Handles the Admin Login Screen
 public class AdminLogin {
 
-    GamePanel gp;
+    private GamePanel gp;
 
     //Stores admin username and password entered by the user
     public String username = "";

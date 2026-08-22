@@ -6,7 +6,7 @@ import java.util.Scanner;
 import main.GamePanel;
 
 public class LoginManager {
-    GamePanel gp;
+    private GamePanel gp;
     public String userText = "";
     public String passText = "";
     public int subState = -1; // -1: None, 0: User, 1: Pass, 2: Action, 3: Switch

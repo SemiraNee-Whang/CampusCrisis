@@ -5,7 +5,7 @@ import main.GamePanel;
 import main.Request;
 
 public class DecisionHistory {
-    GamePanel gp;
+	private GamePanel gp;
     public int scrollOffset = 0; 
     public Rectangle backBtn;
 
