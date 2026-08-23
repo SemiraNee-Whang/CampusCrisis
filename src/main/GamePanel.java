@@ -46,10 +46,12 @@ public class GamePanel extends JPanel implements Runnable {
     public GUI.DecisionHistory historyView = new GUI.DecisionHistory(this);
     public AdminLogin adminLogin = new AdminLogin(this);
     public AdminMenu adminMenu = new AdminMenu(this);
+    public RequestStorage requestStorage = new RequestStorage();
     public RequestManager requestManager = new RequestManager(this);
     public UserStorage userStorage = new UserStorage();
     public UserManager userManager = new UserManager(this);
     public DecisionManager decisionManager = new DecisionManager(this);
+    
   
     public java.util.ArrayList<main.Request> history = new java.util.ArrayList<>();
     public int requestsHandled = 0;
