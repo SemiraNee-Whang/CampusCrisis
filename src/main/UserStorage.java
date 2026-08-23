@@ -11,6 +11,11 @@ public class UserStorage {
 
     //Stores all users loaded from Log in & Sign Up.txt
     private ArrayList<String[]> userData = new ArrayList<>();
+    private String lastError = "";
+
+    public String getLastError() {
+        return lastError;
+    }
 
     /**
      * Loads all valid user records from Log in & Sign Up.txt.
@@ -19,6 +24,8 @@ public class UserStorage {
     public ArrayList<String[]> loadUsers() {
 
         userData.clear();
+        lastError = "";
+
 
         try (BufferedReader br =
                 new BufferedReader(
@@ -53,6 +60,9 @@ public class UserStorage {
             }
 
         } catch (Exception e) {
+
+            lastError =
+                    "Could not read user data.";
 
             e.printStackTrace();
         }

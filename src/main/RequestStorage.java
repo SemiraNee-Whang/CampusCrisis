@@ -12,6 +12,13 @@ public class RequestStorage {
     //Stores request records loaded from requests.txt
     private ArrayList<String[]> requestData = new ArrayList<>();
 
+    
+    private String lastError = "";
+
+    public String getLastError() {
+        return lastError;
+    }
+    
     /**
      * Loads all valid request records from requests.txt.
      * Returns the ArrayList containing the loaded requests.
@@ -212,6 +219,8 @@ public class RequestStorage {
      */
     private boolean saveAllRequests() {
 
+        lastError = "";
+
         try (BufferedWriter bw =
                 new BufferedWriter(
                         new FileWriter(
@@ -239,6 +248,9 @@ public class RequestStorage {
             return true;
 
         } catch (Exception e) {
+
+            lastError =
+                    "Could not save request data.";
 
             e.printStackTrace();
             return false;
