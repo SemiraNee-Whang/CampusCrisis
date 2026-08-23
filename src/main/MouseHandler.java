@@ -110,14 +110,10 @@ import java.awt.event.*;
             gp.requestsHandled++;
         }
 
-        //Keeps approval between 0 and 100
-        if (gp.dashboard.approval > 100) {
-            gp.dashboard.approval = 100;
-        }
-
-        if (gp.dashboard.approval < 0) {
-            gp.dashboard.approval = 0;
-        }
+        //Backend corrects approval range
+        gp.dashboard.approval =
+                gp.decisionManager.clampApproval(
+                        gp.dashboard.approval);
 
         gp.checkGameOver();
 

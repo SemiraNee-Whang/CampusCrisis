@@ -157,4 +157,21 @@ public class DecisionManager {
 
         return true;
     }
+    
+    /**
+     * Keeps the approval rating within the valid range of 0 to 100.
+     * Returns the corrected approval value.
+     */
+    public int clampApproval(int approval) {
+
+        if (approval > 100) {
+            return 100;
+        }
+
+        if (approval < 0) {
+            return 0;
+        }
+
+        return approval;
+    }
 }
