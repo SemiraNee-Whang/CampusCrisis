@@ -364,4 +364,24 @@ public class RequestList {
 
         showButtons = false;
     }
+    
+    /**
+     * Reloads all requests from secondary storage
+     * and prepares the first request for gameplay.
+     */
+    public void reloadRequests() {
+
+        allRequests.clear();
+        history.clear();
+
+        loadRequests();
+
+        if (!allRequests.isEmpty()) {
+            currentRequest = allRequests.get(0);
+        } else {
+            currentRequest = null;
+        }
+
+        showButtons = false;
+    }
 }

@@ -50,7 +50,7 @@ import java.awt.event.*;
            
         } else if (gp.gameState == gp.reportState) {
             if (gp.reportView.backBtn.contains(e.getPoint())) {
-                resetGame();
+            	gp.resetGame();
                 gp.gameState = gp.titleState;
             } 
        
@@ -124,16 +124,7 @@ import java.awt.event.*;
         gp.reqList.loadNextRequest();
     }
 
-    //Handles restarting stats for a fresh game session.
-    public void resetGame() {
-        gp.dashboard.budget = gp.pSetup.STARTING_BUDGET;
-        gp.dashboard.approval = gp.pSetup.STARTING_APPROVAL;
-        gp.dashboard.minutes = 5;
-        gp.dashboard.seconds = 0;
-        gp.history.clear();
-        gp.reqList.history.clear();
-        gp.player.setDefaultValues();
-    }
+    
 
     // Main menu button and Exit screen logic.
     private void handleTitleClick() {

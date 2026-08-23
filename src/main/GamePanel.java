@@ -253,4 +253,27 @@ public class GamePanel extends JPanel implements Runnable {
     public void incrementRequestsHandled() {
         requestsHandled++;
     }
+    
+    /**
+     * Resets all game values for a new term.
+     */
+    public void resetGame() {
+
+        dashboard.budget = pSetup.STARTING_BUDGET;
+        dashboard.approval = pSetup.STARTING_APPROVAL;
+
+        dashboard.minutes = 5;
+        dashboard.seconds = 0;
+        dashboard.secondCounter = 0;
+
+        requestsHandled = 0;
+
+        history.clear();
+        reqList.history.clear();
+
+        //Reloads requests from storage for a fresh term
+        reqList.reloadRequests();
+
+        player.setDefaultValues();
+    }
 }
