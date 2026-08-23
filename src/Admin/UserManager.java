@@ -46,6 +46,15 @@
 	    public Rectangle cancelBtn;
 	    public Rectangle usernameBox;
 	    public Rectangle passwordBox;
+	    
+	  //Controls whether the Edit User form is visible
+	    public boolean editingUser = false;
+
+	    //Stores the original username being edited
+	    public String originalUsername = "";
+	    
+	  //Stores the username selected from the table
+	    public String selectedUsername = "";
 	
 	    public UserManager(GamePanel gp) {
 	        this.gp = gp;
@@ -194,41 +203,59 @@
 	                tableX + tableWidth - 20,
 	                headerY + 10);
 	
-	        //User Rows
+	      //User Rows
 	        g2.setFont(new Font(
 	                "Arial",
 	                Font.PLAIN,
 	                15));
-	
+
 	        int rowHeight = 35;
-	
+
 	        for (int i = 0; i < userData.size(); i++) {
-	
+
 	            String[] data = userData.get(i);
-	
+
 	            int rowY =
 	                    headerY
 	                    + 45
 	                    + (i * rowHeight)
 	                    - scrollOffset;
-	
+
 	            //Only draws users inside the table
 	            if (rowY > headerY + 20
 	                    && rowY < tableY + tableHeight - 10) {
-	
+
+	                //Highlights the selected user
+	                if (data[0].trim()
+	                        .equalsIgnoreCase(selectedUsername)) {
+
+	                    g2.setColor(new Color(230, 230, 230));
+
+	                    g2.fillRect(
+	                            tableX + 10,
+	                            rowY - 22,
+	                            tableWidth - 20,
+	                            28);
+	                }
+
+	                //Sets text back to black
+	                g2.setColor(Color.BLACK);
+
+	                //Username
 	                g2.drawString(
 	                        data[0].trim(),
 	                        tableX + 50,
 	                        rowY);
-	
+
+	                //Password
 	                g2.drawString(
 	                        data[1].trim(),
 	                        tableX + 400,
 	                        rowY);
 	            }
 	        }
-
-	        if (addingUser) {
+	        
+	        if (addingUser || editingUser) {
 	            drawAddUserForm(g2);
 	        }
 	
@@ -238,6 +265,9 @@
 	        drawButton(g2, editBtn, "EDIT");
 	        drawButton(g2, deleteBtn, "DELETE");
 	        drawButton(g2, backBtn, "BACK");
+	        
+	       
+	        
 	    }
 	
 	    //Draws a reusable button
@@ -564,8 +594,10 @@
 
 	        g2.setColor(Color.WHITE);
 
+	        String formTitle = editingUser ? "EDIT USER" : "ADD USER";
+
 	        g2.drawString(
-	                "ADD USER",
+	                formTitle,
 	                formX + 195,
 	                formY + 40);
 
@@ -652,4 +684,107 @@
 	                "CANCEL");
 	    }
 	    
+	    /**
+	     * Loads an existing user's details into the form for editing.
+	     */
+	    public boolean loadUserForEdit(String username) {
+
+	        if (!Validation.isValidString(username)) {
+	            message = "Please enter a username.";
+	            return false;
+	        }
+
+	        for (String[] user : userData) {
+
+	            if (user[0].trim().equalsIgnoreCase(username.trim())) {
+
+	                originalUsername = user[0].trim();
+
+	                newUsername = user[0].trim();
+	                newPassword = user[1].trim();
+
+	                editingUser = true;
+	                addingUser = false;
+
+	                activeField = 0;
+	                message = "";
+
+	                return true;
+	            }
+	        }
+
+	        message = "Username not found.";
+	        return false;
+	    }
+	    
+	    /**
+	     * Sends edited user details to UserStorage.
+	     * Displays a message depending on whether the update succeeds.
+	     */
+	    public void saveEditedUser() {
+
+	        if (!Validation.isValidString(newUsername)) {
+	            message = "Please enter a username.";
+	            return;
+	        }
+
+	        if (!Validation.isValidString(newPassword)) {
+	            message = "Please enter a password.";
+	            return;
+	        }
+
+	        boolean updated =
+	                gp.userStorage.editUser(
+	                        originalUsername,
+	                        newUsername,
+	                        newPassword);
+
+	        if (updated) {
+
+	            loadUsers();
+
+	            message = "User updated successfully.";
+
+	            originalUsername = "";
+	            newUsername = "";
+	            newPassword = "";
+
+	            editingUser = false;
+	            activeField = -1;
+
+	        } else {
+
+	            message = "Username already exists or could not be updated.";
+	        }
+	    }
+	    
+	    /**
+	     * Receives the mouse y-coordinate.
+	     * Selects the user row that was clicked.
+	     */
+	    public void selectUserAt(int mouseY) {
+
+	        int tableY = 110;
+	        int headerY = tableY + 35;
+	        int rowHeight = 35;
+
+	        for (int i = 0; i < userData.size(); i++) {
+
+	            int rowY =
+	                    headerY
+	                    + 45
+	                    + (i * rowHeight)
+	                    - scrollOffset;
+
+	            if (mouseY >= rowY - 22
+	                    && mouseY <= rowY + 8) {
+
+	                selectedUsername =
+	                        userData.get(i)[0].trim();
+
+	                message = "";
+	                return;
+	            }
+	        }
+	    }
 	}

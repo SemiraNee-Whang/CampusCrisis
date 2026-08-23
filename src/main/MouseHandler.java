@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import main.Validation;
 
 
 	public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
@@ -591,66 +592,123 @@ import java.io.IOException;
     
   //Handles clicks on the User Management screen
     private void handleUserManagerClick(int x, int y) {
-    	//Handles Add User form
-    	if (gp.userManager.addingUser) {
 
-    	    //Username textbox
-    	    if (gp.userManager.usernameBox.contains(x, y)) {
+        //ADD OR EDIT FORM IS OPEN
+        if (gp.userManager.addingUser
+                || gp.userManager.editingUser) {
 
-    	        gp.userManager.activeField = 0;
-    	        return;
-    	    }
+            //Username textbox
+            if (gp.userManager.usernameBox.contains(x, y)) {
 
-    	    //Password textbox
-    	    if (gp.userManager.passwordBox.contains(x, y)) {
+                gp.userManager.activeField = 0;
+                gp.userManager.message = "";
+                gp.requestFocusInWindow();
+                return;
+            }
 
-    	        gp.userManager.activeField = 1;
-    	        return;
-    	    }
+            //Password textbox
+            if (gp.userManager.passwordBox.contains(x, y)) {
 
-    	    //Save button
-    	    if (gp.userManager.saveBtn.contains(x, y)) {
+                gp.userManager.activeField = 1;
+                gp.userManager.message = "";
+                gp.requestFocusInWindow();
+                return;
+            }
 
-    	        gp.userManager.saveNewUser();
-    	        return;
-    	    }
+            //SAVE button
+            if (gp.userManager.saveBtn.contains(x, y)) {
 
-    	    //Cancel button
-    	    if (gp.userManager.cancelBtn.contains(x, y)) {
+                if (gp.userManager.editingUser) {
 
-    	        gp.userManager.addingUser = false;
-    	        gp.userManager.newUsername = "";
-    	        gp.userManager.newPassword = "";
-    	        gp.userManager.message = "";
-    	        gp.userManager.activeField = -1;
+                    gp.userManager.saveEditedUser();
 
-    	        return;
-    	    }
+                } else {
 
-    	    return;
-    	}
+                    gp.userManager.saveNewUser();
+                }
 
-        //Add User button
+                return;
+            }
+
+            //CANCEL button
+            if (gp.userManager.cancelBtn.contains(x, y)) {
+
+                gp.userManager.addingUser = false;
+                gp.userManager.editingUser = false;
+
+                gp.userManager.newUsername = "";
+                gp.userManager.newPassword = "";
+                gp.userManager.originalUsername = "";
+
+                gp.userManager.message = "";
+                gp.userManager.activeField = -1;
+
+                return;
+            }
+
+            return;
+        }
+
+
+        //SELECT A USER FROM THE TABLE
+        if (x >= 120
+                && x <= gp.screenWidth - 120
+                && y >= 110
+                && y <= gp.screenHeight - 120) {
+
+            gp.userManager.selectUserAt(y);
+            return;
+        }
+
+
+        //ADD USER
         if (gp.userManager.addBtn.contains(x, y)) {
-        	gp.userManager.addingUser = true;
-        	gp.userManager.newUsername = "";
-        	gp.userManager.newPassword = "";
-        	gp.userManager.activeField = 0;
-        	gp.userManager.message = "";  
+
+            gp.userManager.addingUser = true;
+            gp.userManager.editingUser = false;
+
+            gp.userManager.newUsername = "";
+            gp.userManager.newPassword = "";
+
+            gp.userManager.message = "";
+            gp.userManager.activeField = 0;
+
+            gp.requestFocusInWindow();
         }
 
-      //Edit User button
+
+        //EDIT USER
         else if (gp.userManager.editBtn.contains(x, y)) {
-            gp.userManager.editUser();
+
+            //Checks that a user has been selected
+            if (!Validation.isValidString(
+                    gp.userManager.selectedUsername)) {
+
+                gp.userManager.message =
+                        "Please select a user first.";
+
+                return;
+            }
+
+            //Loads the selected user's information
+            gp.userManager.loadUserForEdit(
+                    gp.userManager.selectedUsername);
+
+            gp.requestFocusInWindow();
         }
 
-      //Delete User button
-        else if (gp    	.userManager.deleteBtn.contains(x, y)) {
+
+        //DELETE USER - old version temporarily
+        else if (gp.userManager.deleteBtn.contains(x, y)) {
+
             gp.userManager.deleteUser();
         }
 
-        //Back button
+
+        //BACK
         else if (gp.userManager.backBtn.contains(x, y)) {
+
+            gp.userManager.selectedUsername = "";
             gp.gameState = gp.adminState;
         }
     }

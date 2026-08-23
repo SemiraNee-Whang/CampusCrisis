@@ -89,8 +89,10 @@ public class KeyHandler implements KeyListener {
         }
         
       //Manage Users - Add User Form Typing
+      //Manage Users - Add/Edit User Form Typing
         else if (gp.gameState == gp.adminUserState
-                && gp.userManager.addingUser) {
+                && (gp.userManager.addingUser
+                || gp.userManager.editingUser)) {
 
             //USERNAME FIELD
             if (gp.userManager.activeField == 0) {
