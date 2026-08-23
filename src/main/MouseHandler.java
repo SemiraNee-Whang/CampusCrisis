@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 	public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
     private GamePanel gp;
     public int mouseX, mouseY;
@@ -287,7 +288,12 @@ import java.io.IOException;
         int boxY = gp.tileSize * 5 - 30;
         gp.pSetup.nameBoxSelected = (x >= boxX && x <= boxX + (gp.tileSize * 6) && y >= boxY && y <= boxY + 40);
         
-        if (gp.pSetup.subState == 1 && !gp.pSetup.presidentName.trim().isEmpty()) gp.gameState = gp.playState;
+        if (gp.pSetup.subState == 1
+                && gp.pSetup.validatePresidentName()) {
+
+            gp.gameState = gp.playState;
+        }
+        
         else if (gp.pSetup.subState == 2) gp.gameState = gp.loginState;
     }
 

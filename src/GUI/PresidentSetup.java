@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.*;
 import main.GamePanel;
+import main.Validation;
 
 public class PresidentSetup {
     private GamePanel gp;
@@ -64,5 +65,13 @@ public class PresidentSetup {
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 28F));
         g2.setColor(subState == 1 ? Color.YELLOW : Color.WHITE);
         g2.drawString("CONFIRM", gp.tileSize * 7, gp.tileSize * 8);
+    }
+    
+    /**
+     * Validates the entered president name.
+     * Returns true if a name has been entered.
+     */
+    public boolean validatePresidentName() {
+        return Validation.isValidString(presidentName);
     }
 }

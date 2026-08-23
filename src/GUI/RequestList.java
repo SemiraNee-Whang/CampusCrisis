@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
+import main.Validation;
 import main.GamePanel;
 import main.Request;
 
@@ -181,22 +181,27 @@ public class RequestList {
 
                     if (parts.length >= 5) {
 
-                        try {
+                        String id = parts[0].trim();
+                        String description = parts[1].trim();
+                        String category = parts[2].trim();
+                        String costText = parts[3].trim();
+                        String impactText = parts[4].trim();
 
-                            //Creates a Request object using the stored data
+                        //Validates text-file data before creating Request object
+                        if (Validation.isValidString(id)
+                                && Validation.isValidString(description)
+                                && Validation.isValidString(category)
+                                && Validation.isPositiveInteger(costText)
+                                && Validation.isInteger(impactText)) {
+
                             Request request = new Request(
-                                    parts[0].trim(),
-                                    parts[1].trim(),
-                                    parts[2].trim(),
-                                    Integer.parseInt(parts[3].trim()),
-                                    Integer.parseInt(parts[4].trim()));
+                                    id,
+                                    description,
+                                    category,
+                                    Integer.parseInt(costText),
+                                    Integer.parseInt(impactText));
 
-                            //Adds the Request object to the ArrayList
                             allRequests.add(request);
-
-                        } catch (Exception e) {
-
-                            //Skips incorrectly formatted request records
                         }
                     }
                 }

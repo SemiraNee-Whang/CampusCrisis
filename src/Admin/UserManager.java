@@ -1,6 +1,7 @@
 package Admin;
 
 import java.awt.*;
+import main.Validation;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -87,10 +88,18 @@ public class UserManager {
 
                     if (parts.length == 2) {
 
-                        userData.add(new String[]{
-                            parts[0].trim(),
-                            parts[1].trim()
-                        });
+                        String username = parts[0].trim();
+                        String password = parts[1].trim();
+
+                        //Only loads valid user records
+                        if (Validation.isValidString(username)
+                                && Validation.isValidString(password)) {
+
+                            userData.add(new String[]{
+                                username,
+                                password
+                            });
+                        }
                     }
                 }
             }
@@ -258,82 +267,103 @@ public class UserManager {
     }
     
   //Adds a new user to Log in & Sign Up.txt
-    public void addUser() {
+    	public void addUser() {
 
-        //Asks the admin to enter a username
-        String username = JOptionPane.showInputDialog(
-                null,
-                "Enter Username:");
+    	    //Asks the admin to enter a username
+    	    String username = JOptionPane.showInputDialog(
+    	            null,
+    	            "Enter Username:");
 
-        //Stops if Cancel is clicked or nothing is entered
-        if (username == null || username.trim().isEmpty()) {
-            return;
-        }
+    	    //Stops if Cancel is clicked
+    	    if (username == null) {
+    	        return;
+    	    }
 
-        //Checks that the username does not already exist
-        for (String[] user : userData) {
+    	    //Validates username
+    	    if (!Validation.isValidString(username)) {
 
-            if (user.length >= 2
-                    && user[0].trim().equalsIgnoreCase(username.trim())) {
+    	        JOptionPane.showMessageDialog(
+    	                null,
+    	                "Please enter a username.",
+    	                "Invalid Input",
+    	                JOptionPane.ERROR_MESSAGE);
 
-                JOptionPane.showMessageDialog(
-                        null,
-                        "That username already exists.",
-                        "Duplicate Username",
-                        JOptionPane.ERROR_MESSAGE);
+    	        return;
+    	    }
 
-                return;
-            }
-        }
+    	    //Checks that the username does not already exist
+    	    for (String[] user : userData) {
 
-        //Asks the admin to enter a password
-        String password = JOptionPane.showInputDialog(
-                null,
-                "Enter Password:");
+    	        if (user.length >= 2
+    	                && user[0].trim().equalsIgnoreCase(username.trim())) {
 
-        //Stops if Cancel is clicked or nothing is entered
-        if (password == null || password.trim().isEmpty()) {
-            return;
-        }
+    	            JOptionPane.showMessageDialog(
+    	                    null,
+    	                    "That username already exists.",
+    	                    "Duplicate Username",
+    	                    JOptionPane.ERROR_MESSAGE);
 
-        try (BufferedWriter bw =
-                new BufferedWriter(
-                        new FileWriter(
-                                "Log in & Sign Up.txt",
-                                true))) {
+    	            return;
+    	        }
+    	    }
 
-            //Format:
-            //username,password
-            bw.write(
-                    username.trim()
-                    + ","
-                    + password.trim());
+    	    //Asks the admin to enter a password
+    	    String password = JOptionPane.showInputDialog(
+    	            null,
+    	            "Enter Password:");
 
-            bw.newLine();
-            bw.flush();
+    	    //Stops if Cancel is clicked
+    	    if (password == null) {
+    	        return;
+    	    }
 
+    	    //Validates password
+    	    if (!Validation.isValidString(password)) {
 
-            //Reloads users so the new user appears immediately
-            loadUsers();
+    	        JOptionPane.showMessageDialog(
+    	                null,
+    	                "Please enter a password.",
+    	                "Invalid Input",
+    	                JOptionPane.ERROR_MESSAGE);
 
-            scrollOffset = getMaxScroll();
+    	        return;
+    	    }
 
-          //Automatically scrolls to the newest user
-            JOptionPane.showMessageDialog(
-                    null,
-                    "User added successfully.");
-            
-        } catch (Exception e) {
+    	    try (BufferedWriter bw =
+    	            new BufferedWriter(
+    	                    new FileWriter(
+    	                            "Log in & Sign Up.txt",
+    	                            true))) {
 
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Could not add user.",
-                    "File Error",
-                    JOptionPane.ERROR_MESSAGE);
+    	        //Format: username,password
+    	        bw.write(
+    	                username.trim()
+    	                + ","
+    	                + password.trim());
 
-            e.printStackTrace();
-        }
-    }
+    	        bw.newLine();
+
+    	        //Reloads users
+    	        loadUsers();
+
+    	        //Automatically scrolls to newest user
+    	        scrollOffset = getMaxScroll();
+
+    	        JOptionPane.showMessageDialog(
+    	                null,
+    	                "User added successfully.");
+
+    	    } catch (Exception e) {
+
+    	        JOptionPane.showMessageDialog(
+    	                null,
+    	                "Could not add user.",
+    	                "File Error",
+    	                JOptionPane.ERROR_MESSAGE);
+
+    	        e.printStackTrace();
+    	    }
+    	}
     
   //Edits an existing user in Log in & Sign Up.txt
     public void editUser() {
@@ -478,8 +508,20 @@ public class UserManager {
                 null,
                 "Enter the Username you want to delete:");
 
-        //Stops if Cancel is clicked or nothing is entered
-        if (searchUsername == null || searchUsername.trim().isEmpty()) {
+      //Stops if Cancel is clicked
+        if (searchUsername == null) {
+            return;
+        }
+
+        //Validates username
+        if (!Validation.isValidString(searchUsername)) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Please enter a username.",
+                    "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE);
+
             return;
         }
 

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.Scanner;
 import main.GamePanel;
+import main.Validation;
 
 public class LoginManager {
     private GamePanel gp;
@@ -99,12 +100,35 @@ public class LoginManager {
     }
 
     public void registerUser() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Log in & Sign Up.txt", true))) {
-            if (userText.isEmpty() || passText.isEmpty()) { message = "Fields empty!"; return; }
+
+        //Validates username
+        if (!Validation.isValidString(userText)) {
+            message = "Please enter a username.";
+            return;
+        }
+
+        //Validates password
+        if (!Validation.isValidString(passText)) {
+            message = "Please enter a password.";
+            return;
+        }
+
+        try (BufferedWriter bw =
+                new BufferedWriter(
+                        new FileWriter("Log in & Sign Up.txt", true))) {
+
             bw.write(userText + "," + passText);
             bw.newLine();
+
             message = "Success! Please Login.";
-            isSignUp = false; userText = ""; passText = "";
-        } catch (IOException e) { message = "Error writing file!"; }
+
+            isSignUp = false;
+            userText = "";
+            passText = "";
+
+        } catch (IOException e) {
+
+            message = "Error writing file!";
+        }
     }
 }

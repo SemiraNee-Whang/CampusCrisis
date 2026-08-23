@@ -1,6 +1,7 @@
 package Admin;
 
 import java.awt.*;
+import main.Validation;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -88,7 +89,28 @@ public class RequestManager {
                     String[] parts = line.split("\\|");
 
                     if (parts.length >= 5) {
-                        requestData.add(parts);
+
+                        String id = parts[0].trim();
+                        String description = parts[1].trim();
+                        String category = parts[2].trim();
+                        String cost = parts[3].trim();
+                        String impact = parts[4].trim();
+
+                        //Only loads valid records
+                        if (Validation.isValidString(id)
+                                && Validation.isValidString(description)
+                                && Validation.isValidString(category)
+                                && Validation.isPositiveInteger(cost)
+                                && Validation.isInteger(impact)) {
+
+                            requestData.add(new String[] {
+                                id,
+                                description,
+                                category,
+                                cost,
+                                impact
+                            });
+                        }
                     }
                 }
             }
@@ -346,87 +368,139 @@ public class RequestManager {
         return String.format("REQ%03d", nextID);
     }
     
-  //Adds a new request to requests.txt
+    /**
+     * Allows the admin to add a new request.
+     * Validates all entered data before saving the request.
+     */
     public void addRequest() {
 
-        
-    	String id = generateRequestID();
+        String id = generateRequestID();
 
-        //Asks the admin to enter the Request Description
+        //Request Description
         String description = JOptionPane.showInputDialog(
                 null,
                 "Enter Request Description:");
 
-        if (description == null || description.trim().isEmpty()) {
+        //Stops if Cancel is pressed
+        if (description == null) {
             return;
         }
 
-        //Asks the admin to enter the Request Category
+        //Validates description
+        if (!Validation.isValidString(description)) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Please enter a request description.",
+                    "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return;
+        }
+
+
+        //Request Category
         String category = JOptionPane.showInputDialog(
                 null,
                 "Enter Request Category:");
 
-        if (category == null || category.trim().isEmpty()) {
+        if (category == null) {
             return;
         }
 
-        try {
+        //Validates category
+        if (!Validation.isValidString(category)) {
 
-            //Asks the admin to enter the cost
-            int cost = Integer.parseInt(
-                    JOptionPane.showInputDialog(
-                            null,
-                            "Enter Request Cost:"));
-
-            //Asks the admin to enter the approval impact
-            int impact = Integer.parseInt(
-                    JOptionPane.showInputDialog(
-                            null,
-                            "Enter Approval Impact:"));
-
-            //Adds the new request to requests.txt
-            try (BufferedWriter bw =
-                         new BufferedWriter(
-                                 new FileWriter(
-                                         "res/requests.txt",
-                                         true))) {
-
-                //Format:
-                //requestID|description|category|cost|approvalImpact
-                bw.write(
-                        id.trim()
-                        + "|"
-                        + description.trim()
-                        + "|"
-                        + category.trim()
-                        + "|"
-                        + cost
-                        + "|"
-                        + impact);
-
-                bw.newLine();
-            }
-
-            //Shows confirmation message
             JOptionPane.showMessageDialog(
                     null,
-                    "Request added successfully.\nRequest ID: " + id);
-            
-            //Reloads the table so the new request appears
-            loadRequests();
-
-        } catch (NumberFormatException e) {
-
-            //Shows an error if cost or approval impact is not a number
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Cost and Approval Impact must be numbers.",
+                    "Please enter a request category.",
                     "Invalid Input",
                     JOptionPane.ERROR_MESSAGE);
 
+            return;
+        }
+
+
+        //Request Cost
+        String costText = JOptionPane.showInputDialog(
+                null,
+                "Enter Request Cost:");
+
+        if (costText == null) {
+            return;
+        }
+
+        //Validates cost
+        if (!Validation.isPositiveInteger(costText)) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Cost must be a positive whole number.",
+                    "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return;
+        }
+
+
+        //Approval Impact
+        String impactText = JOptionPane.showInputDialog(
+                null,
+                "Enter Approval Impact:");
+
+        if (impactText == null) {
+            return;
+        }
+
+        //Validates approval impact
+        if (!Validation.isInteger(impactText)) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Approval Impact must be a whole number.",
+                    "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return;
+        }
+
+
+        //Converts validated Strings to integers
+        int cost = Integer.parseInt(costText.trim());
+        int impact = Integer.parseInt(impactText.trim());
+
+
+        try (BufferedWriter bw =
+                new BufferedWriter(
+                        new FileWriter(
+                                "res/requests.txt",
+                                true))) {
+
+            //Format:
+            //requestID|description|category|cost|approvalImpact
+            bw.write(
+                    id.trim()
+                    + "|"
+                    + description.trim()
+                    + "|"
+                    + category.trim()
+                    + "|"
+                    + cost
+                    + "|"
+                    + impact);
+
+            bw.newLine();
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Request added successfully.\nRequest ID: "
+                    + id);
+
+            //Reload table
+            loadRequests();
+
         } catch (Exception e) {
 
-            //Shows an error if the file cannot be updated
             JOptionPane.showMessageDialog(
                     null,
                     "Could not add request.",
@@ -479,7 +553,19 @@ public class RequestManager {
                 null,
                 "Enter the Request ID you want to edit:");
 
-        if (searchID == null || searchID.trim().isEmpty()) {
+        if (searchID == null) {
+            return;
+        }
+
+        //Validates Request ID
+        if (!Validation.isValidString(searchID)) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Please enter a Request ID.",
+                    "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE);
+
             return;
         }
 
@@ -507,7 +593,19 @@ public class RequestManager {
                         "Enter new Description:",
                         oldDescription);
 
-                if (newDescription == null || newDescription.trim().isEmpty()) {
+                if (newDescription == null) {
+                    return;
+                }
+
+                //Validates description
+                if (!Validation.isValidString(newDescription)) {
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Please enter a request description.",
+                            "Invalid Input",
+                            JOptionPane.ERROR_MESSAGE);
+
                     return;
                 }
 
@@ -517,54 +615,95 @@ public class RequestManager {
                         "Enter new Category:",
                         oldCategory);
 
-                if (newCategory == null || newCategory.trim().isEmpty()) {
+                if (newCategory == null) {
                     return;
                 }
 
-                try {
-
-                    //Asks for the new cost
-                    int newCost = Integer.parseInt(
-                            JOptionPane.showInputDialog(
-                                    null,
-                                    "Enter new Cost:",
-                                    oldCost));
-
-                    //Asks for the new approval impact
-                    int newImpact = Integer.parseInt(
-                            JOptionPane.showInputDialog(
-                                    null,
-                                    "Enter new Approval Impact:",
-                                    oldImpact));
-
-                    //Updates the request inside the ArrayList
-                    requestData.set(i, new String[]{
-                        data[0].trim(),
-                        newDescription.trim(),
-                        newCategory.trim(),
-                        String.valueOf(newCost),
-                        String.valueOf(newImpact)
-                    });
-
-                    //Rewrites requests.txt with the updated data
-                    saveAllRequests();
-
-                    //Reloads the table
-                    loadRequests();
+                //Validates category
+                if (!Validation.isValidString(newCategory)) {
 
                     JOptionPane.showMessageDialog(
                             null,
-                            "Request updated successfully.");
-
-                } catch (NumberFormatException e) {
-
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Cost and Approval Impact must be numbers.",
+                            "Please enter a request category.",
                             "Invalid Input",
                             JOptionPane.ERROR_MESSAGE);
+
+                    return;
                 }
 
+                //Asks for the new cost
+                String newCostText = JOptionPane.showInputDialog(
+                        null,
+                        "Enter new Cost:",
+                        oldCost);
+
+                if (newCostText == null) {
+                    return;
+                }
+
+                //Validates cost
+                if (!Validation.isPositiveInteger(newCostText)) {
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Cost must be a positive whole number.",
+                            "Invalid Input",
+                            JOptionPane.ERROR_MESSAGE);
+
+                    return;
+                }
+
+                //Asks for the new approval impact
+                String newImpactText = JOptionPane.showInputDialog(
+                        null,
+                        "Enter new Approval Impact:",
+                        oldImpact);
+
+                if (newImpactText == null) {
+                    return;
+                }
+
+                //Validates approval impact
+                if (!Validation.isInteger(newImpactText)) {
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Approval Impact must be a whole number.",
+                            "Invalid Input",
+                            JOptionPane.ERROR_MESSAGE);
+
+                    return;
+                }
+
+                //Converts validated Strings
+                int newCost =
+                        Integer.parseInt(newCostText.trim());
+
+                int newImpact =
+                        Integer.parseInt(newImpactText.trim());
+
+                //Updates the request inside the ArrayList
+                requestData.set(
+                        i,
+                        new String[] {
+                            data[0].trim(),
+                            newDescription.trim(),
+                            newCategory.trim(),
+                            String.valueOf(newCost),
+                            String.valueOf(newImpact)
+                        });
+
+                //Rewrites requests.txt
+                saveAllRequests();
+
+                //Reloads the table
+                loadRequests();
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Request updated successfully.");
+
+                //Stops searching once the request has been found
                 break;
             }
         }

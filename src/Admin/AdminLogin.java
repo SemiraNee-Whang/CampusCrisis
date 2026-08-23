@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import main.GamePanel;
+import main.Validation;
 
 //Handles the Admin Login Screen
 public class AdminLogin {
@@ -173,7 +174,20 @@ public class AdminLogin {
     
     //Validates the admin login details using admin.txt
     public boolean validateLogin() {
+    	
+    	  //Checks that a username was entered
+        if (!Validation.isValidString(username)) {
+            errorMessage = "Please enter your username.";
+            return false;
+        }
 
+        //Checks that a password was entered
+        if (!Validation.isValidString(password)) {
+            errorMessage = "Please enter your password.";
+            return false;
+        } 
+        
+        
         try {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(

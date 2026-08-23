@@ -78,7 +78,10 @@ public class Request {
 
     //Changes the Request status
     public void setStatus(String status) {
-        this.status = status;
+
+        if (Validation.isValidString(status)) {
+            this.status = status;
+        }
     }
 
     //Changes the Request outcome
