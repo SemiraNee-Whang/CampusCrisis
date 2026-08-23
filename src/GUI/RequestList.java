@@ -2,7 +2,6 @@ package GUI;
 
 import java.awt.*;
 import java.util.ArrayList;
-import main.Validation;
 import main.GamePanel;
 import main.Request;
 
@@ -67,87 +66,8 @@ public class RequestList {
                 btnHeight);
     }
 
-    /**
-     * Receives the mouse x and y coordinates.
-     * Determines which request action button was selected.
-     */
-    public void handleInput(int mouseX, int mouseY) {
 
-        //If the action buttons are hidden, display them
-        if (!showButtons || currentRequest == null) {
-            showButtons = true;
-            return;
-        }
-
-        //Checks which action button was clicked
-        if (approveBtn.contains(mouseX, mouseY)) {
-            processRequest("APPROVED");
-
-        } else if (declineBtn.contains(mouseX, mouseY)) {
-            processRequest("DECLINED");
-
-        } else if (postponeBtn.contains(mouseX, mouseY)) {
-            postponeRequest();
-        }
-    }
-
-    /**
-     * Receives the status selected for the current request.
-     * Adds the request to the history, removes it from the pending
-     * request list and moves to the next request.
-     */
-    private void processRequest(String status) {
-
-        System.out.println(
-                "Request " + status + ": "
-                + currentRequest.getRequestName());
-
-        //Adds the current request to the completed request history
-        history.add(currentRequest);
-
-        //Removes the request from the pending request list
-        allRequests.remove(currentRequest);
-
-        //Loads the next available request
-        nextRequest();
-    }
-
-    /**
-     * Moves the current request to the back of the request queue
-     * without removing it from the game.
-     */
-    private void postponeRequest() {
-
-        System.out.println(
-                "Request POSTPONED: "
-                + currentRequest.getRequestName());
-
-        //Removes the request from its current position
-        allRequests.remove(currentRequest);
-
-        //Adds the request to the back of the queue
-        allRequests.add(currentRequest);
-
-        //Loads the next available request
-        nextRequest();
-    }
-
-    /**
-     * Sets the next request in the ArrayList as the current request.
-     * If there are no requests left, currentRequest is set to null.
-     */
-    private void nextRequest() {
-
-        if (!allRequests.isEmpty()) {
-            currentRequest = allRequests.get(0);
-
-        } else {
-            currentRequest = null;
-        }
-
-        //Hides the buttons until the next request is opened
-        showButtons = false;
-    }
+   
 
     /**
      * Reads request data from requests.txt.
