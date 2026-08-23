@@ -410,9 +410,11 @@ import java.io.IOException;
     {
 
     }
-    public void mouseReleased(MouseEvent e) 
-    {
-    	
+    public void mouseReleased(MouseEvent e) {
+
+        //Removes glow when mouse is released
+        gp.adminLogin.loginPressed = false;
+        
     }
     public void mouseEntered(MouseEvent e) 
     {
@@ -480,13 +482,11 @@ import java.io.IOException;
         //Login button
         else if (gp.adminLogin.loginBtn.contains(x, y)) {
 
+            gp.adminLogin.loginPressed = true;
             gp.adminLogin.activeField = -1;
 
-            //Checks admin.txt for matching login details
             if (gp.adminLogin.validateLogin()) {
-
                 gp.gameState = gp.adminState;
-
             }
         }
     }

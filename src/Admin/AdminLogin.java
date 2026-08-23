@@ -26,6 +26,8 @@ public class AdminLogin {
     public Rectangle passwordBox;
     public Rectangle loginBtn;
     public Rectangle backBtn;
+    
+    public boolean loginPressed = false;
 
     public AdminLogin(GamePanel gp) {
         this.gp = gp;
@@ -79,8 +81,8 @@ public class AdminLogin {
         g2.drawString("Username", gp.screenWidth / 2 - 150, 165);
 
         //Username textbox
-        drawTextBox(g2, usernameBox, username);
-
+        drawTextBox(g2, usernameBox,username, activeField == 0);
+        
         //Password label
         g2.drawString("Password", gp.screenWidth / 2 - 150, 265);
 
@@ -91,8 +93,7 @@ public class AdminLogin {
         }
 
         //Password textbox
-        drawTextBox(g2, passwordBox, hiddenPassword);
-
+        drawTextBox(g2, passwordBox, hiddenPassword,activeField == 1);
         //Login button
         g2.setColor(Color.YELLOW);
         g2.fill(loginBtn);
@@ -110,6 +111,18 @@ public class AdminLogin {
                     gp.screenWidth / 2 - 120,
                     450);
         }
+        
+      //Glow effect when Login button is pressed
+        if (loginPressed) {
+            g2.setColor(new Color(255, 215, 0, 80));
+            g2.fillRoundRect(
+                    loginBtn.x - 6,
+                    loginBtn.y - 6,
+                    loginBtn.width + 12,
+                    loginBtn.height + 12,
+                    12,
+                    12);
+        }
 
         //Back button
         g2.setColor(Color.GRAY);
@@ -122,17 +135,37 @@ public class AdminLogin {
     }
 
   //Draws a reusable text box
-    private void drawTextBox(Graphics2D g2, Rectangle box, String text) {
+  //Draws a reusable text box
+    private void drawTextBox(Graphics2D g2, Rectangle box, String text, boolean active) {
+
+        //Glow around selected textbox
+        if (active) {
+            g2.setColor(new Color(255, 215, 0, 80));
+            g2.fillRoundRect(
+                    box.x - 6,
+                    box.y - 6,
+                    box.width + 12,
+                    box.height + 12,
+                    12,
+                    12);
+        }
 
         //Text box background
         g2.setColor(new Color(40, 40, 50));
         g2.fill(box);
 
         //Text box border
-        g2.setColor(Color.WHITE);
+        if (active) {
+            g2.setColor(Color.YELLOW);
+            g2.setStroke(new BasicStroke(3));
+        } else {
+            g2.setColor(Color.WHITE);
+            g2.setStroke(new BasicStroke(1));
+        }
+
         g2.draw(box);
 
-        //Text box text
+        //Text inside textbox
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.PLAIN, 18));
         g2.drawString(text, box.x + 10, box.y + 28);
