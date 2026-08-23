@@ -394,15 +394,9 @@ import main.Validation;
                 gp.requestManager.scrollOffset = 0;
             }
 
-            int rowHeight = 35;
-            int visibleHeight = gp.screenHeight - 260;
-
-            int totalHeight =
-                    gp.requestManager.requestData.size()
-                    * rowHeight;
-
+            //Gets accurate maximum scroll amount
             int maxScroll =
-                    Math.max(0, totalHeight - visibleHeight);
+                    gp.requestManager.getMaxScroll();
 
             //Stops scrolling past the last request
             if (gp.requestManager.scrollOffset > maxScroll) {
@@ -567,83 +561,174 @@ import main.Validation;
     //Handles clicks on the Request Management screen
     private void handleRequestManagerClick(int x, int y) {
 
-    	if (gp.requestManager.addingRequest) {
+    	//DELETE CONFIRMATION IS OPEN
+    	if (gp.requestManager.deletingRequest) {
 
-    	    if (gp.requestManager.descriptionBox.contains(x, y)) {
-    	        gp.requestManager.activeField = 0;
-    	        gp.requestFocusInWindow();
+    	    //YES
+    	    if (gp.requestManager.confirmDeleteBtn.contains(x, y)) {
+
+    	        gp.requestManager.confirmDeleteRequest();
     	        return;
     	    }
 
-    	    if (gp.requestManager.categoryBox.contains(x, y)) {
-    	        gp.requestManager.activeField = 1;
-    	        gp.requestFocusInWindow();
-    	        return;
-    	    }
+    	    //NO
+    	    if (gp.requestManager.cancelDeleteBtn.contains(x, y)) {
 
-    	    if (gp.requestManager.costBox.contains(x, y)) {
-    	        gp.requestManager.activeField = 2;
-    	        gp.requestFocusInWindow();
-    	        return;
-    	    }
-
-    	    if (gp.requestManager.impactBox.contains(x, y)) {
-    	        gp.requestManager.activeField = 3;
-    	        gp.requestFocusInWindow();
-    	        return;
-    	    }
-
-    	    if (gp.requestManager.saveBtn.contains(x, y)) {
-    	        gp.requestManager.saveNewRequest();
-    	        return;
-    	    }
-
-    	    if (gp.requestManager.cancelBtn.contains(x, y)) {
-
-    	        gp.requestManager.addingRequest = false;
-
-    	        gp.requestManager.newDescription = "";
-    	        gp.requestManager.newCategory = "";
-    	        gp.requestManager.newCost = "";
-    	        gp.requestManager.newImpact = "";
-
+    	        gp.requestManager.deletingRequest = false;
     	        gp.requestManager.message = "";
-    	        gp.requestManager.activeField = -1;
-
     	        return;
     	    }
 
+    	    //Prevents clicks going through to screen behind
     	    return;
     	}
-    	
-    	//Add Request button
-    	if (gp.requestManager.addBtn.contains(x, y)) {
+     
+        // ADD/EDIT FORM
+        if (gp.requestManager.addingRequest
+                || gp.requestManager.editingRequest) {
 
-    		gp.requestManager.addingRequest = true;
+            //Description
+            if (gp.requestManager.descriptionBox.contains(x, y)) {
 
-    		gp.requestManager.newDescription = "";
-    		gp.requestManager.newCategory = "";
-    		gp.requestManager.newCost = "";
-    		gp.requestManager.newImpact = "";
+                gp.requestManager.activeField = 0;
+                gp.requestManager.message = "";
+                gp.requestFocusInWindow();
+                return;
+            }
 
-    		gp.requestManager.activeField = 0;
-    		gp.requestManager.message = "";
+            //Category
+            if (gp.requestManager.categoryBox.contains(x, y)) {
 
-    		gp.requestFocusInWindow();
-    	}
+                gp.requestManager.activeField = 1;
+                gp.requestManager.message = "";
+                gp.requestFocusInWindow();
+                return;
+            }
 
-    	//Edit Request button
-    	else if (gp.requestManager.editBtn.contains(x, y)) {
-    	    gp.requestManager.editRequest();
-    	}
+            //Cost
+            if (gp.requestManager.costBox.contains(x, y)) {
 
-        //Delete Request button
-    	else if (gp.requestManager.deleteBtn.contains(x, y)) {
-    	    gp.requestManager.deleteRequest();
-    	}
+                gp.requestManager.activeField = 2;
+                gp.requestManager.message = "";
+                gp.requestFocusInWindow();
+                return;
+            }
 
-        //Back button
+            //Approval Impact
+            if (gp.requestManager.impactBox.contains(x, y)) {
+
+                gp.requestManager.activeField = 3;
+                gp.requestManager.message = "";
+                gp.requestFocusInWindow();
+                return;
+            }
+
+            //Save
+            if (gp.requestManager.saveBtn.contains(x, y)) {
+
+                if (gp.requestManager.editingRequest) {
+
+                    gp.requestManager.saveEditedRequest();
+
+                } else {
+
+                    gp.requestManager.saveNewRequest();
+                }
+
+                return;
+            }
+
+            //Cancel
+            if (gp.requestManager.cancelBtn.contains(x, y)) {
+
+                gp.requestManager.addingRequest = false;
+                gp.requestManager.editingRequest = false;
+
+                gp.requestManager.newDescription = "";
+                gp.requestManager.newCategory = "";
+                gp.requestManager.newCost = "";
+                gp.requestManager.newImpact = "";
+
+                gp.requestManager.originalRequestID = "";
+
+                gp.requestManager.message = "";
+                gp.requestManager.activeField = -1;
+
+                return;
+            }
+
+            return;
+        }
+
+
+        // TABLE SELECTION
+        if (x >= 40
+                && x <= gp.screenWidth - 40
+                && y >= 100
+                && y <= gp.screenHeight - 120) {
+
+            gp.requestManager.selectRequestAt(y);
+            return;
+        }
+
+
+        // ADD
+        if (gp.requestManager.addBtn.contains(x, y)) {
+
+            gp.requestManager.addingRequest = true;
+            gp.requestManager.editingRequest = false;
+
+            gp.requestManager.newDescription = "";
+            gp.requestManager.newCategory = "";
+            gp.requestManager.newCost = "";
+            gp.requestManager.newImpact = "";
+
+            gp.requestManager.activeField = 0;
+            gp.requestManager.message = "";
+
+            gp.requestFocusInWindow();
+        }
+
+        // EDIT
+        else if (gp.requestManager.editBtn.contains(x, y)) {
+
+            if (!Validation.isValidString(
+                    gp.requestManager.selectedRequestID)) {
+
+                gp.requestManager.message =
+                        "Please select a request first.";
+
+                return;
+            }
+
+            gp.requestManager.loadRequestForEdit(
+                    gp.requestManager.selectedRequestID);
+
+            gp.requestFocusInWindow();
+        }
+
+
+      //DELETE REQUEST
+        else if (gp.requestManager.deleteBtn.contains(x, y)) {
+
+            if (!Validation.isValidString(
+                    gp.requestManager.selectedRequestID)) {
+
+                gp.requestManager.message =
+                        "Please select a request first.";
+
+                return;
+            }
+
+            gp.requestManager.deletingRequest = true;
+            gp.requestManager.message = "";
+        }
+
+
+        // BACK
         else if (gp.requestManager.backBtn.contains(x, y)) {
+
+            gp.requestManager.selectedRequestID = "";
             gp.gameState = gp.adminState;
         }
     }

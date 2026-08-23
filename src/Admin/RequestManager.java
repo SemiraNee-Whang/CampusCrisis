@@ -4,9 +4,7 @@ import java.awt.*;
 import main.Validation;
 import java.util.ArrayList;
 import main.GamePanel;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import javax.swing.JOptionPane;
+
 
 //Handles viewing and managing requests from requests.txt
 public class RequestManager {
@@ -50,7 +48,18 @@ public class RequestManager {
     //Form buttons
     public Rectangle saveBtn;
     public Rectangle cancelBtn;
+    
+    public boolean editingRequest = false;
+    public String originalRequestID = "";
+    public String selectedRequestID = "";
 
+  //Controls whether delete confirmation is visible
+    public boolean deletingRequest = false;
+
+    //Delete confirmation buttons
+    public Rectangle confirmDeleteBtn;
+    public Rectangle cancelDeleteBtn;
+    
     public RequestManager(GamePanel gp) {
         this.gp = gp;
 
@@ -86,35 +95,47 @@ public class RequestManager {
                 360,
                 220,
                 380,
-                40);
+                60);
 
         categoryBox = new Rectangle(
                 360,
-                280,
+                300,
                 380,
                 40);
 
         costBox = new Rectangle(
                 360,
-                340,
+                360,
                 200,
                 40);
 
         impactBox = new Rectangle(
                 360,
-                400,
+                420,
                 200,
                 40);
 
         saveBtn = new Rectangle(
                 gp.screenWidth / 2 - 130,
-                470,
+                500,
                 110,
                 40);
 
         cancelBtn = new Rectangle(
                 gp.screenWidth / 2 + 20,
-                470,
+                500,
+                110,
+                40);
+        
+        confirmDeleteBtn = new Rectangle(
+                gp.screenWidth / 2 - 130,
+                gp.screenHeight / 2 + 40,
+                110,
+                40);
+
+        cancelDeleteBtn = new Rectangle(
+                gp.screenWidth / 2 + 20,
+                gp.screenHeight / 2 + 40,
                 110,
                 40);
 
@@ -246,6 +267,19 @@ public class RequestManager {
             if (rowY > headerY + 20
                     && rowY < tableY + tableHeight - 10) {
 
+            	if (data[0].trim()
+            	        .equalsIgnoreCase(selectedRequestID)) {
+
+            	    g2.setColor(new Color(230, 230, 230));
+
+            	    g2.fillRect(
+            	            tableX + 10,
+            	            rowY - 22,
+            	            tableWidth - 20,
+            	            28);
+            	}
+
+            	g2.setColor(Color.BLACK);
                 g2.drawString(
                         data[0].trim(),
                         tableX + 20,
@@ -285,8 +319,12 @@ public class RequestManager {
             }
         }
         
-        if (addingRequest) {
+        if (addingRequest || editingRequest) {
             drawAddRequestForm(g2);
+        }
+        
+        if (deletingRequest) {
+            drawDeleteConfirmation(g2);
         }
 
         //Draws the Admin buttons
@@ -385,424 +423,8 @@ public class RequestManager {
         //Example: 6 becomes REQ006
         return String.format("REQ%03d", nextID);
     }
-    
-    /**
-     * Allows the admin to add a new request.
-     * Validates all entered data before saving the request.
-     */
-    public void addRequest() {
-
-        String id = generateRequestID();
-
-        //Request Description
-        String description = JOptionPane.showInputDialog(
-                null,
-                "Enter Request Description:");
-
-        //Stops if Cancel is pressed
-        if (description == null) {
-            return;
-        }
-
-        //Validates description
-        if (!Validation.isValidString(description)) {
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Please enter a request description.",
-                    "Invalid Input",
-                    JOptionPane.ERROR_MESSAGE);
-
-            return;
-        }
-
-
-        //Request Category
-        String category = JOptionPane.showInputDialog(
-                null,
-                "Enter Request Category:");
-
-        if (category == null) {
-            return;
-        }
-
-        //Validates category
-        if (!Validation.isValidString(category)) {
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Please enter a request category.",
-                    "Invalid Input",
-                    JOptionPane.ERROR_MESSAGE);
-
-            return;
-        }
-
-
-        //Request Cost
-        String costText = JOptionPane.showInputDialog(
-                null,
-                "Enter Request Cost:");
-
-        if (costText == null) {
-            return;
-        }
-
-        //Validates cost
-        if (!Validation.isPositiveInteger(costText)) {
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Cost must be a positive whole number.",
-                    "Invalid Input",
-                    JOptionPane.ERROR_MESSAGE);
-
-            return;
-        }
-
-
-        //Approval Impact
-        String impactText = JOptionPane.showInputDialog(
-                null,
-                "Enter Approval Impact:");
-
-        if (impactText == null) {
-            return;
-        }
-
-        //Validates approval impact
-        if (!Validation.isInteger(impactText)) {
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Approval Impact must be a whole number.",
-                    "Invalid Input",
-                    JOptionPane.ERROR_MESSAGE);
-
-            return;
-        }
-
-
-        //Converts validated Strings to integers
-        int cost = Integer.parseInt(costText.trim());
-        int impact = Integer.parseInt(impactText.trim());
-
-
-        try (BufferedWriter bw =
-                new BufferedWriter(
-                        new FileWriter(
-                                "res/requests.txt",
-                                true))) {
-
-            //Format:
-            //requestID|description|category|cost|approvalImpact
-            bw.write(
-                    id.trim()
-                    + "|"
-                    + description.trim()
-                    + "|"
-                    + category.trim()
-                    + "|"
-                    + cost
-                    + "|"
-                    + impact);
-
-            bw.newLine();
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Request added successfully.\nRequest ID: "
-                    + id);
-
-            //Reload table
-            loadRequests();
-
-        } catch (Exception e) {
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Could not add request.",
-                    "File Error",
-                    JOptionPane.ERROR_MESSAGE);
-
-            e.printStackTrace();
-        }
-    }
-  //Rewrites requests.txt using the current ArrayList
-    private void saveAllRequests() {
-
-        try (BufferedWriter bw = new BufferedWriter(
-                new FileWriter("res/requests.txt"))) {
-
-            for (String[] data : requestData) {
-
-                if (data.length >= 5) {
-
-                    //Format:
-                    //requestID|description|category|cost|approvalImpact
-                    bw.write(
-                            data[0].trim() + "|"
-                            + data[1].trim() + "|"
-                            + data[2].trim() + "|"
-                            + data[3].trim() + "|"
-                            + data[4].trim());
-
-                    bw.newLine();
-                }
-            }
-
-        } catch (Exception e) {
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Could not save requests.txt.",
-                    "File Error",
-                    JOptionPane.ERROR_MESSAGE);
-
-            e.printStackTrace();
-        }
-    }
-    
-  //Edits an existing request in requests.txt
-    public void editRequest() {
-
-        //Asks the admin which Request ID must be edited
-        String searchID = JOptionPane.showInputDialog(
-                null,
-                "Enter the Request ID you want to edit:");
-
-        if (searchID == null) {
-            return;
-        }
-
-        //Validates Request ID
-        if (!Validation.isValidString(searchID)) {
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Please enter a Request ID.",
-                    "Invalid Input",
-                    JOptionPane.ERROR_MESSAGE);
-
-            return;
-        }
-
-        boolean found = false;
-
-        //Searches for the matching request
-        for (int i = 0; i < requestData.size(); i++) {
-
-            String[] data = requestData.get(i);
-
-            if (data.length >= 5
-                    && data[0].trim().equalsIgnoreCase(searchID.trim())) {
-
-                found = true;
-
-                //Stores the old values
-                String oldDescription = data[1].trim();
-                String oldCategory = data[2].trim();
-                String oldCost = data[3].trim();
-                String oldImpact = data[4].trim();
-
-                //Asks for the new description
-                String newDescription = JOptionPane.showInputDialog(
-                        null,
-                        "Enter new Description:",
-                        oldDescription);
-
-                if (newDescription == null) {
-                    return;
-                }
-
-                //Validates description
-                if (!Validation.isValidString(newDescription)) {
-
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Please enter a request description.",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE);
-
-                    return;
-                }
-
-                //Asks for the new category
-                String newCategory = JOptionPane.showInputDialog(
-                        null,
-                        "Enter new Category:",
-                        oldCategory);
-
-                if (newCategory == null) {
-                    return;
-                }
-
-                //Validates category
-                if (!Validation.isValidString(newCategory)) {
-
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Please enter a request category.",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE);
-
-                    return;
-                }
-
-                //Asks for the new cost
-                String newCostText = JOptionPane.showInputDialog(
-                        null,
-                        "Enter new Cost:",
-                        oldCost);
-
-                if (newCostText == null) {
-                    return;
-                }
-
-                //Validates cost
-                if (!Validation.isPositiveInteger(newCostText)) {
-
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Cost must be a positive whole number.",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE);
-
-                    return;
-                }
-
-                //Asks for the new approval impact
-                String newImpactText = JOptionPane.showInputDialog(
-                        null,
-                        "Enter new Approval Impact:",
-                        oldImpact);
-
-                if (newImpactText == null) {
-                    return;
-                }
-
-                //Validates approval impact
-                if (!Validation.isInteger(newImpactText)) {
-
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Approval Impact must be a whole number.",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE);
-
-                    return;
-                }
-
-                //Converts validated Strings
-                int newCost =
-                        Integer.parseInt(newCostText.trim());
-
-                int newImpact =
-                        Integer.parseInt(newImpactText.trim());
-
-                //Updates the request inside the ArrayList
-                requestData.set(
-                        i,
-                        new String[] {
-                            data[0].trim(),
-                            newDescription.trim(),
-                            newCategory.trim(),
-                            String.valueOf(newCost),
-                            String.valueOf(newImpact)
-                        });
-
-                //Rewrites requests.txt
-                saveAllRequests();
-
-                //Reloads the table
-                loadRequests();
-
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Request updated successfully.");
-
-                //Stops searching once the request has been found
-                break;
-            }
-        }
-
-        //Shows an error if the Request ID cannot be found
-        if (!found) {
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Request ID not found.",
-                    "Not Found",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-  //Deletes an existing request from requests.txt
-    public void deleteRequest() {
-
-        //Asks the admin which Request ID must be deleted
-        String searchID = JOptionPane.showInputDialog(
-                null,
-                "Enter the Request ID you want to delete:");
-
-        //Stops if the admin presses Cancel or enters nothing
-        if (searchID == null || searchID.trim().isEmpty()) {
-            return;
-        }
-
-        boolean found = false;
-
-        //Searches through all requests
-        for (int i = 0; i < requestData.size(); i++) {
-
-            String[] data = requestData.get(i);
-
-            //Checks if the Request ID matches
-            if (data.length >= 5
-                    && data[0].trim().equalsIgnoreCase(searchID.trim())) {
-
-                found = true;
-
-                //Asks the admin to confirm the deletion
-                int choice = JOptionPane.showConfirmDialog(
-                        null,
-                        "Are you sure you want to delete "
-                        + data[0].trim() + "?\n\n"
-                        + data[1].trim(),
-                        "Confirm Delete",
-                        JOptionPane.YES_NO_OPTION);
-
-                //Only deletes if YES is selected
-                if (choice == JOptionPane.YES_OPTION) {
-
-                    //Removes the request from the ArrayList
-                    requestData.remove(i);
-
-                    //Updates requests.txt
-                    saveAllRequests();
-
-                    //Reloads the requests displayed on screen
-                    loadRequests();
-
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Request deleted successfully.");
-                }
-
-                break;
-            }
-        }
-
-        //Shows an error if the Request ID does not exist
-        if (!found) {
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Request ID not found.",
-                    "Not Found",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
+   
+ 
     /**
      * Draws the Add Request form directly on the Manage Requests screen.
      */
@@ -811,7 +433,7 @@ public class RequestManager {
         int formX = 180;
         int formY = 150;
         int formWidth = 600;
-        int formHeight = 390;
+        int formHeight = 400;
 
         //Form background
         g2.setColor(new Color(30, 30, 40));
@@ -842,8 +464,11 @@ public class RequestManager {
 
         g2.setColor(Color.WHITE);
 
+        String formTitle =
+                editingRequest ? "EDIT REQUEST" : "ADD REQUEST";
+
         g2.drawString(
-                "ADD REQUEST",
+                formTitle,
                 formX + 215,
                 formY + 40);
 
@@ -885,11 +510,14 @@ public class RequestManager {
 
         g2.setColor(Color.WHITE);
 
-        g2.drawString(
-                newDescription
-                + (activeField == 0 ? "|" : ""),
+        drawWrappedText(
+                g2,
+                newDescription,
                 descriptionBox.x + 10,
-                descriptionBox.y + 27);
+                descriptionBox.y + 22,
+                descriptionBox.width - 20,
+                3);
+        
 
 
         //Category box
@@ -1030,5 +658,312 @@ public class RequestManager {
         }
     }
     
+    /**
+     * Selects the request row that was clicked.
+     */
+    public void selectRequestAt(int mouseY) {
+
+        int tableY = 100;
+        int headerY = tableY + 30;
+        int rowHeight = 35;
+
+        for (int i = 0; i < requestData.size(); i++) {
+
+            int rowY =
+                    headerY
+                    + 45
+                    + (i * rowHeight)
+                    - scrollOffset;
+
+            if (mouseY >= rowY - 22
+                    && mouseY <= rowY + 8) {
+
+                selectedRequestID =
+                        requestData.get(i)[0].trim();
+
+                message = "";
+                return;
+            }
+        }
+    }
     
+    /**
+     * Loads the selected request into the Edit Request form.
+     */
+    public boolean loadRequestForEdit(String requestID) {
+
+        if (!Validation.isValidString(requestID)) {
+            message = "Please select a request first.";
+            return false;
+        }
+
+        for (String[] request : requestData) {
+
+            if (request[0].trim()
+                    .equalsIgnoreCase(requestID.trim())) {
+
+                originalRequestID = request[0].trim();
+
+                newDescription = request[1].trim();
+                newCategory = request[2].trim();
+                newCost = request[3].trim();
+                newImpact = request[4].trim();
+
+                editingRequest = true;
+                addingRequest = false;
+
+                activeField = 0;
+                message = "";
+
+                return true;
+            }
+        }
+
+        message = "Request not found.";
+        return false;
+    }
+    
+    /**
+     * Validates and saves changes to an existing request.
+     */
+    public void saveEditedRequest() {
+
+        if (!Validation.isValidString(newDescription)) {
+            message = "Please enter a request description.";
+            return;
+        }
+
+        if (!Validation.isValidString(newCategory)) {
+            message = "Please enter a request category.";
+            return;
+        }
+
+        if (!Validation.isPositiveInteger(newCost)) {
+            message = "Cost must be a positive whole number.";
+            return;
+        }
+
+        if (!Validation.isInteger(newImpact)) {
+            message = "Approval Impact must be a whole number.";
+            return;
+        }
+
+        boolean updated =
+                gp.requestStorage.editRequest(
+                        originalRequestID,
+                        newDescription,
+                        newCategory,
+                        newCost,
+                        newImpact);
+
+        if (updated) {
+
+            loadRequests();
+
+            message = "Request updated successfully.";
+
+            originalRequestID = "";
+            newDescription = "";
+            newCategory = "";
+            newCost = "";
+            newImpact = "";
+
+            editingRequest = false;
+            activeField = -1;
+
+        } else {
+
+            message = "Could not update request.";
+        }
+    }
+    
+    private void drawWrappedText(
+            Graphics2D g2,
+            String text,
+            int x,
+            int y,
+            int maxWidth,
+            int maxLines) {
+
+        FontMetrics fm = g2.getFontMetrics();
+
+        String[] words = text.split(" ");
+
+        StringBuilder line = new StringBuilder();
+
+        int currentY = y;
+        int lineCount = 0;
+
+        for (String word : words) {
+
+            String testLine =
+                    line.length() == 0
+                    ? word
+                    : line + " " + word;
+
+            if (fm.stringWidth(testLine) <= maxWidth) {
+
+                line = new StringBuilder(testLine);
+
+            } else {
+
+                g2.drawString(
+                        line.toString(),
+                        x,
+                        currentY);
+
+                lineCount++;
+
+                if (lineCount >= maxLines) {
+                    return;
+                }
+
+                currentY += fm.getHeight();
+
+                line = new StringBuilder(word);
+            }
+        }
+
+        if (line.length() > 0
+                && lineCount < maxLines) {
+
+            g2.drawString(
+                    line.toString(),
+                    x,
+                    currentY);
+        }
+    }
+    
+    /**
+     * Deletes the selected request using RequestStorage.
+     * Displays whether the deletion was successful.
+     */
+    public void confirmDeleteRequest() {
+
+        if (!Validation.isValidString(selectedRequestID)) {
+            message = "Please select a request first.";
+            return;
+        }
+
+        boolean deleted =
+                gp.requestStorage.deleteRequest(selectedRequestID);
+
+        if (deleted) {
+
+            //Reload requests after deletion
+            loadRequests();
+
+            message = "Request deleted successfully.";
+
+            selectedRequestID = "";
+            deletingRequest = false;
+
+        } else {
+
+            message = "Could not delete request.";
+        }
+    }
+    
+    /**
+     * Draws a confirmation box before deleting a request.
+     */
+    private void drawDeleteConfirmation(Graphics2D g2) {
+
+        int formX = 250;
+        int formY = 200;
+        int formWidth = 460;
+        int formHeight = 220;
+
+        //Background
+        g2.setColor(new Color(30, 30, 40));
+        g2.fillRoundRect(
+                formX,
+                formY,
+                formWidth,
+                formHeight,
+                15,
+                15);
+
+        //Border
+        g2.setColor(Color.YELLOW);
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRoundRect(
+                formX,
+                formY,
+                formWidth,
+                formHeight,
+                15,
+                15);
+
+        //Title
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font(
+                "Arial",
+                Font.BOLD,
+                22));
+
+        g2.drawString(
+                "DELETE REQUEST",
+                formX + 135,
+                formY + 45);
+
+        //Message
+        g2.setFont(new Font(
+                "Arial",
+                Font.PLAIN,
+                16));
+
+        g2.drawString(
+                "Are you sure you want to delete:",
+                formX + 70,
+                formY + 95);
+
+        //Selected Request ID
+        g2.setFont(new Font(
+                "Arial",
+                Font.BOLD,
+                17));
+
+        g2.drawString(
+                selectedRequestID,
+                formX + 190,
+                formY + 125);
+
+        //Buttons
+        drawButton(
+                g2,
+                confirmDeleteBtn,
+                "YES");
+
+        drawButton(
+                g2,
+                cancelDeleteBtn,
+                "NO");
+    }
+    
+    /**
+     * Calculates the maximum amount the request table can scroll.
+     */
+    public int getMaxScroll() {
+
+        int rowHeight = 35;
+
+        //Must match the values used in draw()
+        int tableY = 100;
+        int tableHeight = gp.screenHeight - 220;
+        int headerY = tableY + 30;
+
+        //Available space underneath the table header
+        int visibleHeight =
+                (tableY + tableHeight - 10)
+                - (headerY + 45);
+
+        //Total vertical space needed for all requests
+        int totalHeight =
+                requestData.size() * rowHeight;
+
+        return Math.max(
+                0,
+                totalHeight - visibleHeight);
+    }
 }

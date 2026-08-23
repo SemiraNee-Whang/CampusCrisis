@@ -139,7 +139,8 @@ public class KeyHandler implements KeyListener {
         
       //MANAGE REQUESTS - ADD REQUEST FORM TYPING
         else if (gp.gameState == gp.adminRequestState
-                && gp.requestManager.addingRequest) {
+                && gp.requestManager.addingRequest 
+                || gp.requestManager.editingRequest) {
 
             //DESCRIPTION
             if (gp.requestManager.activeField == 0) {

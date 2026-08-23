@@ -4,6 +4,7 @@
 	import main.Validation;
 	import java.util.ArrayList;
 	import main.GamePanel;
+
 	import javax.swing.JOptionPane;
 	
 	//Handles viewing and managing users from the login and sign up text file
@@ -326,111 +327,6 @@
 	    }
 	    
 	 
-	    
-	  //Edits an existing user in Log in & Sign Up.txt
-	    public void editUser() {
-	
-	        //Asks the admin which username must be edited
-	        String searchUsername = JOptionPane.showInputDialog(
-	                null,
-	                "Enter the Username you want to edit:");
-	
-	        //Stops if Cancel is clicked or nothing is entered
-	        if (searchUsername == null || searchUsername.trim().isEmpty()) {
-	            return;
-	        }
-	
-	        boolean found = false;
-	
-	        //Searches through all users
-	        for (int i = 0; i < userData.size(); i++) {
-	
-	            String[] user = userData.get(i);
-	
-	            if (user.length >= 2
-	                    && user[0].trim().equalsIgnoreCase(searchUsername.trim())) {
-	
-	                found = true;
-	
-	                //Stores the old values
-	                String oldUsername = user[0].trim();
-	                String oldPassword = user[1].trim();
-	
-	                //Asks for the new username
-	                String newUsername = JOptionPane.showInputDialog(
-	                        null,
-	                        "Enter new Username:",
-	                        oldUsername);
-	
-	                if (newUsername == null || newUsername.trim().isEmpty()) {
-	                    return;
-	                }
-	
-	                //Checks that the new username does not belong to another user
-	                for (int j = 0; j < userData.size(); j++) {
-	
-	                    if (j != i) {
-	
-	                        String[] otherUser = userData.get(j);
-	
-	                        if (otherUser.length >= 2
-	                                && otherUser[0].trim()
-	                                .equalsIgnoreCase(newUsername.trim())) {
-	
-	                            JOptionPane.showMessageDialog(
-	                                    null,
-	                                    "That username already exists.",
-	                                    "Duplicate Username",
-	                                    JOptionPane.ERROR_MESSAGE);
-	
-	                            return;
-	                        }
-	                    }
-	                }
-	
-	                //Asks for the new password
-	                String newPassword = JOptionPane.showInputDialog(
-	                        null,
-	                        "Enter new Password:",
-	                        oldPassword);
-	
-	                if (newPassword == null || newPassword.trim().isEmpty()) {
-	                    return;
-	                }
-	
-	                //Updates the user inside the ArrayList
-	                userData.set(i, new String[]{
-	                    newUsername.trim(),
-	                    newPassword.trim()
-	                });
-	
-	                
-	
-	                //Reloads users so the table updates
-	                loadUsers();
-	
-	                JOptionPane.showMessageDialog(
-	                        null,
-	                        "User updated successfully.");
-	
-	                break;
-	            }
-	        }
-	
-	        //Shows an error if the username cannot be found
-	        if (!found) {
-	
-	            JOptionPane.showMessageDialog(
-	                    null,
-	                    "Username not found.",
-	                    "Not Found",
-	                    JOptionPane.ERROR_MESSAGE);
-	        }
-	    }
-	    
-	 
-	    
-	
 	    
 	  //Calculates how far the User Manager table can scroll
 	    public int getMaxScroll() {
