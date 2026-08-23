@@ -24,6 +24,32 @@ public class RequestManager {
 
     //Used to scroll through requests
     public int scrollOffset = 0;
+    
+  //Controls whether the Add Request form is visible
+    public boolean addingRequest = false;
+
+    //Stores form input
+    public String newDescription = "";
+    public String newCategory = "";
+    public String newCost = "";
+    public String newImpact = "";
+
+    //Tracks selected input field
+    //0 = Description, 1 = Category, 2 = Cost, 3 = Impact
+    public int activeField = -1;
+
+    //Displays validation/success messages
+    public String message = "";
+
+    //Form input boxes
+    public Rectangle descriptionBox;
+    public Rectangle categoryBox;
+    public Rectangle costBox;
+    public Rectangle impactBox;
+
+    //Form buttons
+    public Rectangle saveBtn;
+    public Rectangle cancelBtn;
 
     public RequestManager(GamePanel gp) {
         this.gp = gp;
@@ -54,6 +80,42 @@ public class RequestManager {
                 570,
                 gp.screenHeight - 80,
                 120,
+                40);
+        
+        descriptionBox = new Rectangle(
+                360,
+                220,
+                380,
+                40);
+
+        categoryBox = new Rectangle(
+                360,
+                280,
+                380,
+                40);
+
+        costBox = new Rectangle(
+                360,
+                340,
+                200,
+                40);
+
+        impactBox = new Rectangle(
+                360,
+                400,
+                200,
+                40);
+
+        saveBtn = new Rectangle(
+                gp.screenWidth / 2 - 130,
+                470,
+                110,
+                40);
+
+        cancelBtn = new Rectangle(
+                gp.screenWidth / 2 + 20,
+                470,
+                110,
                 40);
 
         //Loads requests when the screen is created
@@ -221,6 +283,10 @@ public class RequestManager {
                         tableX + 710,
                         rowY);
             }
+        }
+        
+        if (addingRequest) {
+            drawAddRequestForm(g2);
         }
 
         //Draws the Admin buttons
@@ -735,6 +801,232 @@ public class RequestManager {
                     "Request ID not found.",
                     "Not Found",
                     JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    /**
+     * Draws the Add Request form directly on the Manage Requests screen.
+     */
+    private void drawAddRequestForm(Graphics2D g2) {
+
+        int formX = 180;
+        int formY = 150;
+        int formWidth = 600;
+        int formHeight = 390;
+
+        //Form background
+        g2.setColor(new Color(30, 30, 40));
+        g2.fillRoundRect(
+                formX,
+                formY,
+                formWidth,
+                formHeight,
+                15,
+                15);
+
+        //Form border
+        g2.setColor(Color.YELLOW);
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRoundRect(
+                formX,
+                formY,
+                formWidth,
+                formHeight,
+                15,
+                15);
+
+        //Title
+        g2.setFont(new Font(
+                "Arial",
+                Font.BOLD,
+                22));
+
+        g2.setColor(Color.WHITE);
+
+        g2.drawString(
+                "ADD REQUEST",
+                formX + 215,
+                formY + 40);
+
+
+        //Labels
+        g2.setFont(new Font(
+                "Arial",
+                Font.BOLD,
+                16));
+
+        g2.drawString(
+                "Description:",
+                formX + 40,
+                formY + 100);
+
+        g2.drawString(
+                "Category:",
+                formX + 40,
+                formY + 160);
+
+        g2.drawString(
+                "Cost:",
+                formX + 40,
+                formY + 220);
+
+        g2.drawString(
+                "Approval Impact:",
+                formX + 40,
+                formY + 280);
+
+
+        //Description box
+        g2.setColor(
+                activeField == 0
+                ? Color.YELLOW
+                : Color.WHITE);
+
+        g2.draw(descriptionBox);
+
+        g2.setColor(Color.WHITE);
+
+        g2.drawString(
+                newDescription
+                + (activeField == 0 ? "|" : ""),
+                descriptionBox.x + 10,
+                descriptionBox.y + 27);
+
+
+        //Category box
+        g2.setColor(
+                activeField == 1
+                ? Color.YELLOW
+                : Color.WHITE);
+
+        g2.draw(categoryBox);
+
+        g2.setColor(Color.WHITE);
+
+        g2.drawString(
+                newCategory
+                + (activeField == 1 ? "|" : ""),
+                categoryBox.x + 10,
+                categoryBox.y + 27);
+
+
+        //Cost box
+        g2.setColor(
+                activeField == 2
+                ? Color.YELLOW
+                : Color.WHITE);
+
+        g2.draw(costBox);
+
+        g2.setColor(Color.WHITE);
+
+        g2.drawString(
+                newCost
+                + (activeField == 2 ? "|" : ""),
+                costBox.x + 10,
+                costBox.y + 27);
+
+
+        //Impact box
+        g2.setColor(
+                activeField == 3
+                ? Color.YELLOW
+                : Color.WHITE);
+
+        g2.draw(impactBox);
+
+        g2.setColor(Color.WHITE);
+
+        g2.drawString(
+                newImpact
+                + (activeField == 3 ? "|" : ""),
+                impactBox.x + 10,
+                impactBox.y + 27);
+
+
+        //Validation / success message
+        if (!message.equals("")) {
+
+            g2.setColor(Color.ORANGE);
+
+            g2.drawString(
+                    message,
+                    formX + 40,
+                    formY + 330);
+        }
+
+
+        //Save / Cancel
+        drawButton(
+                g2,
+                saveBtn,
+                "SAVE");
+
+        drawButton(
+                g2,
+                cancelBtn,
+                "CANCEL");
+    }
+    
+    /**
+     * Validates the entered request information
+     * and sends it to RequestStorage to be saved.
+     */
+    public void saveNewRequest() {
+
+        //Validate description
+        if (!Validation.isValidString(newDescription)) {
+            message = "Please enter a request description.";
+            return;
+        }
+
+        //Validate category
+        if (!Validation.isValidString(newCategory)) {
+            message = "Please enter a request category.";
+            return;
+        }
+
+        //Validate cost
+        if (!Validation.isPositiveInteger(newCost)) {
+            message = "Cost must be a positive whole number.";
+            return;
+        }
+
+        //Validate approval impact
+        if (!Validation.isInteger(newImpact)) {
+            message = "Approval Impact must be a whole number.";
+            return;
+        }
+
+        //Send validated data to backend storage class
+        boolean added =
+                gp.requestStorage.addRequest(
+                        newDescription,
+                        newCategory,
+                        newCost,
+                        newImpact);
+
+        if (added) {
+
+            //Reload table from secondary storage
+            loadRequests();
+
+            //Return table to top
+            scrollOffset = 0;
+
+            message = "Request added successfully.";
+
+            //Clear form
+            newDescription = "";
+            newCategory = "";
+            newCost = "";
+            newImpact = "";
+
+            activeField = -1;
+            addingRequest = false;
+
+        } else {
+
+            message = "Could not add request.";
         }
     }
     

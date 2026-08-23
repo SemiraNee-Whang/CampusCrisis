@@ -137,6 +137,97 @@ public class KeyHandler implements KeyListener {
             }
         }
         
+      //MANAGE REQUESTS - ADD REQUEST FORM TYPING
+        else if (gp.gameState == gp.adminRequestState
+                && gp.requestManager.addingRequest) {
+
+            //DESCRIPTION
+            if (gp.requestManager.activeField == 0) {
+
+                if (c == KeyEvent.VK_BACK_SPACE) {
+
+                    if (gp.requestManager.newDescription.length() > 0) {
+
+                        gp.requestManager.newDescription =
+                                gp.requestManager.newDescription.substring(
+                                        0,
+                                        gp.requestManager.newDescription.length() - 1);
+                    }
+
+                } else if (c >= 32 && c <= 126) {
+
+                    if (gp.requestManager.newDescription.length() < 60) {
+                        gp.requestManager.newDescription += c;
+                    }
+                }
+            }
+
+            //CATEGORY
+            else if (gp.requestManager.activeField == 1) {
+
+                if (c == KeyEvent.VK_BACK_SPACE) {
+
+                    if (gp.requestManager.newCategory.length() > 0) {
+
+                        gp.requestManager.newCategory =
+                                gp.requestManager.newCategory.substring(
+                                        0,
+                                        gp.requestManager.newCategory.length() - 1);
+                    }
+
+                } else if (c >= 32 && c <= 126) {
+
+                    if (gp.requestManager.newCategory.length() < 20) {
+                        gp.requestManager.newCategory += c;
+                    }
+                }
+            }
+
+            //COST
+            else if (gp.requestManager.activeField == 2) {
+
+                if (c == KeyEvent.VK_BACK_SPACE) {
+
+                    if (gp.requestManager.newCost.length() > 0) {
+
+                        gp.requestManager.newCost =
+                                gp.requestManager.newCost.substring(
+                                        0,
+                                        gp.requestManager.newCost.length() - 1);
+                    }
+
+                } else if (Character.isDigit(c)) {
+
+                    if (gp.requestManager.newCost.length() < 8) {
+                        gp.requestManager.newCost += c;
+                    }
+                }
+            }
+
+            //APPROVAL IMPACT
+            else if (gp.requestManager.activeField == 3) {
+
+                if (c == KeyEvent.VK_BACK_SPACE) {
+
+                    if (gp.requestManager.newImpact.length() > 0) {
+
+                        gp.requestManager.newImpact =
+                                gp.requestManager.newImpact.substring(
+                                        0,
+                                        gp.requestManager.newImpact.length() - 1);
+                    }
+
+                } else if (Character.isDigit(c)
+                        || (c == '-'
+                        && gp.requestManager.newImpact.length() == 0)) {
+
+                    if (gp.requestManager.newImpact.length() < 4) {
+                        gp.requestManager.newImpact += c;
+                    }
+                }
+            }
+        }
+        
         //PRESIDENT SETUP TYPING
         else if (gp.gameState == gp.setupState && gp.pSetup.nameBoxSelected) {
             if (c == KeyEvent.VK_BACK_SPACE) {

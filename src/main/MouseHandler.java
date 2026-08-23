@@ -567,11 +567,69 @@ import main.Validation;
     //Handles clicks on the Request Management screen
     private void handleRequestManagerClick(int x, int y) {
 
-        //Add Request button
+    	if (gp.requestManager.addingRequest) {
+
+    	    if (gp.requestManager.descriptionBox.contains(x, y)) {
+    	        gp.requestManager.activeField = 0;
+    	        gp.requestFocusInWindow();
+    	        return;
+    	    }
+
+    	    if (gp.requestManager.categoryBox.contains(x, y)) {
+    	        gp.requestManager.activeField = 1;
+    	        gp.requestFocusInWindow();
+    	        return;
+    	    }
+
+    	    if (gp.requestManager.costBox.contains(x, y)) {
+    	        gp.requestManager.activeField = 2;
+    	        gp.requestFocusInWindow();
+    	        return;
+    	    }
+
+    	    if (gp.requestManager.impactBox.contains(x, y)) {
+    	        gp.requestManager.activeField = 3;
+    	        gp.requestFocusInWindow();
+    	        return;
+    	    }
+
+    	    if (gp.requestManager.saveBtn.contains(x, y)) {
+    	        gp.requestManager.saveNewRequest();
+    	        return;
+    	    }
+
+    	    if (gp.requestManager.cancelBtn.contains(x, y)) {
+
+    	        gp.requestManager.addingRequest = false;
+
+    	        gp.requestManager.newDescription = "";
+    	        gp.requestManager.newCategory = "";
+    	        gp.requestManager.newCost = "";
+    	        gp.requestManager.newImpact = "";
+
+    	        gp.requestManager.message = "";
+    	        gp.requestManager.activeField = -1;
+
+    	        return;
+    	    }
+
+    	    return;
+    	}
+    	
     	//Add Request button
     	if (gp.requestManager.addBtn.contains(x, y)) {
 
-    	    gp.requestManager.addRequest();
+    		gp.requestManager.addingRequest = true;
+
+    		gp.requestManager.newDescription = "";
+    		gp.requestManager.newCategory = "";
+    		gp.requestManager.newCost = "";
+    		gp.requestManager.newImpact = "";
+
+    		gp.requestManager.activeField = 0;
+    		gp.requestManager.message = "";
+
+    		gp.requestFocusInWindow();
     	}
 
     	//Edit Request button
@@ -743,4 +801,6 @@ import main.Validation;
             gp.gameState = gp.adminState;
         }
     }
+    
+    
 }
