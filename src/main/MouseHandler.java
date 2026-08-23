@@ -107,7 +107,7 @@ import java.awt.event.*;
                         gp.history);
 
         if (completed) {
-            gp.requestsHandled++;
+            gp.incrementRequestsHandled();
         }
 
         //Backend corrects approval range

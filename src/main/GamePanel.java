@@ -246,4 +246,11 @@ public class GamePanel extends JPanel implements Runnable {
         }
         g2.dispose();
     }
+    
+    /**
+     * Increases the number of completed requests.
+     */
+    public void incrementRequestsHandled() {
+        requestsHandled++;
+    }
 }
