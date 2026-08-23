@@ -40,7 +40,7 @@ public class Validation {
             return false;
         }
 
-        return Integer.parseInt(value.trim()) >= 0;
+        return Integer.parseInt(value.trim()) > 0;
     }
 
     /**
