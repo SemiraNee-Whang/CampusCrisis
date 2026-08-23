@@ -1,8 +1,6 @@
 package Admin;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import main.GamePanel;
 import main.Validation;
 
@@ -172,59 +170,38 @@ public class AdminLogin {
         g2.drawString(text, box.x + 10, box.y + 28);
     }
     
-    //Validates the admin login details using admin.txt
+    /**
+     * Validates the entered admin login details
+     * using the backend AdminStorage class.
+     */
     public boolean validateLogin() {
-    	
-    	  //Checks that a username was entered
+
         if (!Validation.isValidString(username)) {
-            errorMessage = "Please enter your username.";
+            errorMessage = "Please enter a username.";
             return false;
         }
 
-        //Checks that a password was entered
         if (!Validation.isValidString(password)) {
-            errorMessage = "Please enter your password.";
-            return false;
-        } 
-        
-        
-        try {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(
-                            getClass().getResourceAsStream("/admin.txt")));
-
-            String line;
-
-            while ((line = br.readLine()) != null) {
-
-                String[] parts = line.split("\\|");
-
-                if (parts.length >= 2) {
-
-                    String fileUsername = parts[0].trim();
-                    String filePassword = parts[1].trim();
-
-                    //Checks if entered details match admin.txt
-                    if (username.equals(fileUsername)
-                            && password.equals(filePassword)) {
-
-                        errorMessage = "";
-                        br.close();
-                        return true;
-                    }
-                }
-            }
-
-            br.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            errorMessage = "Could not read admin.txt";
+            errorMessage = "Please enter a password.";
             return false;
         }
 
-        //Displays error if username or password is incorrect
-        errorMessage = "Incorrect username or password";
-        return false;
+        boolean valid =
+                gp.adminStorage.validateAdmin(
+                        username,
+                        password);
+
+        if (valid) {
+
+            errorMessage = "";
+            return true;
+
+        } else {
+
+            errorMessage =
+                    "Incorrect username or password.";
+
+            return false;
+        }
     }
 }

@@ -33,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     //System (Variables)
     public UserStorage userStorage = new UserStorage();
     public RequestStorage requestStorage = new RequestStorage();
+    public AdminStorage adminStorage = new AdminStorage();
     public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this); 
     public CollisionChecker cChecker = new CollisionChecker(this);
