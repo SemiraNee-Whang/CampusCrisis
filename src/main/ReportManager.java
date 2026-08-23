@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 //Handles the creation and saving of end-of-term reports
 public class ReportManager {
@@ -134,5 +136,37 @@ public class ReportManager {
 
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Loads previous game records from game_history.txt.
+     * Returns each record as a String array.
+     */
+    public ArrayList<String[]> loadGameHistory() {
+
+        ArrayList<String[]> gameHistory = new ArrayList<>();
+
+        try (BufferedReader br =
+                new BufferedReader(
+                        new FileReader("game_history.txt"))) {
+
+            String line;
+
+            while ((line = br.readLine()) != null) {
+
+                String[] data = line.split("\\|");
+
+                if (data.length >= 4) {
+                    gameHistory.add(data);
+                }
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "No game history file found yet.");
+        }
+
+        return gameHistory;
     }
 }

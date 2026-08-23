@@ -1,8 +1,6 @@
 package GUI;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import main.GamePanel;
 
@@ -17,18 +15,16 @@ public class ReportView {
         this.backBtn = new Rectangle(gp.screenWidth/2 - 50, gp.screenHeight - 80, 100, 40);
     }
 
-  //Reads the history file and stores it in an ArrayList for display
+    /**
+     * Loads previous game records from ReportManager.
+     */
     public void loadGameHistory() {
+
         gameHistory.clear();
-        try (BufferedReader br = new BufferedReader(new FileReader("game_history.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                // Split by the pipe character
-                gameHistory.add(line.split("\\|"));
-            }
-        } catch (Exception e) {
-            System.out.println("No history file found yet.");
-        }
+
+        gameHistory.addAll(
+                gp.reportM.loadGameHistory()
+        );
     }
 
     public void draw(Graphics2D g2) {
