@@ -121,18 +121,7 @@ import java.awt.event.*;
             return;
         }
 
-        //Loads next request
-        if (!gp.reqList.allRequests.isEmpty()) {
-
-            gp.reqList.currentRequest =
-                    gp.reqList.allRequests.get(0);
-
-        } else {
-
-            gp.reqList.currentRequest = null;
-        }
-
-        gp.reqList.showButtons = false;
+        gp.reqList.loadNextRequest();
     }
 
     //Handles restarting stats for a fresh game session.

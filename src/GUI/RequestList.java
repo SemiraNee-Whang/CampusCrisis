@@ -349,4 +349,19 @@ public class RequestList {
                 + fm.getAscent()) / 2
                 - 2);
     }
+    
+    /**
+     * Loads the next request in the pending request list.
+     * Sets currentRequest to null if no requests remain.
+     */
+    public void loadNextRequest() {
+
+        if (!allRequests.isEmpty()) {
+            currentRequest = allRequests.get(0);
+        } else {
+            currentRequest = null;
+        }
+
+        showButtons = false;
+    }
 }
