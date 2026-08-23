@@ -1,279 +1,293 @@
-package main;
+	package main;
+	
+	import java.awt.*;
+	import javax.swing.*;
+	import entity.Player;
+	import tile.TileManager;
+	import GUI.UI;
+	import GUI.LoginManager;
+	import GUI.PresidentSetup;
+	import GUI.Dashboard;
+	import GUI.RequestList; 
+	import GUI.Instructions;
+	import Admin.AdminLogin;
+	import Admin.AdminMenu;
+	import Admin.RequestManager;
+	import Admin.UserManager;
+	
+	
+	public class GamePanel extends JPanel implements Runnable {
+	    
+	    //Screen Settings
+	    private final int originalTileSize = 16;
+	    private final int scale = 4;
+	    public final int tileSize = originalTileSize * scale; // 64x64
+	    public final int maxScreenCol = 15;
+	    public final int maxScreenRow = 10;
+	    public final int screenWidth = tileSize * maxScreenCol; // 960px
+	    public final int screenHeight = tileSize * maxScreenRow; // 640px
+	    
+	    //FPS
+	    private int FPS = 60;
+	    
+	    //System (Variables)
+	    public UserStorage userStorage = new UserStorage();
+	    public RequestStorage requestStorage = new RequestStorage();
+	    public AdminStorage adminStorage = new AdminStorage();
+	    public TileManager tileM = new TileManager(this);
+	    public KeyHandler keyH = new KeyHandler(this); 
+	    public CollisionChecker cChecker = new CollisionChecker(this);
+	    public UI ui = new UI(this); 
+	    public LoginManager loginM = new LoginManager(this);
+	    public MouseHandler mouseH = new MouseHandler(this);
+	    public PresidentSetup pSetup = new PresidentSetup(this);
+	    public ReportManager reportM = new ReportManager(this);
+	    public Dashboard dashboard = new Dashboard(this);
+	    public RequestList reqList = new RequestList(this); 
+	    public Instructions instructions = new Instructions(this);
+	    public GUI.ReportView reportView = new GUI.ReportView(this);
+	    public GUI.DecisionHistory historyView = new GUI.DecisionHistory(this);
+	    public AdminLogin adminLogin = new AdminLogin(this);
+	    public AdminMenu adminMenu = new AdminMenu(this);
+	    public RequestManager requestManager = new RequestManager(this);
+	    public UserManager userManager = new UserManager(this);
+	    public DecisionManager decisionManager = new DecisionManager(this);
+	    
+	  
+	    public java.util.ArrayList<main.Request> history = new java.util.ArrayList<>();
+	    public int requestsHandled = 0;
+	    
+	    private Thread gameThread;
+	    
+	    //Entitiy
+	    public Player player = new Player(this, keyH);
+	    
+	    //Game State
+	    public int gameState;
+	    public final int titleState = 0;
+	    public final int playState = 1;    
+	    public final int loginState = 2;
+	    public final int setupState = 3;
+	    public final int requestState = 4; 
+	    public final int historyState = 5;
+	    public final int instructionState = 6;
+	    public final int reportState = 7;
+	    public final int adminLoginState = 8;	
+	    public final int adminState = 9;
+	    public final int adminRequestState = 10;
+	    public final int adminUserState = 11;
+	    
+	    public GamePanel() {
+	        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+	        this.setBackground(new Color(30, 30, 40)); 
+	        this.setDoubleBuffered(true);
+	        this.addKeyListener(keyH); 
+	        this.addMouseListener(mouseH);
+	        this.addMouseMotionListener(mouseH);
+	        this.addMouseWheelListener(mouseH);
+	        this.setFocusable(true);
+	        
+	        gameState = titleState; 
+	    }
+	    
+	    public void startGameThread() {
 
-import java.awt.*;
-import javax.swing.*;
-import entity.Player;
-import tile.TileManager;
-import GUI.UI;
-import GUI.LoginManager;
-import GUI.PresidentSetup;
-import GUI.Dashboard;
-import GUI.RequestList; 
-import GUI.Instructions;
-import Admin.AdminLogin;
-import Admin.AdminMenu;
-import Admin.RequestManager;
-import Admin.UserManager;
+	        if (gameThread == null) {
 
+	            gameThread = new Thread(this);
+	            gameThread.start();
+	        }
+	    }
+	    
+	    public void run() {
+	        double drawInterval = 1000000000 / FPS; 
+	        double time = 0;
+	        long lastTime = System.nanoTime();
+	        long currentTime;
+	        
+	        while (gameThread != null) {
+	            currentTime = System.nanoTime();
+	            time += (currentTime - lastTime) / drawInterval;
+	            lastTime = currentTime;
+	            
+	            if (time >= 1) {
+	                update();
+	                repaint();
+	                time--;
+	            }
+	        }
+	    }
+	    
+	    public void update() {
+	    	if (gameState == playState || gameState == requestState || gameState == historyState) {
+	    		player.update();
+	            dashboard.updateTimer();
+	            checkGameOver();
+	        }
+	    }
+	    
+	    public void checkGameOver() {
+	
+	        boolean budgetOut =
+	                dashboard.budget <= 0;
+	
+	        boolean approvalOut =
+	                dashboard.approval <= 0;
+	
+	        boolean approvalComplete =
+	                dashboard.approval >= 100;
+	
+	        boolean requestsFinished =
+	                reqList.allRequests.isEmpty();
+	
+	        boolean timeOut =
+	                dashboard.minutes == 0
+	                && dashboard.seconds == 0;
+	
+	        if (budgetOut
+	                || approvalOut
+	                || approvalComplete
+	                || requestsFinished
+	                || timeOut) {
+	
+	            triggerEndScreen();
+	        }
+	    }
+	
+	    /**
+	     * Ends the current term, saves the results
+	     * and displays the report screen.
+	     */
+	    public void triggerEndScreen() {
 
-public class GamePanel extends JPanel implements Runnable {
-    
-    //Screen Settings
-    private final int originalTileSize = 16;
-    private final int scale = 4;
-    public final int tileSize = originalTileSize * scale; // 64x64
-    public final int maxScreenCol = 15;
-    public final int maxScreenRow = 10;
-    public final int screenWidth = tileSize * maxScreenCol; // 960px
-    public final int screenHeight = tileSize * maxScreenRow; // 640px
-    
-    //FPS
-    private int FPS = 60;
-    
-    //System (Variables)
-    public UserStorage userStorage = new UserStorage();
-    public RequestStorage requestStorage = new RequestStorage();
-    public AdminStorage adminStorage = new AdminStorage();
-    public TileManager tileM = new TileManager(this);
-    public KeyHandler keyH = new KeyHandler(this); 
-    public CollisionChecker cChecker = new CollisionChecker(this);
-    public UI ui = new UI(this); 
-    public LoginManager loginM = new LoginManager(this);
-    public MouseHandler mouseH = new MouseHandler(this);
-    public PresidentSetup pSetup = new PresidentSetup(this);
-    public ReportManager reportM = new ReportManager(this);
-    public Dashboard dashboard = new Dashboard(this);
-    public RequestList reqList = new RequestList(this); 
-    public Instructions instructions = new Instructions(this);
-    public GUI.ReportView reportView = new GUI.ReportView(this);
-    public GUI.DecisionHistory historyView = new GUI.DecisionHistory(this);
-    public AdminLogin adminLogin = new AdminLogin(this);
-    public AdminMenu adminMenu = new AdminMenu(this);
-    public RequestManager requestManager = new RequestManager(this);
-    public UserManager userManager = new UserManager(this);
-    public DecisionManager decisionManager = new DecisionManager(this);
-    
-  
-    public java.util.ArrayList<main.Request> history = new java.util.ArrayList<>();
-    public int requestsHandled = 0;
-    
-    private Thread gameThread;
-    
-    //Entitiy
-    public Player player = new Player(this, keyH);
-    
-    //Game State
-    public int gameState;
-    public final int titleState = 0;
-    public final int playState = 1;    
-    public final int loginState = 2;
-    public final int setupState = 3;
-    public final int requestState = 4; 
-    public final int historyState = 5;
-    public final int instructionState = 6;
-    public final int reportState = 7;
-    public final int adminLoginState = 8;	
-    public final int adminState = 9;
-    public final int adminRequestState = 10;
-    public final int adminUserState = 11;
-    
-    public GamePanel() {
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(new Color(30, 30, 40)); 
-        this.setDoubleBuffered(true);
-        this.addKeyListener(keyH); 
-        this.addMouseListener(mouseH);
-        this.addMouseMotionListener(mouseH);
-        this.addMouseWheelListener(mouseH);
-        this.setFocusable(true);
-        
-        gameState = titleState; 
-    }
-    
-    public void startGameThread() {
-        gameThread = new Thread(this);
-        gameThread.start();
-    }
-    
-    public void run() {
-        double drawInterval = 1000000000 / FPS; 
-        double time = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
-        
-        while (gameThread != null) {
-            currentTime = System.nanoTime();
-            time += (currentTime - lastTime) / drawInterval;
-            lastTime = currentTime;
-            
-            if (time >= 1) {
-                update();
-                repaint();
-                time--;
-            }
-        }
-    }
-    
-    public void update() {
-    	if (gameState == playState || gameState == requestState || gameState == historyState) {
-    		player.update();
-            dashboard.updateTimer();
-            checkGameOver();
-        }
-    }
-    
-    public void checkGameOver() {
+	        String presidentName = pSetup.presidentName;
 
-        boolean budgetOut =
-                dashboard.budget <= 0;
+	        if (presidentName == null
+	                || presidentName.trim().isEmpty()) {
 
-        boolean approvalOut =
-                dashboard.approval <= 0;
+	            presidentName = "President";
+	        }
 
-        boolean approvalComplete =
-                dashboard.approval >= 100;
+	        //Attempts to save the end-of-term summary
+	        boolean historySaved =
+	                reportM.saveGameToHistory(
+	                        presidentName,
+	                        dashboard.budget,
+	                        dashboard.approval);
 
-        boolean requestsFinished =
-                reqList.allRequests.isEmpty();
+	        //Generates the detailed report
+	        reportM.generateFinalReport(
+	                dashboard.approval,
+	                dashboard.budget,
+	                reqList.history);
 
-        boolean timeOut =
-                dashboard.minutes == 0
-                && dashboard.seconds == 0;
+	        //Checks whether either storage operation failed
+	        if (!historySaved
+	                || !reportM.getLastError().isEmpty()) {
 
-        if (budgetOut
-                || approvalOut
-                || approvalComplete
-                || requestsFinished
-                || timeOut) {
+	            System.out.println(
+	                    "Report error: "
+	                    + reportM.getLastError());
+	        }
 
-            triggerEndScreen();
-        }
-    }
+	        //Reloads previous-term records
+	        reportView.loadGameHistory();
 
-    /**
-     * Ends the current term, saves the results
-     * and displays the report screen.
-     */
-    public void triggerEndScreen() {
-
-        String presidentName = pSetup.presidentName;
-
-        if (presidentName == null
-                || presidentName.trim().isEmpty()) {
-
-            presidentName = "President";
-        }
-
-        //Saves summary to game_history.txt
-        reportM.saveGameToHistory(
-                presidentName,
-                dashboard.budget,
-                dashboard.approval);
-
-        //Generates detailed report
-        reportM.generateFinalReport(
-                dashboard.approval,
-                dashboard.budget,
-                reqList.history);
-
-        //Reloads Previous Terms
-        reportView.loadGameHistory();
-
-        //Shows Report screen
-        gameState = reportState;
-    }
-    
-    
-    //Using Painting Component
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        
-        //Menu State
-        if (gameState == titleState) { 
-            ui.draw(g2); 
-        }
-        else if (gameState == loginState) { 
-            loginM.draw(g2);
-        }
-        else if (gameState == setupState) { 
-            pSetup.draw(g2);
-        }
-        
-        else if (gameState == instructionState) { 
-            instructions.draw(g2);
-        }
-        
-        else if (gameState == reportState) {
-            reportView.draw(g2);
-        }
-        else if (gameState == adminLoginState) {
-            adminLogin.draw(g2);
-        }
-        else if (gameState == adminState) {
-            adminMenu.draw(g2);
-        }
-        else if (gameState == adminRequestState) {
-            requestManager.draw(g2);
-        }
-        else if (gameState == adminUserState) {
-            userManager.draw(g2);
-        }
-        
-        
-        //PlayState
-        else if (gameState == playState || gameState == requestState || gameState == historyState) {            
-            
-            //Classroom Layer
-            tileM.drawBackground(g2);   
-            tileM.drawChalkboard(g2);   
-            tileM.drawDesks(g2);        
-            player.draw(g2);            
-            tileM.drawMainDesks(g2);    
-            tileM.drawLayer2(g2);       
-            
-            if (gameState == requestState) {
-                reqList.draw(g2);       
-            }
-            if (gameState == historyState) {
-                historyView.draw(g2); 
-            }
-            
-            //UI Dashboard (Top & Bottom bars)
-            dashboard.draw(g2); 
-            
-            ui.draw(g2);
-        }
-        g2.dispose();
-    }
-    
-    /**
-     * Increases the number of completed requests.
-     */
-    public void incrementRequestsHandled() {
-        requestsHandled++;
-    }
-    
-    /**
-     * Resets all game values for a new term.
-     */
-    public void resetGame() {
-
-        dashboard.budget = pSetup.STARTING_BUDGET;
-        dashboard.approval = pSetup.STARTING_APPROVAL;
-
-        dashboard.minutes = 5;
-        dashboard.seconds = 0;
-        dashboard.secondCounter = 0;
-
-        requestsHandled = 0;
-
-        history.clear();
-        reqList.history.clear();
-
-        //Reloads requests from storage for a fresh term
-        reqList.reloadRequests();
-
-        player.setDefaultValues();
-    }
-}
+	        //Displays report screen
+	        gameState = reportState;
+	    }
+	    
+	    
+	    //Using Painting Component
+	    public void paintComponent(Graphics g) {
+	        super.paintComponent(g);
+	        Graphics2D g2 = (Graphics2D) g;
+	        
+	        //Menu State
+	        if (gameState == titleState) { 
+	            ui.draw(g2); 
+	        }
+	        else if (gameState == loginState) { 
+	            loginM.draw(g2);
+	        }
+	        else if (gameState == setupState) { 
+	            pSetup.draw(g2);
+	        }
+	        
+	        else if (gameState == instructionState) { 
+	            instructions.draw(g2);
+	        }
+	        
+	        else if (gameState == reportState) {
+	            reportView.draw(g2);
+	        }
+	        else if (gameState == adminLoginState) {
+	            adminLogin.draw(g2);
+	        }
+	        else if (gameState == adminState) {
+	            adminMenu.draw(g2);
+	        }
+	        else if (gameState == adminRequestState) {
+	            requestManager.draw(g2);
+	        }
+	        else if (gameState == adminUserState) {
+	            userManager.draw(g2);
+	        }
+	        
+	        
+	        //PlayState
+	        else if (gameState == playState || gameState == requestState || gameState == historyState) {            
+	            
+	            //Classroom Layer
+	            tileM.drawBackground(g2);   
+	            tileM.drawChalkboard(g2);   
+	            tileM.drawDesks(g2);        
+	            player.draw(g2);            
+	            tileM.drawMainDesks(g2);    
+	            tileM.drawLayer2(g2);       
+	            
+	            if (gameState == requestState) {
+	                reqList.draw(g2);       
+	            }
+	            if (gameState == historyState) {
+	                historyView.draw(g2); 
+	            }
+	            
+	            //UI Dashboard (Top & Bottom bars)
+	            dashboard.draw(g2); 
+	            
+	            ui.draw(g2);
+	        }
+	        g2.dispose();
+	    }
+	    
+	    /**
+	     * Increases the number of completed requests.
+	     */
+	    public void incrementRequestsHandled() {
+	        requestsHandled++;
+	    }
+	    
+	    /**
+	     * Resets all game values for a new term.
+	     */
+	    public void resetGame() {
+	
+	        dashboard.budget = pSetup.STARTING_BUDGET;
+	        dashboard.approval = pSetup.STARTING_APPROVAL;
+	
+	        dashboard.minutes = 5;
+	        dashboard.seconds = 0;
+	        dashboard.secondCounter = 0;
+	
+	        requestsHandled = 0;
+	
+	        history.clear();
+	        reqList.history.clear();
+	
+	        //Reloads requests from storage for a fresh term
+	        reqList.reloadRequests();
+	
+	        player.setDefaultValues();
+	    }
+	}

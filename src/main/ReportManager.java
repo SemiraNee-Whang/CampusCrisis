@@ -13,6 +13,12 @@ public class ReportManager {
 
     //Reference to the main GamePanel
     private GamePanel gp;
+    
+    private String lastError = "";
+
+    public String getLastError() {
+        return lastError;
+    }
 
     /**
      * Receives the GamePanel used by the ReportManager.
@@ -32,29 +38,27 @@ public class ReportManager {
             int finalBudget,
             ArrayList<Request> history) {
 
-        //Automatically created when the term ends
+        lastError = "";
+
         try (PrintWriter writer =
                 new PrintWriter(
-                        new FileWriter("/report.txt"))) {
+                        new FileWriter("report.txt"))) {
 
             writer.println("OFFICIAL PRESIDENTIAL REPORT");
             writer.println("============================");
 
-            //Writes the final game statistics
             writer.println(
                     "Total Decisions Made: "
                     + history.size());
 
             writer.println(
                     "Final Approval Rating: "
-                    + finalApproval
-                    + "%");
+                    + finalApproval + "%");
 
             writer.println(
                     "Remaining Budget: R"
                     + finalBudget);
 
-            //Determines whether the term was successful
             String outcome =
                     (finalApproval >= 50
                     && finalBudget >= 0)
@@ -65,10 +69,9 @@ public class ReportManager {
                     "Term Outcome: "
                     + outcome);
 
-            writer.println(
-                    "\n--- Decision History ---");
+            writer.println();
+            writer.println("--- Decision History ---");
 
-            //Writes each handled Request to the report
             for (Request r : history) {
 
                 writer.println(
@@ -78,12 +81,15 @@ public class ReportManager {
                         + r.getStatus());
             }
 
-            
+            System.out.println(
+                    "Report generated successfully in report.txt");
+
         } catch (IOException e) {
 
-            System.err.println(
-                    "Critical Error: Could not save report. "
-                    + e.getMessage());
+            lastError =
+                    "Could not save final report.";
+
+            e.printStackTrace();
         }
     }
 
@@ -91,10 +97,12 @@ public class ReportManager {
      * Receives the president name, final budget and final approval.
      * Appends a summary of the completed term to game_history.txt.
      */
-    public void saveGameToHistory(
+    public boolean saveGameToHistory(
             String name,
             int budget,
             int approval) {
+
+        lastError = "";
 
         try (BufferedWriter bw =
                 new BufferedWriter(
@@ -104,12 +112,7 @@ public class ReportManager {
 
             String status;
 
-            //Determines the final status of the term
-            if (approval >= 100) {
-
-                status = "COMPLETED";
-
-            } else if (approval <= 0
+            if (approval <= 0
                     || budget <= 0) {
 
                 status = "FAILED";
@@ -119,8 +122,6 @@ public class ReportManager {
                 status = "COMPLETED";
             }
 
-            //Format:
-            //Name|Budget|Approval|Status
             bw.write(
                     name
                     + "|"
@@ -132,9 +133,16 @@ public class ReportManager {
 
             bw.newLine();
 
+            return true;
+
         } catch (IOException e) {
 
+            lastError =
+                    "Could not save game history.";
+
             e.printStackTrace();
+
+            return false;
         }
     }
     

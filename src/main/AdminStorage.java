@@ -6,14 +6,28 @@ import java.io.InputStreamReader;
 //Handles admin credential validation from secondary storage
 public class AdminStorage {
 
+    private String lastError = "";
+
     /**
-     * Validates the entered admin username and password.
+     * Returns the most recent storage error message.
+     */
+    public String getLastError() {
+        return lastError;
+    }
+
+    /**
+     * Receives the entered admin username and password.
+     * Checks the credentials against admin.txt.
      * Returns true if a matching admin account is found.
      */
     public boolean validateAdmin(
             String username,
             String password) {
 
+        //Clears previous errors
+        lastError = "";
+
+        //Validates input before checking storage
         if (!Validation.isValidString(username)
                 || !Validation.isValidString(password)) {
 
@@ -51,9 +65,16 @@ public class AdminStorage {
             }
 
         } catch (Exception e) {
+
+            lastError =
+                    "Could not read admin data.";
+
             e.printStackTrace();
+
+            return false;
         }
 
+        //File was read, but credentials did not match
         return false;
     }
 }

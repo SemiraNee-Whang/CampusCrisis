@@ -212,10 +212,11 @@ public class UserStorage {
             }
 
             return true;
-
         } catch (Exception e) {
 
+            lastError = "Could not save user data.";
             e.printStackTrace();
+
             return false;
         }
     }

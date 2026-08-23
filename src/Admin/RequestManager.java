@@ -654,7 +654,16 @@ public class RequestManager {
 
         } else {
 
-            message = "Could not add request.";
+        	if (!gp.requestStorage.getLastError().isEmpty()) {
+
+        	    message =
+        	            gp.requestStorage.getLastError();
+
+        	} else {
+
+        	    message =
+        	            "Could not add request.";
+        	}
         }
     }
     

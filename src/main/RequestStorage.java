@@ -65,6 +65,10 @@ public class RequestStorage {
             }
 
         } catch (Exception e) {
+
+            lastError =
+                    "Could not read request data.";
+
             e.printStackTrace();
         }
 
