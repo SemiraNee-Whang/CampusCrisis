@@ -2,9 +2,6 @@ package Admin;
 
 import java.awt.*;
 import main.Validation;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import main.GamePanel;
 import java.io.BufferedWriter;
@@ -63,61 +60,16 @@ public class RequestManager {
         loadRequests();
     }
 
-    //Reads all requests from requests.txt
+    /**
+     * Loads request records from the backend RequestStorage class.
+     */
     public void loadRequests() {
 
-        //Clears old data before reloading
         requestData.clear();
 
-        try (InputStream is =
-                     getClass().getResourceAsStream("/requests.txt")) {
-
-            if (is == null) {
-                System.out.println("requests.txt could not be found.");
-                return;
-            }
-
-            try (BufferedReader br =
-                         new BufferedReader(new InputStreamReader(is))) {
-
-                String line;
-
-                while ((line = br.readLine()) != null) {
-
-                    //Format:
-                    //requestID|description|category|cost|approvalImpact
-                    String[] parts = line.split("\\|");
-
-                    if (parts.length >= 5) {
-
-                        String id = parts[0].trim();
-                        String description = parts[1].trim();
-                        String category = parts[2].trim();
-                        String cost = parts[3].trim();
-                        String impact = parts[4].trim();
-
-                        //Only loads valid records
-                        if (Validation.isValidString(id)
-                                && Validation.isValidString(description)
-                                && Validation.isValidString(category)
-                                && Validation.isPositiveInteger(cost)
-                                && Validation.isInteger(impact)) {
-
-                            requestData.add(new String[] {
-                                id,
-                                description,
-                                category,
-                                cost,
-                                impact
-                            });
-                        }
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        requestData.addAll(
+                gp.requestStorage.loadRequests()
+        );
     }
 
     //Draws the Request Management screen

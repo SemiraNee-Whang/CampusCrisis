@@ -2,12 +2,8 @@
 	
 	import java.awt.*;
 	import main.Validation;
-	import java.io.BufferedReader;
-	import java.io.FileReader;
 	import java.util.ArrayList;
 	import main.GamePanel;
-	import java.io.BufferedWriter;
-	import java.io.FileWriter;
 	import javax.swing.JOptionPane;
 	
 	//Handles viewing and managing users from the login and sign up text file
