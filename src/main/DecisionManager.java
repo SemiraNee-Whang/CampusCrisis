@@ -86,9 +86,7 @@ public class DecisionManager {
                     + " | "
                     + r.getStatus()
                     + " | "
-                    + r.getOutcome()
-                    + " | "
-                    + r.getRequestName());
+                    + r.getOutcome());
 
             writer.newLine();
 

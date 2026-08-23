@@ -28,7 +28,7 @@
 	    public final int screenHeight = tileSize * maxScreenRow; // 640px
 	    
 	    //FPS
-	    private int FPS = 60;
+	    private static final int FPS = 60;
 	    
 	    //System (Variables)
 	    public UserStorage userStorage = new UserStorage();
@@ -272,22 +272,25 @@
 	     * Resets all game values for a new term.
 	     */
 	    public void resetGame() {
-	
+
 	        dashboard.budget = pSetup.STARTING_BUDGET;
 	        dashboard.approval = pSetup.STARTING_APPROVAL;
-	
+
 	        dashboard.minutes = 5;
 	        dashboard.seconds = 0;
 	        dashboard.secondCounter = 0;
-	
+
 	        requestsHandled = 0;
-	
+
 	        history.clear();
 	        reqList.history.clear();
-	
-	        //Reloads requests from storage for a fresh term
+
 	        reqList.reloadRequests();
-	
+
+	        pSetup.presidentName = "";
+	        pSetup.nameBoxSelected = false;
+	        pSetup.subState = 0;
+
 	        player.setDefaultValues();
 	    }
 	}

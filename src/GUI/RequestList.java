@@ -122,9 +122,7 @@ public class RequestList {
                     22));
 
             String text =
-                    currentRequest.getDescription() != null
-                    ? currentRequest.getDescription()
-                    : currentRequest.getRequestName();
+                    currentRequest.getDescription();
 
             //Displays long descriptions over multiple lines
             drawWrappedText(

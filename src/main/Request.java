@@ -7,7 +7,6 @@ public class Request {
     private String id;
     private String description;
     private String category;
-    private String requestName;
 
     //Stores request cost and approval impact
     private int cost;
@@ -46,10 +45,6 @@ public class Request {
         return category;
     }
 
-    //Returns the Request name
-    public String getRequestName() {
-        return requestName;
-    }
 
     //Returns the cost of the Request
     public int getCost() {
@@ -71,10 +66,7 @@ public class Request {
         return outcome;
     }
 
-    //Changes the Request name
-    public void setRequestName(String requestName) {
-        this.requestName = requestName;
-    }
+ 
 
     //Changes the Request status
     public void setStatus(String status) {
