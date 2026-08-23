@@ -89,23 +89,28 @@ import java.io.IOException;
         Request r = gp.reqList.currentRequest;
         if (r == null) return;
 
-        // Approval logic
+      //Approval logic
         if (decision.equals("Approve")) {
-            gp.dashboard.budget -= r.cost;
-            gp.dashboard.approval += r.impact;
-            r.status = "Approved";
-            r.outcome = "Budget -" + r.cost + ", Approval +" + r.impact;
-        } 
-        // Decline logic
-        else if (decision.equals("Decline")) {
-            gp.dashboard.approval -= 8; 
-            r.status = "Declined";
-            r.outcome = "Approval -8";
+            gp.dashboard.budget -= r.getCost();
+            gp.dashboard.approval += r.getImpact();
+
+            r.setStatus("Approved");
+            r.setOutcome("Budget -" + r.getCost()
+                    + ", Approval +" + r.getImpact());
         }
-        // Postpone logic
+
+        //Decline logic
+        else if (decision.equals("Decline")) {
+            gp.dashboard.approval -= 8;
+
+            r.setStatus("Declined");
+            r.setOutcome("Approval -8");
+        }
+
+        //Postpone Logic
         else if (decision.equals("Postpone")) {
-            r.status = "Postponed";
-            r.outcome = "No change (Deferred)";
+            r.setStatus("Postponed");
+            r.setOutcome("No change (Deferred)");
         }
 
         if (decision.equals("Postpone")) {
@@ -264,7 +269,14 @@ import java.io.IOException;
 
     private void saveDecisionToFile(Request r) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("decisions.txt", true))) {
-            writer.write(r.id + " | " + r.status + " | " + r.outcome + " | " + r.requestName);
+        	writer.write(
+        	        r.getId()
+        	        + " | "
+        	        + r.getStatus()
+        	        + " | "
+        	        + r.getOutcome()
+        	        + " | "
+        	        + r.getRequestName());
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,90 +4,210 @@ import java.awt.*;
 import main.GamePanel;
 import main.Request;
 
+//Displays all decisions made during the current game term
 public class DecisionHistory {
-	private GamePanel gp;
-    public int scrollOffset = 0; 
+
+    //Reference to the main GamePanel
+    private GamePanel gp;
+
+    //Controls how far the history table has been scrolled
+    public int scrollOffset = 0;
+
+    //Stores the clickable area of the Back button
     public Rectangle backBtn;
 
+    /**
+     * Receives the GamePanel used by the Decision History screen.
+     * Creates the Back button used to return to gameplay.
+     */
     public DecisionHistory(GamePanel gp) {
         this.gp = gp;
-        // Positioned at the bottom-left of the white table area
-        backBtn = new Rectangle(gp.tileSize + 20, gp.screenHeight - 110, 100, 35);
+
+        //Positioned at the bottom-left of the white table area
+        backBtn = new Rectangle(
+                gp.tileSize + 20,
+                gp.screenHeight - 110,
+                100,
+                35);
     }
 
+    /**
+     * Receives the Graphics2D object used to draw the screen.
+     * Displays all requests stored in the current decision history,
+     * including the request ID, status and outcome summary.
+     */
     public void draw(Graphics2D g2) {
+
         //Dims the Background (To make the table pop)
         g2.setColor(new Color(0, 0, 0, 150));
-        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        g2.fillRect(
+                0,
+                0,
+                gp.screenWidth,
+                gp.screenHeight);
 
-        // White Table Background
+        //White Table Background
         int tableX = gp.tileSize;
         int tableY = gp.tileSize;
         int tableW = gp.screenWidth - (gp.tileSize * 2);
         int tableH = gp.screenHeight - (gp.tileSize * 3);
-        
-        g2.setColor(Color.WHITE);
-        g2.fillRect(tableX, tableY, tableW, tableH);
-        g2.setColor(Color.BLACK);
-        g2.drawRect(tableX, tableY, tableW, tableH);
 
-        //Column Labels 
-        g2.setFont(new Font("Arial", Font.BOLD, 18));
+        g2.setColor(Color.WHITE);
+        g2.fillRect(
+                tableX,
+                tableY,
+                tableW,
+                tableH);
+
+        g2.setColor(Color.BLACK);
+        g2.drawRect(
+                tableX,
+                tableY,
+                tableW,
+                tableH);
+
+        //Column Labels
+        g2.setFont(new Font(
+                "Arial",
+                Font.BOLD,
+                18));
+
         int yHead = tableY + 40;
-        
-        g2.drawString("ID", tableX + 30, yHead);
-        g2.drawString("STATUS", tableX + 130, yHead);
-        g2.drawString("OUTCOME SUMMARY", tableX + 300, yHead);
-        
+
+        g2.drawString(
+                "ID",
+                tableX + 30,
+                yHead);
+
+        g2.drawString(
+                "STATUS",
+                tableX + 130,
+                yHead);
+
+        g2.drawString(
+                "OUTCOME SUMMARY",
+                tableX + 300,
+                yHead);
+
         //Header Underline
         g2.setStroke(new BasicStroke(2));
-        g2.drawLine(tableX + 20, yHead + 10, tableX + tableW - 20, yHead + 10);
 
-        //Draw History: FROM GamePanel ArrayList
-        g2.setFont(new Font("Consolas", Font.PLAIN, 15)); // used Monospaced type font
-        
-        //gp.history matches MouseHandler
+        g2.drawLine(
+                tableX + 20,
+                yHead + 10,
+                tableX + tableW - 20,
+                yHead + 10);
+
+        //Draw History from the GamePanel ArrayList
+        g2.setFont(new Font(
+                "Consolas",
+                Font.PLAIN,
+                15));
+
+        //Loops through every Request stored in the history
         for (int i = 0; i < gp.history.size(); i++) {
+
             Request r = gp.history.get(i);
-            
-            //Calculate Y position based on scroll
-            int rowY = yHead + 50 + (i * 35) - scrollOffset; 
-            
-            //Clipping: Only draw if inside the white table area
-            if (rowY > yHead + 20 && rowY < tableY + tableH - 20) {
-                
-                //Colour coding based on status
-                if ("Approved".equals(r.status)) {
-                    g2.setColor(new Color(0, 120, 0)); // Dark Green
-                } else if ("Declined".equals(r.status)) {
-                    g2.setColor(new Color(180, 0, 0)); // Dark Red
+
+            //Calculates the row position based on scrolling
+            int rowY =
+                    yHead
+                    + 50
+                    + (i * 35)
+                    - scrollOffset;
+
+            //Only draws rows that fit inside the table
+            if (rowY > yHead + 20
+                    && rowY < tableY + tableH - 20) {
+
+                //Colour coding based on request status
+                if ("Approved".equals(r.getStatus())) {
+
+                    g2.setColor(
+                            new Color(0, 120, 0));
+
+                } else if ("Declined".equals(r.getStatus())) {
+
+                    g2.setColor(
+                            new Color(180, 0, 0));
+
                 } else {
+
                     g2.setColor(Color.GRAY);
                 }
-                
-                g2.drawString(r.id, tableX + 30, rowY);
-                g2.drawString(r.status, tableX + 130, rowY);
-                
-                g2.setColor(Color.BLACK); // Reset for description
-                g2.drawString(r.outcome, tableX + 300, rowY);
+
+                //Displays the Request ID
+                g2.drawString(
+                        r.getId(),
+                        tableX + 30,
+                        rowY);
+
+                //Displays the decision status
+                g2.drawString(
+                        r.getStatus(),
+                        tableX + 130,
+                        rowY);
+
+                //Displays the outcome summary
+                g2.setColor(Color.BLACK);
+
+                g2.drawString(
+                        r.getOutcome(),
+                        tableX + 300,
+                        rowY);
             }
         }
 
         //Back Button
-        drawStyledButton(g2, backBtn, "BACK", new Color(255, 215, 0));
+        drawStyledButton(
+                g2,
+                backBtn,
+                "BACK",
+                new Color(255, 215, 0));
     }
 
-    private void drawStyledButton(Graphics2D g2, Rectangle r, String text, Color bgColor) {
+    /**
+     * Receives the button position, text and colour.
+     * Draws a reusable styled button on the Decision History screen.
+     */
+    private void drawStyledButton(
+            Graphics2D g2,
+            Rectangle r,
+            String text,
+            Color bgColor) {
+
+        //Button background
         g2.setColor(bgColor);
         g2.fill(r);
+
+        //Button border
         g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(1));
         g2.draw(r);
 
-        g2.setFont(new Font("Arial", Font.BOLD, 14));
-        FontMetrics fm = g2.getFontMetrics();
-        int textX = r.x + (r.width - fm.stringWidth(text)) / 2;
-        int textY = r.y + (r.height + fm.getAscent()) / 2 - 2;
-        g2.drawString(text, textX, textY);
+        //Button text
+        g2.setFont(new Font(
+                "Arial",
+                Font.BOLD,
+                14));
+
+        FontMetrics fm =
+                g2.getFontMetrics();
+
+        int textX =
+                r.x
+                + (r.width
+                - fm.stringWidth(text)) / 2;
+
+        int textY =
+                r.y
+                + (r.height
+                + fm.getAscent()) / 2
+                - 2;
+
+        g2.drawString(
+                text,
+                textX,
+                textY);
     }
 }
