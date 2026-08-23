@@ -4,8 +4,6 @@
 	import main.Validation;
 	import java.util.ArrayList;
 	import main.GamePanel;
-
-	import javax.swing.JOptionPane;
 	
 	//Handles viewing and managing users from the login and sign up text file
 	public class UserManager {

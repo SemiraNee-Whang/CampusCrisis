@@ -57,4 +57,21 @@ public class Validation {
 
         return number >= 0 && number <= 100;
     }
+    
+    /**
+     * Receives an approval impact entered as text.
+     * Returns true if it is an integer between -100 and 100.
+     */
+    public static boolean isValidImpact(String value) {
+
+        if (!isInteger(value)) {
+            return false;
+        }
+
+        int impact =
+                Integer.parseInt(value.trim());
+
+        return impact >= -100
+                && impact <= 100;
+    }
 }

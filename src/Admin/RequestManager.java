@@ -620,7 +620,7 @@ public class RequestManager {
         }
 
         //Validate approval impact
-        if (!Validation.isInteger(newImpact)) {
+        if (!Validation.isValidImpact(newImpact)) {
             message = "Approval Impact must be a whole number.";
             return;
         }
