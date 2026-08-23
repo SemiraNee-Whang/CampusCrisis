@@ -1,9 +1,6 @@
 package GUI;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import main.Validation;
 import main.GamePanel;
@@ -157,59 +154,16 @@ public class RequestList {
      * Each valid line is converted into a Request object and stored
      * in the allRequests ArrayList.
      */
+    /**
+     * Loads request objects from the backend RequestStorage class.
+     */
     private void loadRequests() {
 
-        try (InputStream is =
-                getClass().getResourceAsStream("/requests.txt")) {
+        allRequests.clear();
 
-            //Stops if requests.txt cannot be found
-            if (is == null) {
-                return;
-            }
-
-            try (BufferedReader br =
-                    new BufferedReader(
-                            new InputStreamReader(is))) {
-
-                String line;
-
-                while ((line = br.readLine()) != null) {
-
-                    //Format:
-                    //requestID|description|category|cost|approvalImpact
-                    String[] parts = line.split("\\|");
-
-                    if (parts.length >= 5) {
-
-                        String id = parts[0].trim();
-                        String description = parts[1].trim();
-                        String category = parts[2].trim();
-                        String costText = parts[3].trim();
-                        String impactText = parts[4].trim();
-
-                        //Validates text-file data before creating Request object
-                        if (Validation.isValidString(id)
-                                && Validation.isValidString(description)
-                                && Validation.isValidString(category)
-                                && Validation.isPositiveInteger(costText)
-                                && Validation.isInteger(impactText)) {
-
-                            Request request = new Request(
-                                    id,
-                                    description,
-                                    category,
-                                    Integer.parseInt(costText),
-                                    Integer.parseInt(impactText));
-
-                            allRequests.add(request);
-                        }
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        allRequests.addAll(
+                gp.requestStorage.loadRequestObjects()
+        );
     }
 
     /**

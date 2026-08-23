@@ -251,4 +251,42 @@ public class RequestStorage {
     public ArrayList<String[]> getRequestData() {
         return requestData;
     }
+    
+    /**
+     * Loads request records from secondary storage
+     * and returns them as Request objects for gameplay.
+     */
+    public ArrayList<Request> loadRequestObjects() {
+
+        ArrayList<Request> requests = new ArrayList<>();
+
+        //Reuse the existing validated file-reading method
+        loadRequests();
+
+        for (String[] data : requestData) {
+
+            if (data.length >= 5) {
+
+                String id = data[0].trim();
+                String description = data[1].trim();
+                String category = data[2].trim();
+
+                int cost =
+                        Integer.parseInt(data[3].trim());
+
+                int impact =
+                        Integer.parseInt(data[4].trim());
+
+                requests.add(
+                        new Request(
+                                id,
+                                description,
+                                category,
+                                cost,
+                                impact));
+            }
+        }
+
+        return requests;
+    }
 }

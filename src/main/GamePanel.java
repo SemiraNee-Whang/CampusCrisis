@@ -31,6 +31,8 @@ public class GamePanel extends JPanel implements Runnable {
     private int FPS = 60;
     
     //System (Variables)
+    public UserStorage userStorage = new UserStorage();
+    public RequestStorage requestStorage = new RequestStorage();
     public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this); 
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -46,9 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
     public GUI.DecisionHistory historyView = new GUI.DecisionHistory(this);
     public AdminLogin adminLogin = new AdminLogin(this);
     public AdminMenu adminMenu = new AdminMenu(this);
-    public RequestStorage requestStorage = new RequestStorage();
     public RequestManager requestManager = new RequestManager(this);
-    public UserStorage userStorage = new UserStorage();
     public UserManager userManager = new UserManager(this);
     public DecisionManager decisionManager = new DecisionManager(this);
     
