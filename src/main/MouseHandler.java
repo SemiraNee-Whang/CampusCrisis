@@ -17,6 +17,7 @@ import java.io.IOException;
 
     
     public void mousePressed(MouseEvent e) {
+    	gp.requestFocusInWindow();
         int x = e.getX();
         int y = e.getY();
 
@@ -590,10 +591,52 @@ import java.io.IOException;
     
   //Handles clicks on the User Management screen
     private void handleUserManagerClick(int x, int y) {
+    	//Handles Add User form
+    	if (gp.userManager.addingUser) {
+
+    	    //Username textbox
+    	    if (gp.userManager.usernameBox.contains(x, y)) {
+
+    	        gp.userManager.activeField = 0;
+    	        return;
+    	    }
+
+    	    //Password textbox
+    	    if (gp.userManager.passwordBox.contains(x, y)) {
+
+    	        gp.userManager.activeField = 1;
+    	        return;
+    	    }
+
+    	    //Save button
+    	    if (gp.userManager.saveBtn.contains(x, y)) {
+
+    	        gp.userManager.saveNewUser();
+    	        return;
+    	    }
+
+    	    //Cancel button
+    	    if (gp.userManager.cancelBtn.contains(x, y)) {
+
+    	        gp.userManager.addingUser = false;
+    	        gp.userManager.newUsername = "";
+    	        gp.userManager.newPassword = "";
+    	        gp.userManager.message = "";
+    	        gp.userManager.activeField = -1;
+
+    	        return;
+    	    }
+
+    	    return;
+    	}
 
         //Add User button
         if (gp.userManager.addBtn.contains(x, y)) {
-        	gp.userManager.addUser();   
+        	gp.userManager.addingUser = true;
+        	gp.userManager.newUsername = "";
+        	gp.userManager.newPassword = "";
+        	gp.userManager.activeField = 0;
+        	gp.userManager.message = "";  
         }
 
       //Edit User button
@@ -602,7 +645,7 @@ import java.io.IOException;
         }
 
       //Delete User button
-        else if (gp.userManager.deleteBtn.contains(x, y)) {
+        else if (gp    	.userManager.deleteBtn.contains(x, y)) {
             gp.userManager.deleteUser();
         }
 

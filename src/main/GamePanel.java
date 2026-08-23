@@ -15,6 +15,7 @@ import Admin.AdminMenu;
 import Admin.RequestManager;
 import Admin.UserManager;
 
+
 public class GamePanel extends JPanel implements Runnable {
     
     //Screen Settings
@@ -46,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
     public AdminLogin adminLogin = new AdminLogin(this);
     public AdminMenu adminMenu = new AdminMenu(this);
     public RequestManager requestManager = new RequestManager(this);
+    public UserStorage userStorage = new UserStorage();
     public UserManager userManager = new UserManager(this);
     public DecisionManager decisionManager = new DecisionManager(this);
   

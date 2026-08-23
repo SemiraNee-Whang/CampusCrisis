@@ -14,7 +14,8 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         char c = e.getKeyChar();
-
+        
+        
         //Login Screen Typing
         if (gp.gameState == gp.loginState) {
             //subState 0 = Username, subState 1 = Password
@@ -38,11 +39,14 @@ public class KeyHandler implements KeyListener {
       //Admin Login Screen Typing
         else if (gp.gameState == gp.adminLoginState) {
 
-            //Username field
+            //USERNAME FIELD
             if (gp.adminLogin.activeField == 0) {
 
+                //Backspace
                 if (c == KeyEvent.VK_BACK_SPACE) {
+
                     if (gp.adminLogin.username.length() > 0) {
+
                         gp.adminLogin.username =
                                 gp.adminLogin.username.substring(
                                         0,
@@ -50,18 +54,23 @@ public class KeyHandler implements KeyListener {
                     }
                 }
 
+                //Normal characters
                 else if (c >= 32 && c <= 126) {
+
                     if (gp.adminLogin.username.length() < 16) {
                         gp.adminLogin.username += c;
                     }
                 }
             }
 
-            //Password field
+            //PASSWORD FIELD
             else if (gp.adminLogin.activeField == 1) {
 
+                //Backspace
                 if (c == KeyEvent.VK_BACK_SPACE) {
+
                     if (gp.adminLogin.password.length() > 0) {
+
                         gp.adminLogin.password =
                                 gp.adminLogin.password.substring(
                                         0,
@@ -69,13 +78,62 @@ public class KeyHandler implements KeyListener {
                     }
                 }
 
+                //Normal characters
                 else if (c >= 32 && c <= 126) {
+
                     if (gp.adminLogin.password.length() < 16) {
                         gp.adminLogin.password += c;
                     }
                 }
             }
-        }	
+        }
+        
+      //Manage Users - Add User Form Typing
+        else if (gp.gameState == gp.adminUserState
+                && gp.userManager.addingUser) {
+
+            //USERNAME FIELD
+            if (gp.userManager.activeField == 0) {
+
+                if (c == KeyEvent.VK_BACK_SPACE) {
+
+                    if (gp.userManager.newUsername.length() > 0) {
+
+                        gp.userManager.newUsername =
+                                gp.userManager.newUsername.substring(
+                                        0,
+                                        gp.userManager.newUsername.length() - 1);
+                    }
+
+                } else if (c >= 32 && c <= 126) {
+
+                    if (gp.userManager.newUsername.length() < 20) {
+                        gp.userManager.newUsername += c;
+                    }
+                }
+            }
+
+            //PASSWORD FIELD
+            else if (gp.userManager.activeField == 1) {
+
+                if (c == KeyEvent.VK_BACK_SPACE) {
+
+                    if (gp.userManager.newPassword.length() > 0) {
+
+                        gp.userManager.newPassword =
+                                gp.userManager.newPassword.substring(
+                                        0,
+                                        gp.userManager.newPassword.length() - 1);
+                    }
+
+                } else if (c >= 32 && c <= 126) {
+
+                    if (gp.userManager.newPassword.length() < 20) {
+                        gp.userManager.newPassword += c;
+                    }
+                }
+            }
+        }
         
         //PRESIDENT SETUP TYPING
         else if (gp.gameState == gp.setupState && gp.pSetup.nameBoxSelected) {
