@@ -123,25 +123,63 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void checkGameOver() {
-        //Budget check: Ends if 0 or less
-        boolean budgetOut = dashboard.budget <= 0;
-        
-        //Approval check: Ends if 0 or less
-        boolean approvalOut = dashboard.approval <= 0;
-        
-        // //Timer check: Ends if minutes and seconds are both 03. Timer check: Ends if minutes and seconds are both 0
-        boolean timeOut = (dashboard.minutes == 0 && dashboard.seconds == 0 && requestsHandled >= 2);
 
-        if (budgetOut || approvalOut || timeOut) {
+        boolean budgetOut =
+                dashboard.budget <= 0;
+
+        boolean approvalOut =
+                dashboard.approval <= 0;
+
+        boolean approvalComplete =
+                dashboard.approval >= 100;
+
+        boolean requestsFinished =
+                reqList.allRequests.isEmpty();
+
+        boolean timeOut =
+                dashboard.minutes == 0
+                && dashboard.seconds == 0;
+
+        if (budgetOut
+                || approvalOut
+                || approvalComplete
+                || requestsFinished
+                || timeOut) {
+
             triggerEndScreen();
         }
     }
 
+    /**
+     * Ends the current term, saves the results
+     * and displays the report screen.
+     */
     public void triggerEndScreen() {
-        // Generate the official report file
-        reportM.generateFinalReport(dashboard.approval, dashboard.budget, reqList.history);
-        
-        // Switch state to show the ReportView
+
+        String presidentName = pSetup.presidentName;
+
+        if (presidentName == null
+                || presidentName.trim().isEmpty()) {
+
+            presidentName = "President";
+        }
+
+        //Saves summary to game_history.txt
+        reportM.saveGameToHistory(
+                presidentName,
+                dashboard.budget,
+                dashboard.approval);
+
+        //Generates detailed report
+        reportM.generateFinalReport(
+                dashboard.approval,
+                dashboard.budget,
+                reqList.history);
+
+        //Reloads Previous Terms
+        reportView.loadGameHistory();
+
+        //Shows Report screen
         gameState = reportState;
     }
     

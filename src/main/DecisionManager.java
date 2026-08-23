@@ -3,6 +3,7 @@ package main;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 //Handles the processing and storage of request decisions
 public class DecisionManager {
@@ -94,5 +95,28 @@ public class DecisionManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public boolean handleDecision(
+            Request r,
+            String decision,
+            ArrayList<Request> pendingRequests,
+            ArrayList<Request> requestHistory) {
+
+        boolean completed =
+                processDecision(r, decision);
+
+        if (!completed) {
+            pendingRequests.remove(r);
+            pendingRequests.add(r);
+            return false;
+        }
+
+        pendingRequests.remove(r);
+        requestHistory.add(r);
+
+        saveDecisionToFile(r);
+
+        return true;
     }
 }

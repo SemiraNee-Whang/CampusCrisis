@@ -2,10 +2,7 @@ package main;
 
 import java.awt.Rectangle;
 import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import main.Validation;
+
 
 
 	public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
@@ -87,6 +84,7 @@ import main.Validation;
         }
     }
 
+    
     /**
      * Receives the decision selected by the player.
      * Sends the decision to DecisionManager and updates the request queue.
@@ -116,17 +114,17 @@ import main.Validation;
             //Completed requests are removed from the queue
             gp.reqList.allRequests.remove(r);
 
-            //Adds the request to current-term history
+            //Adds request to current-term history
             gp.reqList.history.add(r);
             gp.history.add(r);
 
             gp.requestsHandled++;
 
-            //Stores the completed decision
+            //Stores completed decision
             gp.decisionManager.saveDecisionToFile(r);
         }
 
-        //Keeps approval within 0 - 100
+        //Keeps approval between 0 and 100
         if (gp.dashboard.approval > 100) {
             gp.dashboard.approval = 100;
         }
@@ -135,43 +133,14 @@ import main.Validation;
             gp.dashboard.approval = 0;
         }
 
-        //Checks whether the game has ended
-        if (gp.dashboard.approval <= 0
-                || gp.dashboard.approval >= 100
-                || gp.dashboard.budget <= 0
-                || gp.reqList.allRequests.isEmpty()) {
+        //GamePanel handles game-over logic
+        gp.checkGameOver();
 
-            String presidentName =
-                    gp.pSetup.presidentName;
-
-            if (presidentName == null
-                    || presidentName.trim().isEmpty()) {
-
-                presidentName = "President";
-            }
-
-            //Stores the summary of the completed term
-            gp.reportM.saveGameToHistory(
-                    presidentName,
-                    gp.dashboard.budget,
-                    gp.dashboard.approval);
-
-            //Generates the detailed report
-            gp.reportM.generateFinalReport(
-                    gp.dashboard.approval,
-                    gp.dashboard.budget,
-                    gp.reqList.history);
-
-            //Reloads previous-term history
-            gp.reportView.loadGameHistory();
-
-            //Displays the report screen
-            gp.gameState = gp.reportState;
-
+        if (gp.gameState == gp.reportState) {
             return;
         }
 
-        //Loads the next request
+        //Loads next request
         if (!gp.reqList.allRequests.isEmpty()) {
 
             gp.reqList.currentRequest =
@@ -183,7 +152,7 @@ import main.Validation;
         }
 
         gp.reqList.showButtons = false;
-    }	
+    }
 
     //Handles restarting stats for a fresh game session.
     public void resetGame() {
