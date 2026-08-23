@@ -1,8 +1,6 @@
 package GUI;
 
 import java.awt.*;
-import java.io.*;
-import java.util.Scanner;
 import main.GamePanel;
 import main.Validation;
 
@@ -80,45 +78,60 @@ public class LoginManager {
     }
 
     public boolean validateLogin() {
-        boolean userFound = false;
-        File file = new File("Log in & Sign Up.txt");
-        try (Scanner s = new Scanner(file)) {
-            while (s.hasNextLine()) {
-                String[] data = s.nextLine().split(",");
-                if (data.length == 2) {
-                    if (data[0].equals(userText)) {
-                        userFound = true;
-                        if (data[1].equals(passText)) return true;
-                    }
-                }
-            }
-            message = userFound ? "Incorrect password" : "Incorrect username";
-        } catch (FileNotFoundException e) {
-            message = "Log in & Sign Up.txt not found!";
+
+        if (!Validation.isValidString(userText)) {
+            message = "Please enter your username.";
+            return false;
         }
+
+        if (!Validation.isValidString(passText)) {
+            message = "Please enter your password.";
+            return false;
+        }
+
+        boolean valid =
+                gp.userStorage.validateLogin(
+                        userText,
+                        passText);
+
+        if (valid) {
+            message = "";
+            return true;
+        }
+
+        //Gives a more useful error
+        if (!gp.userStorage.userExists(userText)) {
+            message = "Incorrect username.";
+        } else {
+            message = "Incorrect password.";
+        }
+
         return false;
     }
 
     public void registerUser() {
 
-        //Validates username
         if (!Validation.isValidString(userText)) {
             message = "Please enter a username.";
             return;
         }
 
-        //Validates password
         if (!Validation.isValidString(passText)) {
             message = "Please enter a password.";
             return;
         }
 
-        try (BufferedWriter bw =
-                new BufferedWriter(
-                        new FileWriter("Log in & Sign Up.txt", true))) {
+        if (gp.userStorage.userExists(userText)) {
+            message = "Username already exists.";
+            return;
+        }
 
-            bw.write(userText + "," + passText);
-            bw.newLine();
+        boolean added =
+                gp.userStorage.addUser(
+                        userText,
+                        passText);
+
+        if (added) {
 
             message = "Success! Please Login.";
 
@@ -126,9 +139,9 @@ public class LoginManager {
             userText = "";
             passText = "";
 
-        } catch (IOException e) {
+        } else {
 
-            message = "Error writing file!";
+            message = "Could not create account.";
         }
     }
 }

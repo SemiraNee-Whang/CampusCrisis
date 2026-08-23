@@ -218,5 +218,56 @@ public class UserStorage {
     }
     
     
+    /**
+     * Validates a username and password against stored users.
+     * Returns true if a matching account is found.
+     */
+    public boolean validateLogin(String username, String password) {
+
+        if (!Validation.isValidString(username)
+                || !Validation.isValidString(password)) {
+            return false;
+        }
+
+        //Make sure latest data is loaded
+        loadUsers();
+
+        for (String[] user : userData) {
+
+            if (user.length >= 2
+                    && user[0].trim().equals(username.trim())
+                    && user[1].trim().equals(password.trim())) {
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Returns true if a username exists in storage.
+     */
+    public boolean userExists(String username) {
+
+        if (!Validation.isValidString(username)) {
+            return false;
+        }
+
+        loadUsers();
+
+        for (String[] user : userData) {
+
+            if (user.length >= 2
+                    && user[0].trim()
+                    .equalsIgnoreCase(username.trim())) {
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 

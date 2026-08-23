@@ -76,9 +76,7 @@ public class ReportManager {
                         + r.getStatus());
             }
 
-            System.out.println(
-                    "Report generated successfully in report.txt");
-
+            
         } catch (IOException e) {
 
             System.err.println(
