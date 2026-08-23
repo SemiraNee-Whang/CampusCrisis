@@ -84,77 +84,101 @@ import java.io.IOException;
         }
     }
 
-    ///Logic for processing impacts and logging to history.
+    /**
+     * Receives the decision selected by the player.
+     * Sends the decision to DecisionManager and updates the request queue.
+     */
     private void processDecision(String decision) {
+
         Request r = gp.reqList.currentRequest;
-        if (r == null) return;
 
-      //Approval logic
-        if (decision.equals("Approve")) {
-            gp.dashboard.budget -= r.getCost();
-            gp.dashboard.approval += r.getImpact();
-
-            r.setStatus("Approved");
-            r.setOutcome("Budget -" + r.getCost()
-                    + ", Approval +" + r.getImpact());
-        }
-
-        //Decline logic
-        else if (decision.equals("Decline")) {
-            gp.dashboard.approval -= 8;
-
-            r.setStatus("Declined");
-            r.setOutcome("Approval -8");
-        }
-
-        //Postpone Logic
-        else if (decision.equals("Postpone")) {
-            r.setStatus("Postponed");
-            r.setOutcome("No change (Deferred)");
-        }
-
-        if (decision.equals("Postpone")) {
-            gp.reqList.allRequests.remove(r);
-            gp.reqList.allRequests.add(r); // Send to back of queue
-        } else {
-            gp.reqList.allRequests.remove(r);
-            gp.reqList.history.add(r);
-            gp.requestsHandled++;
-            gp.history.add(r);
-            saveDecisionToFile(r);
-        }
-
-        // Apply caps and floors
-        if (gp.dashboard.approval > 100) gp.dashboard.approval = 100;
-        if (gp.dashboard.approval < 0) gp.dashboard.approval = 0;
-
-        // Check game-over / win conditions
-        if (gp.dashboard.approval <= 0 || gp.dashboard.approval >= 100 || gp.dashboard.budget <= 0 || gp.reqList.allRequests.isEmpty()) {
-            
-            // 1. Save summary record to game_history.txt for the Previous Terms screen
-            String presidentName = gp.pSetup.presidentName;
-            if (presidentName == null || presidentName.trim().isEmpty()) {
-                presidentName = "President";
-            }
-            gp.reportM.saveGameToHistory(presidentName, gp.dashboard.budget, gp.dashboard.approval);
-            
-            // 2. Generate detailed report.txt
-            gp.reportM.generateFinalReport(gp.dashboard.approval, gp.dashboard.budget, gp.reqList.history);
-            
-            // 3. Reload history in ReportView so the table updates immediately
-            gp.reportView.loadGameHistory();
-            
-            // 4. Switch state to end screen
-            gp.gameState = gp.reportState;
+        if (r == null) {
             return;
         }
 
-        // Load next request
-        if (!gp.reqList.allRequests.isEmpty()) {
-            gp.reqList.currentRequest = gp.reqList.allRequests.get(0);
+        //Processes the decision using the backend DecisionManager
+        boolean completed =
+                gp.decisionManager.processDecision(
+                        r,
+                        decision);
+
+        //Postponed requests move to the back of the queue
+        if (!completed) {
+
+            gp.reqList.allRequests.remove(r);
+            gp.reqList.allRequests.add(r);
+
         } else {
+
+            //Completed requests are removed from the queue
+            gp.reqList.allRequests.remove(r);
+
+            //Adds the request to current-term history
+            gp.reqList.history.add(r);
+            gp.history.add(r);
+
+            gp.requestsHandled++;
+
+            //Stores the completed decision
+            gp.decisionManager.saveDecisionToFile(r);
+        }
+
+        //Keeps approval within 0 - 100
+        if (gp.dashboard.approval > 100) {
+            gp.dashboard.approval = 100;
+        }
+
+        if (gp.dashboard.approval < 0) {
+            gp.dashboard.approval = 0;
+        }
+
+        //Checks whether the game has ended
+        if (gp.dashboard.approval <= 0
+                || gp.dashboard.approval >= 100
+                || gp.dashboard.budget <= 0
+                || gp.reqList.allRequests.isEmpty()) {
+
+            String presidentName =
+                    gp.pSetup.presidentName;
+
+            if (presidentName == null
+                    || presidentName.trim().isEmpty()) {
+
+                presidentName = "President";
+            }
+
+            //Stores the summary of the completed term
+            gp.reportM.saveGameToHistory(
+                    presidentName,
+                    gp.dashboard.budget,
+                    gp.dashboard.approval);
+
+            //Generates the detailed report
+            gp.reportM.generateFinalReport(
+                    gp.dashboard.approval,
+                    gp.dashboard.budget,
+                    gp.reqList.history);
+
+            //Reloads previous-term history
+            gp.reportView.loadGameHistory();
+
+            //Displays the report screen
+            gp.gameState = gp.reportState;
+
+            return;
+        }
+
+        //Loads the next request
+        if (!gp.reqList.allRequests.isEmpty()) {
+
+            gp.reqList.currentRequest =
+                    gp.reqList.allRequests.get(0);
+
+        } else {
+
             gp.reqList.currentRequest = null;
         }
+
         gp.reqList.showButtons = false;
     }	
 
@@ -267,21 +291,7 @@ import java.io.IOException;
         else if (gp.pSetup.subState == 2) gp.gameState = gp.loginState;
     }
 
-    private void saveDecisionToFile(Request r) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("decisions.txt", true))) {
-        	writer.write(
-        	        r.getId()
-        	        + " | "
-        	        + r.getStatus()
-        	        + " | "
-        	        + r.getOutcome()
-        	        + " | "
-        	        + r.getRequestName());
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+ 
 
     public void mouseMoved(MouseEvent e) {
         mouseX = e.getX(); mouseY = e.getY();

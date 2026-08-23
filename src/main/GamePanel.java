@@ -47,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
     public AdminMenu adminMenu = new AdminMenu(this);
     public RequestManager requestManager = new RequestManager(this);
     public UserManager userManager = new UserManager(this);
+    public DecisionManager decisionManager = new DecisionManager(this);
   
     public java.util.ArrayList<main.Request> history = new java.util.ArrayList<>();
     public int requestsHandled = 0;
