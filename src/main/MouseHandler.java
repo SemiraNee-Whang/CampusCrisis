@@ -5,6 +5,7 @@ import java.awt.event.*;
 
 
 
+
 	public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
     private GamePanel gp;
     public int mouseX, mouseY;
@@ -97,31 +98,16 @@ import java.awt.event.*;
             return;
         }
 
-        //Processes the decision using the backend DecisionManager
         boolean completed =
-                gp.decisionManager.processDecision(
+                gp.decisionManager.handleDecisionResult(
                         r,
-                        decision);
+                        decision,
+                        gp.reqList.allRequests,
+                        gp.reqList.history,
+                        gp.history);
 
-        //Postponed requests move to the back of the queue
-        if (!completed) {
-
-            gp.reqList.allRequests.remove(r);
-            gp.reqList.allRequests.add(r);
-
-        } else {
-
-            //Completed requests are removed from the queue
-            gp.reqList.allRequests.remove(r);
-
-            //Adds request to current-term history
-            gp.reqList.history.add(r);
-            gp.history.add(r);
-
+        if (completed) {
             gp.requestsHandled++;
-
-            //Stores completed decision
-            gp.decisionManager.saveDecisionToFile(r);
         }
 
         //Keeps approval between 0 and 100
@@ -133,7 +119,6 @@ import java.awt.event.*;
             gp.dashboard.approval = 0;
         }
 
-        //GamePanel handles game-over logic
         gp.checkGameOver();
 
         if (gp.gameState == gp.reportState) {

@@ -119,4 +119,42 @@ public class DecisionManager {
 
         return true;
     }
+    
+    /**
+     * Handles the result of a player decision.
+     * Updates the pending request queue and decision history.
+     * Returns true if the request was completed,
+     * or false if it was postponed.
+     */
+    public boolean handleDecisionResult(
+            Request r,
+            String decision,
+            java.util.ArrayList<Request> pendingRequests,
+            java.util.ArrayList<Request> requestHistory,
+            java.util.ArrayList<Request> gameHistory) {
+
+        boolean completed =
+                processDecision(r, decision);
+
+        //Postpone moves request to back of queue
+        if (!completed) {
+
+            pendingRequests.remove(r);
+            pendingRequests.add(r);
+
+            return false;
+        }
+
+        //Approve/Decline removes request from pending list
+        pendingRequests.remove(r);
+
+        //Adds request to histories
+        requestHistory.add(r);
+        gameHistory.add(r);
+
+        //Stores completed decision
+        saveDecisionToFile(r);
+
+        return true;
+    }
 }
