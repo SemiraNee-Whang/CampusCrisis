@@ -55,6 +55,13 @@
 	    
 	  //Stores the username selected from the table
 	    public String selectedUsername = "";
+	    
+	  //Controls whether delete confirmation is visible
+	    public boolean deletingUser = false;
+
+	    //Delete confirmation buttons
+	    public Rectangle confirmDeleteBtn;
+	    public Rectangle cancelDeleteBtn;
 	
 	    public UserManager(GamePanel gp) {
 	        this.gp = gp;
@@ -109,6 +116,18 @@
 	                370,
 	                310,
 	                300,
+	                40);
+	        
+	        confirmDeleteBtn = new Rectangle(
+	                gp.screenWidth / 2 - 130,
+	                gp.screenHeight / 2 + 40,
+	                110,
+	                40);
+
+	        cancelDeleteBtn = new Rectangle(
+	                gp.screenWidth / 2 + 20,
+	                gp.screenHeight / 2 + 40,
+	                110,
 	                40);
 	
 	        //Loads users when the screen is created
@@ -253,6 +272,10 @@
 	                        tableX + 400,
 	                        rowY);
 	            }
+	        }
+	        
+	        if (deletingUser) {
+	            drawDeleteConfirmation(g2);
 	        }
 	        
 	        if (addingUser || editingUser) {
@@ -411,82 +434,7 @@
 	    
 	 
 	    
-	  //Deletes an existing user from Log in & Sign Up.txt
-	    public void deleteUser() {
 	
-	        //Asks the admin which username must be deleted
-	        String searchUsername = JOptionPane.showInputDialog(
-	                null,
-	                "Enter the Username you want to delete:");
-	
-	      //Stops if Cancel is clicked
-	        if (searchUsername == null) {
-	            return;
-	        }
-	
-	        //Validates username
-	        if (!Validation.isValidString(searchUsername)) {
-	
-	            JOptionPane.showMessageDialog(
-	                    null,
-	                    "Please enter a username.",
-	                    "Invalid Input",
-	                    JOptionPane.ERROR_MESSAGE);
-	
-	            return;
-	        }
-	
-	        boolean found = false;
-	
-	        //Searches through all users
-	        for (int i = 0; i < userData.size(); i++) {
-	
-	            String[] user = userData.get(i);
-	
-	            //Checks if the username matches
-	            if (user.length >= 2
-	                    && user[0].trim().equalsIgnoreCase(searchUsername.trim())) {
-	
-	                found = true;
-	
-	                //Asks the admin to confirm the deletion
-	                int choice = JOptionPane.showConfirmDialog(
-	                        null,
-	                        "Are you sure you want to delete user:\n"
-	                        + user[0].trim() + "?",
-	                        "Confirm Delete",
-	                        JOptionPane.YES_NO_OPTION);
-	
-	                //Only deletes if YES is selected
-	                if (choice == JOptionPane.YES_OPTION) {
-	
-	                    //Removes the user from the ArrayList
-	                    userData.remove(i);
-	
-	                    
-	
-	                    //Reloads users so the table updates
-	                    loadUsers();
-	
-	                    JOptionPane.showMessageDialog(
-	                            null,
-	                            "User deleted successfully.");
-	                }
-	
-	                break;
-	            }
-	        }
-	
-	        //Shows an error if the username cannot be found
-	        if (!found) {
-	
-	            JOptionPane.showMessageDialog(
-	                    null,
-	                    "Username not found.",
-	                    "Not Found",
-	                    JOptionPane.ERROR_MESSAGE);
-	        }
-	    }
 	    
 	  //Calculates how far the User Manager table can scroll
 	    public int getMaxScroll() {
@@ -786,5 +734,108 @@
 	                return;
 	            }
 	        }
+	    }
+	    
+	    /**
+	     * Deletes the selected user using the backend UserStorage class.
+	     */
+	    public void confirmDeleteUser() {
+
+	        if (!Validation.isValidString(selectedUsername)) {
+	            message = "Please select a user first.";
+	            return;
+	        }
+
+	        boolean deleted =
+	                gp.userStorage.deleteUser(selectedUsername);
+
+	        if (deleted) {
+
+	            loadUsers();
+
+	            message = "User deleted successfully.";
+	            selectedUsername = "";
+	            deletingUser = false;
+
+	        } else {
+
+	            message = "Could not delete user.";
+	        }
+	    }
+	    /**
+	     * Draws the delete confirmation directly on the Manage Users screen.
+	     */
+	    private void drawDeleteConfirmation(Graphics2D g2) {
+
+	        int formX = 250;
+	        int formY = 200;
+	        int formWidth = 460;
+	        int formHeight = 220;
+
+	        //Background
+	        g2.setColor(new Color(30, 30, 40));
+	        g2.fillRoundRect(
+	                formX,
+	                formY,
+	                formWidth,
+	                formHeight,
+	                15,
+	                15);
+
+	        //Border
+	        g2.setColor(Color.YELLOW);
+	        g2.setStroke(new BasicStroke(2));
+	        g2.drawRoundRect(
+	                formX,
+	                formY,
+	                formWidth,
+	                formHeight,
+	                15,
+	                15);
+
+	        //Title
+	        g2.setFont(new Font(
+	                "Arial",
+	                Font.BOLD,
+	                22));
+
+	        g2.setColor(Color.WHITE);
+
+	        g2.drawString(
+	                "DELETE USER",
+	                formX + 150,
+	                formY + 45);
+
+	        //Confirmation message
+	        g2.setFont(new Font(
+	                "Arial",
+	                Font.PLAIN,
+	                16));
+
+	        g2.drawString(
+	                "Are you sure you want to delete:",
+	                formX + 70,
+	                formY + 95);
+
+	        g2.setFont(new Font(
+	                "Arial",
+	                Font.BOLD,
+	                17));
+
+	        g2.drawString(
+	                selectedUsername,
+	                formX + 170,
+	                formY + 125);
+
+	        //Buttons
+	        drawButton(
+	                g2,
+	                confirmDeleteBtn,
+	                "YES");
+
+	        drawButton(
+	                g2,
+	                cancelDeleteBtn,
+	                "NO");
 	    }
 	}

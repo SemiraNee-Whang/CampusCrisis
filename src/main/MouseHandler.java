@@ -593,6 +593,27 @@ import main.Validation;
   //Handles clicks on the User Management screen
     private void handleUserManagerClick(int x, int y) {
 
+    	//DELETE CONFIRMATION IS OPEN
+    	if (gp.userManager.deletingUser) {
+
+    	    //Yes
+    	    if (gp.userManager.confirmDeleteBtn.contains(x, y)) {
+
+    	        gp.userManager.confirmDeleteUser();
+    	        return;
+    	    }
+
+    	    //No
+    	    if (gp.userManager.cancelDeleteBtn.contains(x, y)) {
+
+    	        gp.userManager.deletingUser = false;
+    	        gp.userManager.message = "";
+    	        return;
+    	    }
+
+    	    return;
+    	}
+    	
         //ADD OR EDIT FORM IS OPEN
         if (gp.userManager.addingUser
                 || gp.userManager.editingUser) {
@@ -698,10 +719,20 @@ import main.Validation;
         }
 
 
-        //DELETE USER - old version temporarily
+        //DELETE USER
         else if (gp.userManager.deleteBtn.contains(x, y)) {
 
-            gp.userManager.deleteUser();
+            if (!Validation.isValidString(
+                    gp.userManager.selectedUsername)) {
+
+                gp.userManager.message =
+                        "Please select a user first.";
+
+                return;
+            }
+
+            gp.userManager.deletingUser = true;
+            gp.userManager.message = "";
         }
 
 
