@@ -1,19 +1,21 @@
 OFFICIAL PRESIDENTIAL REPORT
 ============================
-Total Decisions Made: 11
-Final Approval Rating: 99%
-Remaining Budget: R-600
+Total Decisions Made: 13
+Final Approval Rating: 84%
+Remaining Budget: R-1200
 Term Outcome: UNSUCCESSFUL
 
 --- Decision History ---
 ID: REQ001 | Status: Approved
-ID: REQ002 | Status: Approved
-ID: REQ003 | Status: Approved
-ID: REQ004 | Status: Approved
-ID: REQ005 | Status: Approved
-ID: REQ006 | Status: Approved
+ID: REQ005 | Status: Declined
+ID: REQ006 | Status: Declined
 ID: REQ007 | Status: Approved
 ID: REQ008 | Status: Approved
 ID: REQ009 | Status: Approved
 ID: REQ010 | Status: Approved
 ID: REQ012 | Status: Approved
+ID: REQ013 | Status: Approved
+ID: REQ014 | Status: Approved
+ID: REQ015 | Status: Approved
+ID: REQ016 | Status: Approved
+ID: REQ017 | Status: Approved
