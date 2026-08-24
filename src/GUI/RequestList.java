@@ -5,24 +5,34 @@ import java.util.ArrayList;
 import main.GamePanel;
 import main.Request;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RequestList.
+ */
 //Handles loading, displaying and managing student requests during gameplay
 public class RequestList {
 
+    /** The gp. */
     //Reference to the main GamePanel
     private GamePanel gp;
 
+    /** The current request. */
     //Stores the request currently being displayed
     public Request currentRequest;
 
+    /** The all requests. */
     //Stores all requests that are still waiting to be handled
     public ArrayList<Request> allRequests = new ArrayList<>();
 
+    /** The history. */
     //Stores requests that have already been handled
     public ArrayList<Request> history = new ArrayList<>();
 
+    /** The show buttons. */
     //Controls whether the Approve, Decline and Postpone buttons are visible
     public boolean showButtons = false;
 
+    /** The postpone btn. */
     //Stores the clickable button areas
     public Rectangle approveBtn, declineBtn, postponeBtn;
 
@@ -30,6 +40,8 @@ public class RequestList {
      * Receives the GamePanel used by the RequestList.
      * Loads all requests from requests.txt and sets the first request
      * as the current request if requests are available.
+     *
+     * @param gp the gp
      */
     public RequestList(GamePanel gp) {
         this.gp = gp;
@@ -89,6 +101,8 @@ public class RequestList {
     /**
      * Receives the Graphics2D object used to draw the request screen.
      * Displays the current request and the request action buttons.
+     *
+     * @param g2 the g 2
      */
     public void draw(Graphics2D g2) {
 
@@ -177,6 +191,12 @@ public class RequestList {
      * Receives text and its drawing position.
      * Splits long text into multiple lines so that it fits
      * inside the available width.
+     *
+     * @param g2 the g 2
+     * @param text the text
+     * @param x the x
+     * @param y the y
+     * @param maxWidth the max width
      */
     private void drawWrappedText(
             Graphics2D g2,
@@ -228,6 +248,11 @@ public class RequestList {
     /**
      * Receives a button area, button text and background colour.
      * Draws a reusable styled button on the request screen.
+     *
+     * @param g2 the g 2
+     * @param r the r
+     * @param text the text
+     * @param bgColor the bg color
      */
     private void drawStyledButton(
             Graphics2D g2,

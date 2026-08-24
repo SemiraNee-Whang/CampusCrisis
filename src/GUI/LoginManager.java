@@ -4,18 +4,47 @@ import java.awt.*;
 import main.GamePanel;
 import main.Validation;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LoginManager.
+ */
 public class LoginManager {
+    
+    /** The gp. */
     private GamePanel gp;
+    
+    /** The user text. */
     public String userText = "";
+    
+    /** The pass text. */
     public String passText = "";
+    
+    /** The sub state. */
     public int subState = -1; // -1: None, 0: User, 1: Pass, 2: Action, 3: Switch
+    
+    /** The is sign up. */
     public boolean isSignUp = false;
+    
+    /** The message. */
     public String message = "";
+    
+    /** The active field. */
     public int activeField = -1;
 
+    /**
+     * Instantiates a new login manager.
+     *
+     * @param gp the gp
+     */
     public LoginManager(GamePanel gp) {
         this.gp = gp;
     }
+    
+    /**
+     * Draw.
+     *
+     * @param g2 the g 2
+     */
     public void draw(Graphics2D g2) {
         //Fills the background with a dark theme colour
         g2.setColor(new Color(20, 20, 30));
@@ -69,6 +98,15 @@ public class LoginManager {
         g2.drawString(message, gp.tileSize * 5, gp.tileSize * 3);
     }
 
+    /**
+     * Draw field.
+     *
+     * @param g2 the g 2
+     * @param label the label
+     * @param text the text
+     * @param y the y
+     * @param active the active
+     */
     private void drawField(Graphics2D g2, String label, String text, int y, boolean active) {
         g2.setColor(Color.WHITE);
         g2.drawString(label, gp.tileSize * 2, y);
@@ -77,6 +115,11 @@ public class LoginManager {
         g2.drawString(text + (active ? "_" : ""), gp.tileSize * 5 + 10, y);
     }
 
+    /**
+     * Validate login.
+     *
+     * @return true, if successful
+     */
     public boolean validateLogin() {
 
         if (!Validation.isValidString(userText)) {
@@ -109,6 +152,9 @@ public class LoginManager {
         return false;
     }
 
+    /**
+     * Register user.
+     */
     public void registerUser() {
 
         if (!Validation.isValidString(userText)) {

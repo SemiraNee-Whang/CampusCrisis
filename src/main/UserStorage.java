@@ -6,13 +6,25 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UserStorage.
+ */
 //Handles reading, writing and managing user data in secondary storage
 public class UserStorage {
 
+    /** The user data. */
     //Stores all users loaded from Log in & Sign Up.txt
     private ArrayList<String[]> userData = new ArrayList<>();
+    
+    /** The last error. */
     private String lastError = "";
 
+    /**
+     * Gets the last error.
+     *
+     * @return the last error
+     */
     public String getLastError() {
         return lastError;
     }
@@ -20,6 +32,8 @@ public class UserStorage {
     /**
      * Loads all valid user records from Log in & Sign Up.txt.
      * Returns the ArrayList containing the loaded users.
+     *
+     * @return the array list
      */
     public ArrayList<String[]> loadUsers() {
 
@@ -72,6 +86,9 @@ public class UserStorage {
 
     /**
      * Returns true if the supplied username already exists.
+     *
+     * @param username the username
+     * @return true, if successful
      */
     public boolean usernameExists(String username) {
 
@@ -95,6 +112,10 @@ public class UserStorage {
      * Receives a username and password.
      * Validates the data and adds the new user to secondary storage.
      * Returns true if the user was successfully added.
+     *
+     * @param username the username
+     * @param password the password
+     * @return true, if successful
      */
     public boolean addUser(String username, String password) {
 
@@ -119,6 +140,11 @@ public class UserStorage {
     /**
      * Edits an existing user.
      * Returns true if the user is found and successfully updated.
+     *
+     * @param oldUsername the old username
+     * @param newUsername the new username
+     * @param newPassword the new password
+     * @return true, if successful
      */
     public boolean editUser(
             String oldUsername,
@@ -167,6 +193,9 @@ public class UserStorage {
     /**
      * Deletes a user using their username.
      * Returns true if the user is found and removed.
+     *
+     * @param username the username
+     * @return true, if successful
      */
     public boolean deleteUser(String username) {
 
@@ -191,6 +220,8 @@ public class UserStorage {
     /**
      * Rewrites Log in & Sign Up.txt using the current userData.
      * Returns true if the file is successfully saved.
+     *
+     * @return true, if successful
      */
     private boolean saveAllUsers() {
 
@@ -223,6 +254,8 @@ public class UserStorage {
 
     /**
      * Returns the current user data.
+     *
+     * @return the user data
      */
     public ArrayList<String[]> getUserData() {
         return userData;
@@ -232,6 +265,10 @@ public class UserStorage {
     /**
      * Validates a username and password against stored users.
      * Returns true if a matching account is found.
+     *
+     * @param username the username
+     * @param password the password
+     * @return true, if successful
      */
     public boolean validateLogin(String username, String password) {
 
@@ -259,6 +296,9 @@ public class UserStorage {
 
     /**
      * Returns true if a username exists in storage.
+     *
+     * @param username the username
+     * @return true, if successful
      */
     public boolean userExists(String username) {
 

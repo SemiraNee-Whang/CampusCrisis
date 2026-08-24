@@ -1,11 +1,18 @@
 package main;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Validation.
+ */
 //Provides reusable validation methods for user input
 public class Validation {
 
     /**
      * Receives text entered by the user.
      * Returns true if the text contains a value.
+     *
+     * @param value the value
+     * @return true, if is valid string
      */
     public static boolean isValidString(String value) {
         return value != null && !value.trim().isEmpty();
@@ -14,6 +21,9 @@ public class Validation {
     /**
      * Receives text that should contain an integer.
      * Returns true if the value can be converted to an integer.
+     *
+     * @param value the value
+     * @return true, if is integer
      */
     public static boolean isInteger(String value) {
 
@@ -33,6 +43,9 @@ public class Validation {
     /**
      * Receives text that should contain a positive integer.
      * Returns true if the value is an integer greater than or equal to zero.
+     *
+     * @param value the value
+     * @return true, if is positive integer
      */
     public static boolean isPositiveInteger(String value) {
 
@@ -46,6 +59,9 @@ public class Validation {
     /**
      * Receives a percentage entered as text.
      * Returns true if it is an integer between 0 and 100.
+     *
+     * @param value the value
+     * @return true, if is valid percentage
      */
     public static boolean isValidPercentage(String value) {
 
@@ -61,6 +77,9 @@ public class Validation {
     /**
      * Receives an approval impact entered as text.
      * Returns true if it is an integer between -100 and 100.
+     *
+     * @param value the value
+     * @return true, if is valid impact
      */
     public static boolean isValidImpact(String value) {
 

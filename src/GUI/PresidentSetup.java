@@ -4,27 +4,57 @@ import java.awt.*;
 import main.GamePanel;
 import main.Validation;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PresidentSetup.
+ */
 public class PresidentSetup {
+    
+    /** The gp. */
     private GamePanel gp;
+    
+    /** The president name. */
     public String presidentName = "";
+    
+    /** The sub state. */
     public int subState = 0; // 0: Name Input, 1: Confirm Button, 2: Back Button
     
+    /** The starting budget. */
     // Initialising stats from specifications 
     public final int STARTING_BUDGET = 20000;
+    
+    /** The current budget. */
     public int currentBudget;
+    
+    /** The starting approval. */
     public final int STARTING_APPROVAL = 40;
+    
+    /** The current approval. */
     public int currentApproval;
+    
+    /** The remaining time. */
     public int remainingTime = 12; // Example: 12 weeks/turns [cite: 38]
     
+    /** The name box selected. */
     // Click-to-type state
     public boolean nameBoxSelected = false;
     
+    /**
+     * Instantiates a new president setup.
+     *
+     * @param gp the gp
+     */
     public PresidentSetup(GamePanel gp) {
         this.gp = gp;
         this.currentBudget = STARTING_BUDGET;
         this.currentApproval = STARTING_APPROVAL;
     }
 
+    /**
+     * Draw.
+     *
+     * @param g2 the g 2
+     */
     public void draw(Graphics2D g2) {
         //Background
         g2.setColor(new Color(20, 20, 30));
@@ -70,6 +100,8 @@ public class PresidentSetup {
     /**
      * Validates the entered president name.
      * Returns true if a name has been entered.
+     *
+     * @return true, if successful
      */
     public boolean validatePresidentName() {
         return Validation.isValidString(presidentName);

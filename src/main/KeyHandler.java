@@ -3,13 +3,29 @@ package main;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class KeyHandler.
+ */
 public class KeyHandler implements KeyListener {
+    
+    /** The gp. */
     private GamePanel gp;
     
+    /**
+     * Instantiates a new key handler.
+     *
+     * @param gp the gp
+     */
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
     }
 
+    /**
+     * Key typed.
+     *
+     * @param e the e
+     */
     @Override
     public void keyTyped(KeyEvent e) {
         char c = e.getKeyChar();
@@ -156,7 +172,7 @@ public class KeyHandler implements KeyListener {
 
                 } else if (c >= 32 && c <= 126) {
 
-                    if (gp.requestManager.newDescription.length() < 60) {
+                    if (gp.requestManager.newDescription.length() < 70) {
                         gp.requestManager.newDescription += c;
                     }
                 }
@@ -242,6 +258,11 @@ public class KeyHandler implements KeyListener {
         }
     }
 
+    /**
+     * Key pressed.
+     *
+     * @param e the e
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
@@ -263,6 +284,11 @@ public class KeyHandler implements KeyListener {
         }
         }
 
+	/**
+	 * Key released.
+	 *
+	 * @param e the e
+	 */
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub

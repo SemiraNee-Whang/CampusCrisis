@@ -6,22 +6,36 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
+/**
+ * The Class RequestStorage.
+ */
 //Handles reading, writing and managing request data in secondary storage
 public class RequestStorage {
 
-    //Stores request records loaded from requests.txt
+	//Stores request records loaded from requests.txt
     private ArrayList<String[]> requestData = new ArrayList<>();
 
     
+    /** The last error. */
     private String lastError = "";
 
+    	/**
+    	 * Returns the most recent error message produced while
+    	 * reading from or writing to secondary storage.
+    	 *
+    	 * @return the latest storage error message
+    	 */
     public String getLastError() {
         return lastError;
     }
     
     /**
-     * Loads all valid request records from requests.txt.
-     * Returns the ArrayList containing the loaded requests.
+     * Loads all request records from requests.txt.
+     * Each record is separated into request ID, description,
+     * category, cost and approval impact.
+     * Invalid records are ignored.
+     *
+     * @return an ArrayList containing all valid request records
      */
     public ArrayList<String[]> loadRequests() {
 
@@ -51,7 +65,7 @@ public class RequestStorage {
                             && Validation.isValidString(description)
                             && Validation.isValidString(category)
                             && Validation.isPositiveInteger(cost)
-                            && Validation.isInteger(impact)) {
+                            && Validation.isValidImpact(impact)) {
 
                         requestData.add(new String[] {
                                 id,
@@ -76,8 +90,10 @@ public class RequestStorage {
     }
 
     /**
-     * Generates the next available Request ID.
-     * Returns the ID in the format REQ001.
+     * Searches the current request records to find the highest
+     * Request ID and generates the next available ID.
+     *
+     * @return the next Request ID in the format REQ001
      */
     public String generateRequestID() {
 
@@ -116,8 +132,15 @@ public class RequestStorage {
     }
 
     /**
-     * Receives request details and adds a new request.
-     * Returns true if the request is successfully saved.
+     * Receives the details of a new request, validates them,
+     * generates a new Request ID and adds the record to secondary storage.
+     *
+     * @param description the description of the request
+     * @param category the category of the request
+     * @param costText the request cost entered as text
+     * @param impactText the approval impact entered as text
+     * @return true if the request is valid and successfully saved,
+     *         otherwise false
      */
     public boolean addRequest(
             String description,
@@ -129,7 +152,7 @@ public class RequestStorage {
         if (!Validation.isValidString(description)
                 || !Validation.isValidString(category)
                 || !Validation.isPositiveInteger(costText)
-                || !Validation.isInteger(impactText)) {
+                || !Validation.isValidImpact(impactText)) {
 
             return false;
         }
@@ -148,8 +171,17 @@ public class RequestStorage {
     }
 
     /**
-     * Receives the Request ID and new request details.
-     * Returns true if the matching request is successfully updated.
+     * Receives the ID of an existing request and its updated details.
+     * Searches for the matching request, replaces its data and rewrites
+     * requests.txt.
+     *
+     * @param id the ID of the request being edited
+     * @param newDescription the updated request description
+     * @param newCategory the updated request category
+     * @param newCost the updated request cost
+     * @param newImpact the updated approval impact
+     * @return true if the request is found and successfully updated,
+     *         otherwise false
      */
     public boolean editRequest(
             String id,
@@ -158,15 +190,17 @@ public class RequestStorage {
             String newCost,
             String newImpact) {
 
+    	//Validates all updated request details
         if (!Validation.isValidString(id)
                 || !Validation.isValidString(newDescription)
                 || !Validation.isValidString(newCategory)
                 || !Validation.isPositiveInteger(newCost)
-                || !Validation.isInteger(newImpact)) {
+                || !Validation.isValidImpact(newImpact)) {
 
             return false;
         }
-
+        
+      //Searches for the request with the matching ID
         for (int i = 0; i < requestData.size(); i++) {
 
             String[] request =
@@ -174,8 +208,9 @@ public class RequestStorage {
 
             if (request[0].trim()
                     .equalsIgnoreCase(id.trim())) {
-
-                requestData.set(
+            		
+            	//Replaces the old record with the updated information
+	                requestData.set(
                         i,
                         new String[] {
                                 request[0].trim(),
@@ -193,8 +228,12 @@ public class RequestStorage {
     }
 
     /**
-     * Deletes a request using its Request ID.
-     * Returns true if the request is found and removed.
+     * Receives a Request ID, searches for the matching record,
+     * removes it from the request list and updates requests.txt.
+     *
+     * @param id the ID of the request to delete
+     * @return true if the request is found and successfully deleted,
+     *         otherwise false
      */
     public boolean deleteRequest(String id) {
 
@@ -218,8 +257,11 @@ public class RequestStorage {
     }
 
     /**
-     * Rewrites requests.txt using the current request data.
-     * Returns true if the file is successfully saved.
+     * Rewrites requests.txt using the current requestData ArrayList.
+     * Each request is written as a pipe-separated record.
+     *
+     * @return true if all request records are successfully saved,
+     *         otherwise false
      */
     private boolean saveAllRequests() {
 
@@ -263,14 +305,18 @@ public class RequestStorage {
 
     /**
      * Returns the current request data.
+     *
+     * @return the request data
      */
     public ArrayList<String[]> getRequestData() {
         return requestData;
     }
     
     /**
-     * Loads request records from secondary storage
-     * and returns them as Request objects for gameplay.
+     * Loads the stored request records and converts each valid record
+     * into a Request object for use during gameplay.
+     *
+     * @return an ArrayList of Request objects
      */
     public ArrayList<Request> loadRequestObjects() {
 

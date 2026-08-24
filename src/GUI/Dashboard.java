@@ -3,18 +3,37 @@ package GUI;
 import java.awt.*;
 import main.GamePanel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Dashboard.
+ */
 public class Dashboard {
+    
+    /** The gp. */
     private GamePanel gp;
     
+    /** The budget. */
     //Live Stats
     public int budget;
+    
+    /** The approval. */
     public int approval;
     
+    /** The second counter. */
     //Timer Variables
     public int secondCounter = 0;
+    
+    /** The minutes. */
     public int minutes = 5;
+    
+    /** The seconds. */
     public int seconds = 0;
 
+    /**
+     * Instantiates a new dashboard.
+     *
+     * @param gp the gp
+     */
     public Dashboard(GamePanel gp) {
         this.gp = gp;
         //Set live stats from your starting constants
@@ -22,6 +41,9 @@ public class Dashboard {
         this.approval = gp.pSetup.STARTING_APPROVAL;
     }
 
+    /**
+     * Update timer.
+     */
     //The method exists so that gamepanel can continue working 
     public void updateTimer() {
         secondCounter++;
@@ -38,6 +60,11 @@ public class Dashboard {
         }
     }
 
+    /**
+     * Draw.
+     *
+     * @param g2 the g 2
+     */
     public void draw(Graphics2D g2) {
         //Top Status Bar
         g2.setColor(new Color(20, 20, 30, 220)); 

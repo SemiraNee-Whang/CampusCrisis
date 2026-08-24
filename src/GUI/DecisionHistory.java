@@ -4,21 +4,30 @@ import java.awt.*;
 import main.GamePanel;
 import main.Request;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DecisionHistory.
+ */
 //Displays all decisions made during the current game term
 public class DecisionHistory {
 
+    /** The gp. */
     //Reference to the main GamePanel
     private GamePanel gp;
 
+    /** The scroll offset. */
     //Controls how far the history table has been scrolled
     public int scrollOffset = 0;
 
+    /** The back btn. */
     //Stores the clickable area of the Back button
     public Rectangle backBtn;
 
     /**
      * Receives the GamePanel used by the Decision History screen.
      * Creates the Back button used to return to gameplay.
+     *
+     * @param gp the gp
      */
     public DecisionHistory(GamePanel gp) {
         this.gp = gp;
@@ -35,6 +44,8 @@ public class DecisionHistory {
      * Receives the Graphics2D object used to draw the screen.
      * Displays all requests stored in the current decision history,
      * including the request ID, status and outcome summary.
+     *
+     * @param g2 the g 2
      */
     public void draw(Graphics2D g2) {
 
@@ -169,6 +180,11 @@ public class DecisionHistory {
     /**
      * Receives the button position, text and colour.
      * Draws a reusable styled button on the Decision History screen.
+     *
+     * @param g2 the g 2
+     * @param r the r
+     * @param text the text
+     * @param bgColor the bg color
      */
     private void drawStyledButton(
             Graphics2D g2,

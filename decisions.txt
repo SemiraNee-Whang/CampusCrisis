@@ -26,3 +26,16 @@ REQ014 | Approved | Budget -1600, Approval +6
 REQ015 | Approved | Budget -2200, Approval +5
 REQ016 | Approved | Budget -900, Approval +5
 REQ017 | Approved | Budget -3500, Approval +8
+REQ001 | Approved | Budget -3000, Approval +6
+REQ002 | Approved | Budget -2500, Approval +7
+REQ003 | Approved | Budget -2000, Approval +5
+REQ004 | Approved | Budget -1800, Approval +6
+REQ005 | Declined | Approval -8
+REQ007 | Declined | Approval -8
+REQ008 | Approved | Budget -1000, Approval +5
+REQ009 | Approved | Budget -4000, Approval +7
+REQ010 | Approved | Budget -600, Approval +3
+REQ012 | Approved | Budget -1500, Approval +5
+REQ013 | Approved | Budget -700, Approval +4
+REQ014 | Approved | Budget -1600, Approval +6
+REQ015 | Approved | Budget -2200, Approval +5

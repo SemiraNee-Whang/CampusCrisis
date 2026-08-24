@@ -3,13 +3,20 @@ package main;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AdminStorage.
+ */
 //Handles admin credential validation from secondary storage
 public class AdminStorage {
 
+    /** The last error. */
     private String lastError = "";
 
     /**
      * Returns the most recent storage error message.
+     *
+     * @return the last error
      */
     public String getLastError() {
         return lastError;
@@ -19,6 +26,10 @@ public class AdminStorage {
      * Receives the entered admin username and password.
      * Checks the credentials against admin.txt.
      * Returns true if a matching admin account is found.
+     *
+     * @param username the username
+     * @param password the password
+     * @return true, if successful
      */
     public boolean validateAdmin(
             String username,

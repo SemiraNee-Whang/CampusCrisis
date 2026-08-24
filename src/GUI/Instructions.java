@@ -3,17 +3,37 @@ package GUI;
 import java.awt.*;
 import main.GamePanel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Instructions.
+ */
 public class Instructions {
+    
+    /** The gp. */
     private GamePanel gp;
+    
+    /** The sub state. */
     public int subState = 0; 
+    
+    /** The back btn. */
     public Rectangle nextBtn, backBtn;
 
+    /**
+     * Instantiates a new instructions.
+     *
+     * @param gp the gp
+     */
     public Instructions(GamePanel gp) {
         this.gp = gp;
         backBtn = new Rectangle(gp.tileSize * 2, gp.screenHeight - 100, 120, 45);
         nextBtn = new Rectangle(gp.screenWidth - (gp.tileSize * 2) - 120, gp.screenHeight - 100, 120, 45);
     }
 
+    /**
+     * Draw.
+     *
+     * @param g2 the g 2
+     */
     public void draw(Graphics2D g2) {
         g2.setColor(new Color(211, 211, 211)); 
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
@@ -67,6 +87,13 @@ public class Instructions {
         drawStyledButton(g2, nextBtn, nextText, btnYellow);
     }
 
+    /**
+     * Draw centered page.
+     *
+     * @param g2 the g 2
+     * @param title the title
+     * @param body the body
+     */
     //Centre the font and for design 
     private void drawCenteredPage(Graphics2D g2, String title, String body) {
         g2.setFont(new Font("Arial", Font.BOLD, 30));
@@ -83,6 +110,13 @@ public class Instructions {
         }
     }
 
+    /**
+     * Draw left aligned page.
+     *
+     * @param g2 the g 2
+     * @param title the title
+     * @param body the body
+     */
     //Positioning and Design
     private void drawLeftAlignedPage(Graphics2D g2, String title, String body) {
         
@@ -98,6 +132,14 @@ public class Instructions {
         }
     }
 
+    /**
+     * Draw styled button.
+     *
+     * @param g2 the g 2
+     * @param r the r
+     * @param text the text
+     * @param bg the bg
+     */
     //Button Design
     private void drawStyledButton(Graphics2D g2, Rectangle r, String text, Color bg) {
         g2.setColor(bg);
@@ -111,6 +153,13 @@ public class Instructions {
         g2.drawString(text, textX, textY);
     }
 
+    /**
+     * Gets the centered X.
+     *
+     * @param g2 the g 2
+     * @param text the text
+     * @return the centered X
+     */
     private int getCenteredX(Graphics2D g2, String text) {
         return gp.screenWidth / 2 - (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth() / 2;
     }

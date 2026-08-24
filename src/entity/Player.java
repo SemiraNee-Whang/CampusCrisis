@@ -7,21 +7,29 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 
+// TODO: Auto-generated Javadoc
 /**
  * Represents the student president character.
  * Handles the fixed character position, image loading and rendering.
  */
 public class Player {
 
+    /** The gp. */
     private GamePanel gp;
 
+    /** The x. */
     private int x;
+    
+    /** The y. */
     private int y;
 
+    /** The player image. */
     private BufferedImage playerImage;
 
     /**
      * Creates the player and prepares the character image.
+     *
+     * @param gp the gp
      */
     public Player(GamePanel gp) {
 
@@ -42,6 +50,8 @@ public class Player {
 
     /**
      * Loads the image used to display the stationary player.
+     *
+     * @return the player image
      */
     public void getPlayerImage() {
 
@@ -61,6 +71,8 @@ public class Player {
 
     /**
      * Draws the stationary player character.
+     *
+     * @param g2 the g 2
      */
     public void draw(Graphics2D g2) {
 

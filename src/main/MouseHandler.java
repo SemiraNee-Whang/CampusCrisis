@@ -6,15 +6,33 @@ import java.awt.event.*;
 
 
 
+	// TODO: Auto-generated Javadoc
+/**
+	 * The Class MouseHandler.
+	 */
 	public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
+    
+    /** The gp. */
     private GamePanel gp;
+    
+    /** The mouse Y. */
     public int mouseX, mouseY;
 
+    /**
+     * Instantiates a new mouse handler.
+     *
+     * @param gp the gp
+     */
     public MouseHandler(GamePanel gp) {
         this.gp = gp;
     }
 
     
+    /**
+     * Mouse pressed.
+     *
+     * @param e the e
+     */
     public void mousePressed(MouseEvent e) {
     	gp.requestFocusInWindow();
         int x = e.getX();
@@ -58,6 +76,12 @@ import java.awt.event.*;
         }
     }
 
+    /**
+     * Handle request pop up.
+     *
+     * @param x the x
+     * @param y the y
+     */
     //Handles clicks within the request pop-up, including "Postpone"
     private void handleRequestPopUp(int x, int y) {
         Rectangle requestBox = new Rectangle(gp.tileSize * 2, gp.tileSize * 2, gp.screenWidth - gp.tileSize * 4, gp.tileSize * 4);
@@ -89,6 +113,8 @@ import java.awt.event.*;
     /**
      * Receives the decision selected by the player.
      * Sends the decision to DecisionManager and updates the request queue.
+     *
+     * @param decision the decision
      */
     private void processDecision(String decision) {
 
@@ -126,6 +152,9 @@ import java.awt.event.*;
 
     
 
+    /**
+     * Handle title click.
+     */
     // Main menu button and Exit screen logic.
     private void handleTitleClick() {
         if (!gp.ui.confirmExitState) {
@@ -159,6 +188,12 @@ import java.awt.event.*;
         }
     }
 
+    /**
+     * Handle instruction click.
+     *
+     * @param x the x
+     * @param y the y
+     */
     private void handleInstructionClick(int x, int y) {
         if (gp.instructions.nextBtn.contains(x, y)) {
             if (gp.instructions.subState < 8) gp.instructions.subState++;
@@ -173,6 +208,9 @@ import java.awt.event.*;
     }
 
    
+    /**
+     * Handle login click.
+     */
     private void handleLoginClick() {
 
         int x = mouseX;
@@ -215,6 +253,12 @@ import java.awt.event.*;
     }
 	
 
+    /**
+     * Handle setup click.
+     *
+     * @param x the x
+     * @param y the y
+     */
     public void handleSetupClick(int x, int y) {
         int boxX = gp.tileSize * 6;
         int boxY = gp.tileSize * 5 - 30;
@@ -231,6 +275,11 @@ import java.awt.event.*;
 
  
 
+    /**
+     * Mouse moved.
+     *
+     * @param e the e
+     */
     public void mouseMoved(MouseEvent e) {
         mouseX = e.getX(); mouseY = e.getY();
         if (gp.gameState == gp.titleState) handleTitleHover(mouseX, mouseY);
@@ -238,6 +287,12 @@ import java.awt.event.*;
         else if (gp.gameState == gp.setupState) handleSetupHover(mouseX, mouseY);
     }
 
+    /**
+     * Handle title hover.
+     *
+     * @param x the x
+     * @param y the y
+     */
     public void handleTitleHover(int x, int y) {
 
         if (!gp.ui.confirmExitState) {
@@ -300,6 +355,11 @@ import java.awt.event.*;
         }
     }
 
+    /**
+     * Mouse wheel moved.
+     *
+     * @param e the e
+     */
     public void mouseWheelMoved(MouseWheelEvent e) {
 
         //Scrolls through the Decision History screen
@@ -356,29 +416,64 @@ import java.awt.event.*;
         }
     }
     
+    /**
+     * Mouse dragged.
+     *
+     * @param e the e
+     */
     public void mouseDragged(MouseEvent e) 
     { 
     	mouseX = e.getX(); mouseY = e.getY(); 
     }
+    
+    /**
+     * Mouse clicked.
+     *
+     * @param e the e
+     */
     public void mouseClicked(MouseEvent e) 
     {
 
     }
+    
+    /**
+     * Mouse released.
+     *
+     * @param e the e
+     */
     public void mouseReleased(MouseEvent e) {
 
         //Removes glow when mouse is released
         gp.adminLogin.loginPressed = false;
         
     }
+    
+    /**
+     * Mouse entered.
+     *
+     * @param e the e
+     */
     public void mouseEntered(MouseEvent e) 
     {
     	
     }
+    
+    /**
+     * Mouse exited.
+     *
+     * @param e the e
+     */
     public void mouseExited(MouseEvent e) 
     {
     	
     }
 
+    /**
+     * Handle login hover.
+     *
+     * @param x the x
+     * @param y the y
+     */
     public void handleLoginHover(int x, int y) {
         if (x >= 10 && x <= 100 && y >= 10 && y <= 50) 
         	gp.loginM.subState = 4;
@@ -393,6 +488,12 @@ import java.awt.event.*;
         else gp.loginM.subState = -1;
     }
 
+    /**
+     * Handle setup hover.
+     *
+     * @param x the x
+     * @param y the y
+     */
     public void handleSetupHover(int x, int y) {
         if (x >= 10 && x <= 100 && y >= 10 && y <= 50) 
         	gp.pSetup.subState = 2;
@@ -403,6 +504,12 @@ import java.awt.event.*;
         else gp.pSetup.subState = -1;
     }
     
+  /**
+   * Handle admin login click.
+   *
+   * @param x the x
+   * @param y the y
+   */
   //Handles clicks on the Admin Login screen
     private void handleAdminLoginClick(int x, int y) {
 
@@ -445,6 +552,12 @@ import java.awt.event.*;
         }
     }
     
+    /**
+     * Handle admin menu click.
+     *
+     * @param x the x
+     * @param y the y
+     */
     //Handles clicks on the main Admin Menu
     private void handleAdminMenuClick(int x, int y) {
 
@@ -488,6 +601,13 @@ import java.awt.event.*;
             gp.gameState = gp.titleState;
         }
     }
+    
+    /**
+     * Handle request manager click.
+     *
+     * @param x the x
+     * @param y the y
+     */
     //Handles clicks on the Request Management screen
     private void handleRequestManagerClick(int x, int y) {
 
@@ -663,6 +783,12 @@ import java.awt.event.*;
         }
     }
     
+  /**
+   * Handle user manager click.
+   *
+   * @param x the x
+   * @param y the y
+   */
   //Handles clicks on the User Management screen
     private void handleUserManagerClick(int x, int y) {
 

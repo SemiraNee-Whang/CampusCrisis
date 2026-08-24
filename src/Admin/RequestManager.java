@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Admin;
 
 import java.awt.*;
@@ -512,7 +515,7 @@ public class RequestManager {
 
         drawWrappedText(
                 g2,
-                newDescription,
+                newDescription + (activeField == 0 ? "|" : ""),
                 descriptionBox.x + 10,
                 descriptionBox.y + 22,
                 descriptionBox.width - 20,

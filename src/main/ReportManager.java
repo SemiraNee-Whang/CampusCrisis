@@ -8,20 +8,33 @@ import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ReportManager.
+ */
 //Handles the creation and saving of end-of-term reports
 public class ReportManager {
 
+    /** The gp. */
     //Reference to the main GamePanel
     private GamePanel gp;
     
+    /** The last error. */
     private String lastError = "";
 
+    /**
+     * Gets the last error.
+     *
+     * @return the last error
+     */
     public String getLastError() {
         return lastError;
     }
 
     /**
      * Receives the GamePanel used by the ReportManager.
+     *
+     * @param gp the gp
      */
     public ReportManager(GamePanel gp) {
         this.gp = gp;
@@ -32,6 +45,10 @@ public class ReportManager {
      * the list of requests handled during the term.
      * Generates report.txt containing the final term results
      * and the decision history.
+     *
+     * @param finalApproval the final approval
+     * @param finalBudget the final budget
+     * @param history the history
      */
     public void generateFinalReport(
             int finalApproval,
@@ -96,6 +113,11 @@ public class ReportManager {
     /**
      * Receives the president name, final budget and final approval.
      * Appends a summary of the completed term to game_history.txt.
+     *
+     * @param name the name
+     * @param budget the budget
+     * @param approval the approval
+     * @return true, if successful
      */
     public boolean saveGameToHistory(
             String name,
@@ -149,6 +171,8 @@ public class ReportManager {
     /**
      * Loads previous game records from game_history.txt.
      * Returns each record as a String array.
+     *
+     * @return the array list
      */
     public ArrayList<String[]> loadGameHistory() {
 

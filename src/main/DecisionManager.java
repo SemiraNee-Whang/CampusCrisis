@@ -3,25 +3,35 @@ package main;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
+
+/**
+ * The Class DecisionManager.
+ */
 //Handles the processing and storage of request decisions
 public class DecisionManager {
 
     private GamePanel gp;
 
     /**
-     * Receives the GamePanel used by the DecisionManager.
+     * Creates the DecisionManager and stores a reference to GamePanel
+     * so that budget and approval values can be updated.
+     *
+     * @param gp the main GamePanel containing the current game data
      */
     public DecisionManager(GamePanel gp) {
         this.gp = gp;
     }
 
     /**
-     * Receives a Request and the decision selected by the player.
-     * Updates the budget, approval, request status and request outcome.
-     * Returns true if the request is completed and should be removed
-     * from the pending request list.
+     * Receives a Request and the player's selected decision.
+     * Updates the budget, approval rating, request status and outcome
+     * according to whether the request is approved, declined or postponed.
+     *
+     * @param r the Request currently being processed
+     * @param decision the decision selected by the player
+     * @return true if the request is completed and should be removed
+     *         from the pending queue, or false if it is postponed
      */
     public boolean processDecision(Request r, String decision) {
 
@@ -70,8 +80,10 @@ public class DecisionManager {
     }
 
     /**
-     * Receives a completed Request.
-     * Appends the request decision information to decisions.txt.
+     * Receives a completed Request and appends its ID, status and outcome
+     * to decisions.txt.
+     *
+     * @param r the completed Request whose decision must be stored
      */
     public void saveDecisionToFile(Request r) {
 
@@ -95,34 +107,20 @@ public class DecisionManager {
         }
     }
     
-    public boolean handleDecision(
-            Request r,
-            String decision,
-            ArrayList<Request> pendingRequests,
-            ArrayList<Request> requestHistory) {
-
-        boolean completed =
-                processDecision(r, decision);
-
-        if (!completed) {
-            pendingRequests.remove(r);
-            pendingRequests.add(r);
-            return false;
-        }
-
-        pendingRequests.remove(r);
-        requestHistory.add(r);
-
-        saveDecisionToFile(r);
-
-        return true;
-    }
+   
     
     /**
-     * Handles the result of a player decision.
-     * Updates the pending request queue and decision history.
-     * Returns true if the request was completed,
-     * or false if it was postponed.
+     * Processes a player decision and updates all related request collections.
+     * Postponed requests are moved to the back of the pending queue.
+     * Completed requests are removed from the pending queue, added to the
+     * current request history and game history, and saved to decisions.txt.
+     *
+     * @param r the Request being processed
+     * @param decision the player's selected decision
+     * @param pendingRequests the list of requests still waiting to be handled
+     * @param requestHistory the current term's completed request history
+     * @param gameHistory the overall in-memory game decision history
+     * @return true if the request was completed, or false if it was postponed
      */
     public boolean handleDecisionResult(
             Request r,
@@ -157,8 +155,12 @@ public class DecisionManager {
     }
     
     /**
-     * Keeps the approval rating within the valid range of 0 to 100.
-     * Returns the corrected approval value.
+     * Receives an approval rating and keeps it within the valid
+     * range of 0 to 100.
+     *
+     * @param approval the approval rating to check
+     * @return 100 if the value is above 100, 0 if it is below 0,
+     *         otherwise the original approval value
      */
     public int clampApproval(int approval) {
 

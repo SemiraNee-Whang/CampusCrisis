@@ -8,17 +8,35 @@
 		import javax.imageio.ImageIO;
 		import main.GamePanel;
 		
+		// TODO: Auto-generated Javadoc
+/**
+		 * The Class UI.
+		 */
 		//Handles the UI
 		public class UI {
 		
-		    private GamePanel gp;
-		    Graphics2D g2;
-		    // -1 means no hover
+		    /** The gp. */
+    		private GamePanel gp;
+		    
+    		/** The g 2. */
+    		Graphics2D g2;
+		    
+    		/** The command num. */
+    		// -1 means no hover
 		    public int commandNum = -1; 
-		    public boolean confirmExitState = false;
-		    BufferedImage titleBg;
+		    
+    		/** The confirm exit state. */
+    		public boolean confirmExitState = false;
+		    
+    		/** The title bg. */
+    		BufferedImage titleBg;
 		
-		    public UI(GamePanel gp) {
+		    /**
+    		 * Instantiates a new ui.
+    		 *
+    		 * @param gp the gp
+    		 */
+    		public UI(GamePanel gp) {
 		        this.gp = gp;
 		        
 		        try {
@@ -28,7 +46,12 @@
 		        }
 		    }
 		
-		    public void draw(Graphics2D g2) {
+		    /**
+    		 * Draw.
+    		 *
+    		 * @param g2 the g 2
+    		 */
+    		public void draw(Graphics2D g2) {
 		        this.g2 = g2;
 		        if (gp.gameState == gp.titleState) {
 		            if (!confirmExitState) {
@@ -39,7 +62,10 @@
 		        }
 		    }
 		
-		    public void drawTitleScreen() {
+		    /**
+    		 * Draw title screen.
+    		 */
+    		public void drawTitleScreen() {
 		        if (titleBg != null) g2.drawImage(titleBg, 0, 0, gp.screenWidth, gp.screenHeight, null);
 		
 		        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 42F));
@@ -75,7 +101,10 @@
 		        
 		    }
 		
-		    public void drawExitConfirmation() {
+		    /**
+    		 * Draw exit confirmation.
+    		 */
+    		public void drawExitConfirmation() {
 		    	
 		        //Background and Overlay
 		        if (titleBg != null) 
@@ -110,7 +139,15 @@
 		        drawOption("NO", centerX + 60, y, 5);
 		    }
 		    
-		    private void drawOption(String text, int x, int y, int index) {
+		    /**
+    		 * Draw option.
+    		 *
+    		 * @param text the text
+    		 * @param x the x
+    		 * @param y the y
+    		 * @param index the index
+    		 */
+    		private void drawOption(String text, int x, int y, int index) {
 		        //Shadow
 		        g2.setColor(Color.BLACK);
 		        g2.drawString(text, x + 3, y + 3);
@@ -124,7 +161,13 @@
 		        g2.drawString(text, x, y);
 		    }
 		
-		    public int getXforCenteredText(String text) {
+		    /**
+    		 * Gets the xfor centered text.
+    		 *
+    		 * @param text the text
+    		 * @return the xfor centered text
+    		 */
+    		public int getXforCenteredText(String text) {
 		        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
 		        return gp.screenWidth / 2 - length / 2;
 		    }

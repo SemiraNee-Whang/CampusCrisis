@@ -2,9 +2,18 @@ package main;
 
 import javax.swing.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Main.
+ */
 //THIS IS THE MAIN CLASS
 public class Main {
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		
 		

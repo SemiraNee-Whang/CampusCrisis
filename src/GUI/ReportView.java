@@ -4,11 +4,26 @@ import java.awt.*;
 import java.util.ArrayList;
 import main.GamePanel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ReportView.
+ */
 public class ReportView {
+    
+    /** The gp. */
     private GamePanel gp;
+    
+    /** The back btn. */
     public Rectangle backBtn;
+    
+    /** The game history. */
     ArrayList<String[]> gameHistory = new ArrayList<>();
 
+    /**
+     * Instantiates a new report view.
+     *
+     * @param gp the gp
+     */
     public ReportView(GamePanel gp) {
         this.gp = gp;
         //Positioned at the bottom centre
@@ -27,6 +42,11 @@ public class ReportView {
         );
     }
 
+    /**
+     * Draw.
+     *
+     * @param g2 the g 2
+     */
     public void draw(Graphics2D g2) {
         //Background
         g2.setColor(new Color(20, 20, 30));
@@ -75,6 +95,11 @@ public class ReportView {
         drawBackButton(g2);
     }
 
+    /**
+     * Draw back button.
+     *
+     * @param g2 the g 2
+     */
     private void drawBackButton(Graphics2D g2) {
         g2.setColor(Color.GRAY);
         g2.fill(backBtn);
