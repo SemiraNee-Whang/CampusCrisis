@@ -1,1 +1,6 @@
-	admin|admin123
+admin|admin123
+Admin01|Campus@2026
+Admin02|Crisis#481
+Manager1|Admin!732
+SchoolAdmin|Secure#915
+SystemAdmin|Control@842
