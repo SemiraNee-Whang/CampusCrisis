@@ -5,8 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
-import main.KeyHandler;
-import java.awt.Rectangle;
 
 /**
  * Represents the student president character controlled by the player.
@@ -16,17 +14,9 @@ import java.awt.Rectangle;
 public class Player extends Entity {
 
     private GamePanel gp;
-    private KeyHandler keyH;
-    public Rectangle solidArea;
-    public boolean collisionOn = false;
 
-    public Player(GamePanel gp, KeyHandler keyH) {
-        this.gp = gp;
-        this.keyH = keyH;
-        
-        solidArea = new Rectangle(16, 48, 32, 16);
-        setDefaultValues();
-        getPlayerImage();
+    public Player(GamePanel gp) {
+    	
     }
 
     public void setDefaultValues() {
@@ -67,57 +57,7 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
-    //Handles Character Moving
-    public void update() {
-        boolean moving = keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed;
     
-        if (moving) {
-            if (keyH.upPressed) direction = "up";
-            else if (keyH.downPressed) direction = "down";
-            else if (keyH.leftPressed) direction = "left";
-            else if (keyH.rightPressed) direction = "right";
-
-            // CHECK TILE COLLISION
-            collisionOn = false;
-            gp.cChecker.checkTile(this);
-
-            // IF COLLISION IS FALSE, PLAYER CAN MOVE
-            if (!collisionOn) {
-                switch(direction) {
-                    case "up": y -= speed; break;
-                    case "down": y += speed; break;
-                    case "left": x -= speed; break;
-                    case "right": x += speed; break;
-                }
-            }
-
-            //RE-CALIBRATED BOUNDARIES
-            
-            // Left Wall
-            if (x < 80) x = 80; 
-
-            // Right Wall
-            if (x > gp.screenWidth - gp.tileSize - 95) x = gp.screenWidth - gp.tileSize - 95;
-
-            // Top Wall
-            if (y < 140) y = 140; 
-
-            // Bottom Wall
-            if (y > gp.screenHeight - gp.tileSize - 70) {
-                y = gp.screenHeight - gp.tileSize - 70;
-            }
-
-            // 3
-            spriteCounter++;
-            if (spriteCounter > 10) {
-                spriteNum++;
-                if (spriteNum > 4) spriteNum = 1;
-                spriteCounter = 0;
-            }
-        } else {
-            spriteNum = 0;
-        }
-    }
     //Player Graphics
     public void draw(Graphics2D g2) {
         BufferedImage image = null;

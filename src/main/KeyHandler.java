@@ -5,8 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
     private GamePanel gp;
-    public boolean upPressed, downPressed, leftPressed, rightPressed;
-
+    
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
     }
@@ -255,13 +254,7 @@ public class KeyHandler implements KeyListener {
             if (code == KeyEvent.VK_ESCAPE) gp.gameState = gp.playState;
         }
     
-        //Handles keyboard controls when pressing the buttons
-        if (gp.gameState == gp.playState) {
-            if (code == KeyEvent.VK_W) upPressed = true;
-            if (code == KeyEvent.VK_S) downPressed = true;
-            if (code == KeyEvent.VK_A) leftPressed = true;
-            if (code == KeyEvent.VK_D) rightPressed = true;
-        }
+       
         
         // Quick Enter for Login
         if (code == KeyEvent.VK_ENTER && gp.gameState == gp.loginState) {
@@ -269,14 +262,13 @@ public class KeyHandler implements KeyListener {
             gp.loginM.subState = 2;     // focus login button
         }
         }
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
     
 
-    //Handles keyboard controls when not pressing the buttons
-    public void keyReleased(KeyEvent e) {
-        int code = e.getKeyCode();
-        if (code == KeyEvent.VK_W) upPressed = false;
-        if (code == KeyEvent.VK_S) downPressed = false;
-        if (code == KeyEvent.VK_A) leftPressed = false;
-        if (code == KeyEvent.VK_D) rightPressed = false;
-    }
+  
 }

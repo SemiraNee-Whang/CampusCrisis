@@ -36,7 +36,6 @@
 	    public AdminStorage adminStorage = new AdminStorage();
 	    public TileManager tileM = new TileManager(this);
 	    public KeyHandler keyH = new KeyHandler(this); 
-	    public CollisionChecker cChecker = new CollisionChecker(this);
 	    public UI ui = new UI(this); 
 	    public LoginManager loginM = new LoginManager(this);
 	    public MouseHandler mouseH = new MouseHandler(this);
@@ -60,7 +59,7 @@
 	    private Thread gameThread;
 	    
 	    //Entitiy
-	    public Player player = new Player(this, keyH);
+	    public Player player = new Player(this);
 	    
 	    //Game State
 	    public int gameState;
@@ -120,8 +119,7 @@
 	    
 	    public void update() {
 	    	if (gameState == playState || gameState == requestState || gameState == historyState) {
-	    		player.update();
-	            dashboard.updateTimer();
+	    		dashboard.updateTimer();
 	            checkGameOver();
 	        }
 	    }
